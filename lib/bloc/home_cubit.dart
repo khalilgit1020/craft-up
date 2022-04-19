@@ -463,7 +463,7 @@ class CraftHomeCubit extends Cubit<CraftStates> {
   Future getMySavedPostsId()async{
 
     mySavedPostsId.clear();
-    mySavedPostsId.clear();
+    mySavedPostsDetails = [];
 
     emit(CraftGetSavedPostsLoadingState());
 
