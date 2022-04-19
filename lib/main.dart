@@ -36,8 +36,6 @@ void main()async {
     },
     blocObserver: SimpleBlocObserver(),
   );
-
-
 }
 
 class MyApp extends StatelessWidget {
@@ -48,7 +46,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => CraftHomeCubit()..getUserData()..getUsers(),
+      create: (context) => CraftHomeCubit()..getUserData()..getUsers()..getNotifications()..getNotifications(),
       child: BlocConsumer<CraftHomeCubit,CraftStates>(
         listener:(context,state){} ,
         builder: (context,state){

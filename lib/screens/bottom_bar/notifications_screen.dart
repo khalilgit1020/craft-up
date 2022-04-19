@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:graduation/constants.dart';
@@ -17,12 +18,20 @@ class NotificationsScreen extends StatelessWidget {
     var size = MediaQuery.of(context).size;
 
     return BlocConsumer<CraftHomeCubit,CraftStates>(
-      listener:(context, state){}  ,
+      listener:(context, state){
+
+       // CraftHomeCubit().getNotifications();
+      }  ,
       builder:(context, state){
 
         var cubit = CraftHomeCubit.get(context);
 
-        var UserModel = CraftHomeCubit.get(context).UserModel;
+
+        if (kDebugMode) {
+          print(cubit.notifications.length.toString());
+        }
+
+       // var UserModel = CraftHomeCubit.get(context).UserModel;
 
         return
           SafeArea(
@@ -31,7 +40,6 @@ class NotificationsScreen extends StatelessWidget {
               child: Scaffold(
                 body: Column(
                   children: [
-
                     Container(
                       color: mainColor,
                       padding: const EdgeInsets.symmetric(horizontal: 30),
@@ -51,19 +59,20 @@ class NotificationsScreen extends StatelessWidget {
                     ),
 
                     const SizedBox(height: 12,),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 18.0,vertical: 12),
-                      child: ListView.separated(
-                        shrinkWrap: true,
-                        physics:const NeverScrollableScrollPhysics(),
-                        itemCount: 2,
-                        separatorBuilder: (context,index)=> MyDivider(),
-                        itemBuilder:(context,index){
-
-                          // cubit.getComments(postId: model.postId);
-
-                          return BuildNotification();
-                        },
+                    Expanded(
+                      child: SingleChildScrollView(
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 18.0,vertical: 12),
+                          child: ListView.separated(
+                            shrinkWrap: true,
+                            physics:const NeverScrollableScrollPhysics(),
+                            itemCount: cubit.notifications.length,
+                            separatorBuilder: (context,index)=> MyDivider(),
+                            itemBuilder:(context,index){
+                              return BuildNotification(id:cubit.notifications[index] ,);
+                            },
+                          ),
+                        ),
                       ),
                     ),
                   ],

@@ -1,11 +1,9 @@
 
 
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:graduation/models/comment_model.dart';
-import 'package:graduation/models/craft_user_model.dart';
 
 import '../bloc/craft_states.dart';
 import '../bloc/home_cubit.dart';
@@ -31,14 +29,11 @@ class BuildComment extends StatelessWidget {
           }
 
           if (state is CraftWriteCommentErrorState) {
-
-            print(state.error.toString());
+            if (kDebugMode) {
+              print(state.error.toString());
+            }
             // CraftHomeCubit().getComments(postId: model.postId);
-
-
           }
-
-
 
         } ,
         builder: (context,state){
@@ -76,7 +71,7 @@ class BuildComment extends StatelessWidget {
                       children: [
                         Text(
                           userModel.name!,
-                          style: TextStyle(
+                          style:const TextStyle(
                             fontSize: 16,
                           ),
                         ),

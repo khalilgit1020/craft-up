@@ -176,13 +176,26 @@ class CraftGetPostCommentsUserErrorState extends CraftStates
 
 
 
+// CraftGetPostCommentsNotificationUserSuccessState
+
+
+class CraftGetPostCommentsNotificationUserSuccessState extends CraftStates
+{}
+
+class CraftGetPostCommentsNotificationUserErrorState extends CraftStates
+{
+  final String error;
+
+  CraftGetPostCommentsNotificationUserErrorState(this.error);
+}
+
+
+
 
 
 
 class CraftCreateUserSuccessState extends CraftStates
-{
-
-}
+{}
 
 class CraftCreateUserErrorState extends CraftStates
 {

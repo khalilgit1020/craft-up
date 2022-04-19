@@ -72,7 +72,9 @@ class SettingsProfileScreen extends StatelessWidget {
                           buildListTileForSettings(Icons.add_to_photos,'كتابة اقتراح',(){
                             Navigator.of(context).push(MaterialPageRoute(builder:(_)=> WriteSuggetion()));
                           }),
-                          buildListTileForSettings(Icons.share,'مشاركة التطبيق ',(){}),
+                          buildListTileForSettings(Icons.share,'مشاركة التطبيق ',(){
+                          //  cubit.getNotifications();
+                          }),
                           buildListTileForSettings(IconBroken.Logout,'تسجيل الخروج',(){
                             cubit.logOut(context);
                           }),

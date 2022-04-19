@@ -19,7 +19,9 @@ class HomeScreen extends StatelessWidget {
     return BlocProvider(
       create: (context) => CraftHomeCubit()..getUserData()
         ..getPosts()
-        ..getMySavedPostsId(),
+        ..getMySavedPostsId()
+        ..getNotifications()
+      ,
       child: BlocConsumer<CraftHomeCubit, CraftStates>(
         listener: (context, state) {
           if (state is CraftSavePostSuccessState) {

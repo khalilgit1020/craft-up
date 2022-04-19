@@ -224,14 +224,60 @@ class CraftHomeCubit extends Cubit<CraftStates> {
   }
 
 
-  List<NotificationModel>? notifications = [];
+  List notifications = [];
+  CraftUserModel? notificationUserModel;
+
+  giveSpecificUserNotification({
+    required String? id,
+  }){
+
+     FirebaseFirestore.instance.collection('users').doc(id).get().then((value) {
+      if (kDebugMode) {
+        print(value.data());
+      }
+      notificationUserModel = CraftUserModel.fromJson(value.data()!);
+      //notifications!.add(CraftUserModel.fromJson(value.data()!));
+      emit(CraftGetPostCommentsNotificationUserSuccessState());
+    }).catchError((error){
+      emit(CraftGetPostCommentsNotificationUserErrorState(error.toString()));
+    });
+  }
+
+  void getNotifications(
+   // required String? postId
+  )async{
+
+    notifications.clear();
+
+    await FirebaseFirestore.instance
+        .collection('posts')
+        .get()
+        .then((value) {
+
+        value.docs.forEach((element) {
+
+          if (FirebaseAuth.instance.currentUser!.uid == element['uId']){
+
+            element.reference.collection('comments').get().then((val) {
+              val.docs.forEach((el) {
+                print('${el['userId']} 3333333333' );
+                notifications.add(el['userId']);
+               // giveSpecificUserNotification(id: el['userId']);
+
+                emit(CraftGetPostCommentsNotificationUserSuccessState());
+
+              });
+            }).catchError((error){});
+
+            //print('${element.data()} 3333333333' );
+          }
 
 
-  void getNotifications({
-    required String? postId
-  })async{
-
-    notifications!.clear();
+           /* if (kDebugMode) {
+            print('${element.data()} 3333333333' );
+          }*/
+        });
+    }).catchError((error){});
 
 
 
