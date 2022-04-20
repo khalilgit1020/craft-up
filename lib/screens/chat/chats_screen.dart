@@ -157,26 +157,26 @@ class ChatScreen extends StatelessWidget {
                       ],
                     ),
                   ),
-                  cubit.users!.isNotEmpty
+                  cubit.users.isNotEmpty
                       ? Expanded(
-                    child: ListView.separated(
-                      physics: const BouncingScrollPhysics(),
-                      itemBuilder: (context, index) =>
-                          buildChatItem(cubit.users![index], context),
-                      separatorBuilder: (context, index) =>
-                      const Divider(),
-                      itemCount: cubit.users!.length,
-                    ),
-                  )
+                          child: ListView.separated(
+                            physics: const BouncingScrollPhysics(),
+                            itemBuilder: (context, index) =>
+                                buildChatItem(cubit.users[index], context),
+                            separatorBuilder: (context, index) =>
+                                const Divider(),
+                            itemCount: cubit.users.length,
+                          ),
+                        )
                       : const Expanded(
-                    child: Center(
-                      child: Text(
-                        'لا يوجد لديك مراسلات حتى الأن...',
-                        style:
-                        TextStyle(color: Colors.grey, fontSize: 18),
-                      ),
-                    ),
-                  ),
+                          child: Center(
+                            child: Text(
+                              'لا يوجد لديك مراسلات حتى الأن...',
+                              style:
+                                  TextStyle(color: Colors.grey, fontSize: 18),
+                            ),
+                          ),
+                        ),
                 ],
               ),
             ),
@@ -213,4 +213,3 @@ class ChatScreen extends StatelessWidget {
     );
   }
 }
-

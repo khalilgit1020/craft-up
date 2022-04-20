@@ -50,11 +50,12 @@ class SavedPostsScreen extends StatelessWidget {
                   Expanded(
 
                     child:cubit.mySavedPostsDetails!.isNotEmpty ?
-                    SingleChildScrollView(
-                        child: RefreshIndicator(
-                          onRefresh: () {
-                            return cubit.getMySavedPostsId();
-                          },
+                    RefreshIndicator(
+                      onRefresh: ()async{
+                        await cubit.getMySavedPostsId();
+                        //192.168.1.101
+                      },
+                      child: SingleChildScrollView(
                           child: Padding(
                             padding: const EdgeInsets.symmetric(horizontal: 16.0,vertical: 20),
                             child: ListView.separated(
@@ -64,13 +65,13 @@ class SavedPostsScreen extends StatelessWidget {
                               separatorBuilder: (context,index)=> MyDivider(),
                               itemBuilder:(context,index){
                                 return BuildPost(
-                                  model: cubit.posts![index],
+                                  model: cubit.mySavedPostsDetails![index],
                                   //userModel: cubit.UserModel!,
                                 );
                               },
                             ),
-                          ),
-                        )
+                          )
+                      ),
                     ):
                      const Center(
                       child: Text(
