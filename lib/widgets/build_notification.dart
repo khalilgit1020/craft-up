@@ -15,17 +15,19 @@ class BuildNotification extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => CraftHomeCubit()..giveSpecificUserNotification(id: id.toString()),
+      create: (context) => CraftHomeCubit()..giveSpecificUserNotification(id: id),
       child: BlocConsumer<CraftHomeCubit,CraftStates>(
-        listener:(context,state){} ,
+        listener:(context,state){
+
+        } ,
         builder: (context,state){
 
           var cubit = CraftHomeCubit.get(context);
 
 
-          var notificationModel = cubit.commentUserModel;
+          var notificationModel = cubit.notificationUserModel;
 
-          return
+          return state is CraftGetPostCommentsNotificationUserSuccessState ?
             Row(
               children: [
                 Expanded(
@@ -66,7 +68,9 @@ class BuildNotification extends StatelessWidget {
                   ),
                 ),
               ],
-            );
+            ) :
+          const Center(child: CircularProgressIndicator.adaptive())
+          ;
 
         },
       ),

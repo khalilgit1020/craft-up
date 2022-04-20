@@ -176,7 +176,14 @@ class CraftGetPostCommentsUserErrorState extends CraftStates
 
 
 
-// CraftGetPostCommentsNotificationUserSuccessState
+// CraftGetPostCommentsNotificationUserSuccessState   CraftGetPostCommentsNotificationUserLoadingState
+
+
+
+
+class CraftGetPostCommentsNotificationUserLoadingState extends CraftStates
+{}
+
 
 
 class CraftGetPostCommentsNotificationUserSuccessState extends CraftStates

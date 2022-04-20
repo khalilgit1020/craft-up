@@ -6,7 +6,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:graduation/models/comment_model.dart';
-import 'package:graduation/models/notification_model.dart';
 import 'package:graduation/screens/bottom_bar/profile_screen.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_staorage;
 import 'package:graduation/screens/bottom_bar/search_screen.dart';
@@ -223,13 +222,18 @@ class CraftHomeCubit extends Cubit<CraftStates> {
 
   giveSpecificUserNotification({
     required String? id,
-  }) {
-    FirebaseFirestore.instance.collection('users').doc(id).get().then((value) {
+  }) async{
+
+    emit(CraftGetPostCommentsNotificationUserLoadingState());
+
+
+    await FirebaseFirestore.instance.collection('users').doc(id).get().then((value) {
       if (kDebugMode) {
         print(value.data());
       }
       notificationUserModel = CraftUserModel.fromJson(value.data()!);
       //notifications!.add(CraftUserModel.fromJson(value.data()!));
+
       emit(CraftGetPostCommentsNotificationUserSuccessState());
     }).catchError((error) {
       emit(CraftGetPostCommentsNotificationUserErrorState(error.toString()));
@@ -241,16 +245,18 @@ class CraftHomeCubit extends Cubit<CraftStates> {
     notifications.clear();
 
     await FirebaseFirestore.instance.collection('posts').get().then((value) {
-      value.docs.forEach((element) {
+      for (var element in value.docs) {
         if (FirebaseAuth.instance.currentUser!.uid == element['uId']) {
           element.reference.collection('comments').get().then((val) {
-            val.docs.forEach((el) {
-              print('${el['userId']} 3333333333');
+            for (var el in val.docs) {
+              if (kDebugMode) {
+                print('${el['userId']} 3333333333');
+              }
               notifications.add(el['userId']);
               // giveSpecificUserNotification(id: el['userId']);
 
               emit(CraftGetPostCommentsNotificationUserSuccessState());
-            });
+            }
           }).catchError((error) {});
 
           //print('${element.data()} 3333333333' );
@@ -259,7 +265,7 @@ class CraftHomeCubit extends Cubit<CraftStates> {
         /* if (kDebugMode) {
             print('${element.data()} 3333333333' );
           }*/
-      });
+      }
     }).catchError((error) {});
   }
 
@@ -602,12 +608,16 @@ class CraftHomeCubit extends Cubit<CraftStates> {
           users.add(CraftUserModel.fromJson(element.data()));
         }
       }
-      print(
+      if (kDebugMode) {
+        print(
           "${users.length}ssssssssssssssssssssssssssssssssssssssssssssssssssssssss");
+      }
 
       emit(CraftGetAllUsersSuccessState());
     }).catchError((error) {
-      print(error.toString());
+      if (kDebugMode) {
+        print(error.toString());
+      }
       emit(CraftGetAllUsersErrorState(error.toString()));
     });
   }
