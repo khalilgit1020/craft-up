@@ -31,9 +31,9 @@ class PostScreen extends StatelessWidget {
               state: ToastState.SUCCESS,
               msg: 'تم نشر تعليقك',
             );
-
             CraftHomeCubit().getMySavedPostsId();
             CraftHomeCubit().getComments(postId: model.postId);
+            //CraftHomeCubit().getNotifications();
           }
           if (state is CraftGetSavedPostsSuccessState) {
 

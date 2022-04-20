@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:graduation/bloc/home_cubit.dart';
@@ -6,6 +7,7 @@ import 'package:graduation/models/craft_user_model.dart';
 import 'package:graduation/screens/chat/chat_details.dart';
 
 import '../bloc/craft_states.dart';
+import '../widgets/user_info_and_works.dart';
 import 'settings_screen/image_zoom_screen.dart';
 
 class OtherUserProfile extends StatelessWidget {
@@ -38,10 +40,10 @@ class OtherUserProfile extends StatelessWidget {
                   ),
 
                   // for information card and gallery works
-                  userInfoAndWorks(size, userModel, context, cubit),
+                  userInfoAndWorks(size, userModel, cubit,context),
 
                   // for user picture
-                  userPicture(size, userModel),
+                  userPicture(context, size, userModel),
 
                   Padding(
                     padding: const EdgeInsets.all(8.0),
@@ -67,7 +69,7 @@ class OtherUserProfile extends StatelessWidget {
     );
   }
 
-  Column userPicture(Size size, CraftUserModel userModel) {
+  Column userPicture(context, Size size, CraftUserModel userModel) {
     return Column(
       children: [
         SizedBox(
@@ -79,9 +81,18 @@ class OtherUserProfile extends StatelessWidget {
               shape: BoxShape.circle,
               border: Border.all(width: 4, color: Colors.blue.shade200),
             ),
-            child: CircleAvatar(
-              radius: 50,
-              backgroundImage: NetworkImage(userModel.image!),
+            child: InkWell(
+              onTap: () {
+                Navigator.of(context).push(MaterialPageRoute(
+                    builder: (_) => ImageZoomScreen(
+                          tag: 'profile 1'.toString(),
+                          url: userModel.image!,
+                        )));
+              },
+              child: CircleAvatar(
+                radius: 50,
+                backgroundImage: NetworkImage(userModel.image!),
+              ),
             ),
           ),
         ),
@@ -90,7 +101,11 @@ class OtherUserProfile extends StatelessWidget {
   }
 
   Column userInfoAndWorks(
-      Size size, CraftUserModel userModel, context, CraftHomeCubit cubit) {
+    Size size,
+    CraftUserModel userModel,
+    CraftHomeCubit cubit,
+    BuildContext  context,
+  ) {
     return Column(
       children: [
         SizedBox(
@@ -115,39 +130,39 @@ class OtherUserProfile extends StatelessWidget {
                   child: Column(
                     children: [
                       SizedBox(
-                        height: size.height / 15,
+                        height: size.height / 20,
                       ),
                       textUser(userModel.name, 20),
-                      textUser(
-                          userModel.craftType == ''
-                              ? '${userModel.address}'
-                              : '${userModel.craftType} | ${userModel.address}',
-                          14),
-                      textUser(userModel.phone, 14),
+                      if (userModel.craftType != '')
+                        textUser(userModel.craftType, 14),
+                      textUser('${userModel.address} | ${userModel.phone}', 14),
                       textUser(userModel.email, 14),
                       const SizedBox(
                         height: 10,
                       ),
-                      Container(
-                        padding: const EdgeInsets.symmetric(
-                            vertical: 8, horizontal: 22),
-                        decoration: BoxDecoration(
-                          color: mainColor,
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                        child: InkWell(
-                          onTap: () {
-                            Navigator.of(context).push(MaterialPageRoute(
-                                builder: (_) => ChatDetailsScreen(
-                                      userModel: userModel,
-                                    )));
-                          },
-                          child: const Text(
-                            'مراسلة',
-                            style: TextStyle(
-                              fontSize: 16,
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
+
+                      InkWell(
+                        onTap: (){
+
+                           //CraftHomeCubit.get(context).getMessage(receiverId: userModel.uId!);
+                          Navigator.of(context).push(MaterialPageRoute(
+                              builder: (context) => ChatDetailsScreen(userModel: userModel)));
+                        },
+                        child: Container(
+                          width: size.width / 4.5,
+                          height: size.height / 25,
+                          decoration: BoxDecoration(
+                            color: mainColor,
+                            borderRadius: BorderRadius.circular(16),
+                          ),
+                          child:const Center(
+                            child: Text(
+                              'مراسلة',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold
+                              ),
                             ),
                           ),
                         ),
@@ -164,57 +179,55 @@ class OtherUserProfile extends StatelessWidget {
         ),
         userModel.userType!
             ? Expanded(
-                //cubit.getMyWorkImages();
-
+                child: RefreshIndicator(
+                onRefresh: () {
+                  return cubit.getOtherWorkImages(id: userModel.uId);
+                },
                 child: cubit.otherWorkGallery.isNotEmpty
-                    ? RefreshIndicator(
-                        onRefresh: () {
-                          return cubit.getOtherWorkImages(id: userModel.uId);
-                        },
-                        child: GridView.builder(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 20, vertical: 2),
-                          gridDelegate:
-                              const SliverGridDelegateWithMaxCrossAxisExtent(
-                            maxCrossAxisExtent: 200,
-                            childAspectRatio: 3 / 3,
-                            crossAxisSpacing: 18,
-                            mainAxisSpacing: 14,
-                          ),
-                          itemCount: cubit.otherWorkGallery.length,
-                          itemBuilder: (context, index) {
-                            var url = cubit.otherWorkGallery[index]['image'];
-
-                            return InkWell(
-                              onTap: () {
-                                Navigator.of(context).push(MaterialPageRoute(
-                                    builder: (_) => ImageZoomScreen(
-                                          tag: index.toString(),
-                                          url: url,
-                                        )));
-                              },
-                              child: Hero(
-                                tag: index.toString(),
-                                child: Image.network(
-                                  '$url',
-                                  fit: BoxFit.fill,
-                                ),
-                              ),
-                            );
-                          },
+                    ? GridView.builder(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 20, vertical: 2),
+                        gridDelegate:
+                            const SliverGridDelegateWithMaxCrossAxisExtent(
+                          maxCrossAxisExtent: 200,
+                          childAspectRatio: 3 / 3,
+                          crossAxisSpacing: 18,
+                          mainAxisSpacing: 14,
                         ),
+                        itemCount: cubit.otherWorkGallery.length,
+                        itemBuilder: (context, index) {
+                          var url = cubit.otherWorkGallery[index]['image'];
+
+                          return InkWell(
+                            onTap: () {
+                              Navigator.of(context).push(MaterialPageRoute(
+                                  builder: (_) => ImageZoomScreen(
+                                        tag: index.toString(),
+                                        url: url,
+                                      )));
+                            },
+                            child: Hero(
+                              tag: index.toString(),
+                              child: Image.network(
+                                '$url',
+                                fit: BoxFit.fill,
+                              ),
+                            ),
+                          );
+                        },
                       )
                     : Center(
                         child: Text(
-                          'لا يوجد لديه صور في معرضك الخاص',
+                          'لا يوجد لديه صور في معرضه الخاص بعد',
                           style: TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                              color: mainColor),
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                            color: mainColor,
+                          ),
                           textAlign: TextAlign.center,
                         ),
                       ),
-              )
+              ))
             : Expanded(
                 child: Center(
                   child: Stack(
@@ -232,15 +245,6 @@ class OtherUserProfile extends StatelessWidget {
                 ),
               ),
       ],
-    );
-  }
-
-  Center textUser(userModel, double size) {
-    return Center(
-      child: Text(
-        userModel,
-        style: TextStyle(fontSize: size, fontWeight: FontWeight.bold),
-      ),
     );
   }
 }

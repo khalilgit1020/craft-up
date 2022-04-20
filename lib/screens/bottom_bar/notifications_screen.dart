@@ -60,17 +60,22 @@ class NotificationsScreen extends StatelessWidget {
 
                     const SizedBox(height: 12,),
                     Expanded(
-                      child: SingleChildScrollView(
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 18.0,vertical: 12),
-                          child: ListView.separated(
-                            shrinkWrap: true,
-                            physics:const NeverScrollableScrollPhysics(),
-                            itemCount: cubit.notifications.length,
-                            separatorBuilder: (context,index)=> MyDivider(),
-                            itemBuilder:(context,index){
-                              return BuildNotification(id:cubit.notifications[index] ,);
-                            },
+                      child: RefreshIndicator(
+                          onRefresh: () {
+                            return cubit.getNotifications();
+                          },
+                        child: SingleChildScrollView(
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 18.0,vertical: 12),
+                            child: ListView.separated(
+                              shrinkWrap: true,
+                              physics:const NeverScrollableScrollPhysics(),
+                              itemCount: cubit.notifications.length,
+                              separatorBuilder: (context,index)=> MyDivider(),
+                              itemBuilder:(context,index){
+                                return BuildNotification(id:cubit.notifications[index] ,);
+                              },
+                            ),
                           ),
                         ),
                       ),

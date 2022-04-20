@@ -240,7 +240,7 @@ class CraftHomeCubit extends Cubit<CraftStates> {
     });
   }
 
-  void getNotifications(// required String? postId
+  Future <void> getNotifications(// required String? postId
       ) async {
     notifications.clear();
 
@@ -256,6 +256,9 @@ class CraftHomeCubit extends Cubit<CraftStates> {
               // giveSpecificUserNotification(id: el['userId']);
 
               emit(CraftGetPostCommentsNotificationUserSuccessState());
+            }
+            if (kDebugMode) {
+              print(notifications.length.toString());
             }
           }).catchError((error) {});
 
@@ -591,7 +594,7 @@ class CraftHomeCubit extends Cubit<CraftStates> {
         .update(model.toMap())
         .then((value) {
       getUserData();
-      //  emit(CraftUserUpdateSuccessState());
+        emit(CraftUserUpdateSuccessState());
     }).catchError((error) {
       emit(CraftUserUpdateErrorState());
     });
@@ -659,10 +662,10 @@ class CraftHomeCubit extends Cubit<CraftStates> {
     emit(CraftUnableMessageButtonState());
   }
 
-  void getMessage({
+   void getMessage({
     required String receiverId,
   }) {
-    FirebaseFirestore.instance
+     FirebaseFirestore.instance
         .collection('users')
         .doc(UserModel!.uId)
         .collection('chats')
