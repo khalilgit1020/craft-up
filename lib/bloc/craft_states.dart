@@ -52,6 +52,12 @@ class ShopRegisterChangePasswordVisibilityState extends CraftStates {}
 
 
 
+
+class CraftChangeIsCrafterState extends CraftStates
+{}
+
+
+
 class CraftGetUserLoadingState extends CraftStates
 {}
 

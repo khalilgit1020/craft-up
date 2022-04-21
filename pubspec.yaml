@@ -40,6 +40,7 @@ dependencies:
   fluttertoast:
   cached_network_image:
   smooth_page_indicator:
+  animated_bottom_navigation_bar:
   bloc:
   flutter_bloc:
   google_maps_flutter:

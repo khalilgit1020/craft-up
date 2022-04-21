@@ -28,7 +28,7 @@ class CraftHomeCubit extends Cubit<CraftStates> {
   static CraftHomeCubit get(context) => BlocProvider.of(context);
 
   CraftUserModel? UserModel;
-  bool isCrafter = true;
+  bool isCrafter = true ;
 
   // FirebaseAuth.instance.currentUser!.uid
   void getUserData() {
@@ -438,7 +438,7 @@ class CraftHomeCubit extends Cubit<CraftStates> {
 
     FirebaseFirestore.instance
         .collection('users')
-        .doc(FirebaseAuth.instance.currentUser!.uid)
+        .doc(uId)
         .collection('savedPosts')
         .get()
         .then((value) {

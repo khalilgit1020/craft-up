@@ -1,9 +1,30 @@
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:graduation/constants.dart';
 import '../models/boarding_model.dart';
 import 'auth/login_screen.dart';
 import '../helpers/cache_helper.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
+
+
+
+// to get latitude and longitude and store it in firebase
+
+late Position cPosition;
+LocationPermission? locationPermission;
+checkIfLocationPermissionAllowedd() async {
+  locationPermission = await Geolocator.requestPermission();
+
+  if (locationPermission == LocationPermission.denied) {
+    locationPermission = await Geolocator.requestPermission();
+  }
+}
+getPositionn()async{
+
+  cPosition = await Geolocator.getCurrentPosition(
+      desiredAccuracy: LocationAccuracy.high);
+}
+
 
 
 class OnBoardingScreen extends StatefulWidget {
@@ -46,6 +67,16 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
       }
     });
   }
+
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    checkIfLocationPermissionAllowedd();
+    getPositionn();
+  }
+
 
   @override
   Widget build(BuildContext context) {

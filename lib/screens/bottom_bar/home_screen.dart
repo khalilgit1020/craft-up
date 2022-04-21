@@ -1,3 +1,4 @@
+import 'package:animated_bottom_navigation_bar/animated_bottom_navigation_bar.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -24,6 +25,9 @@ class HomeScreen extends StatelessWidget {
       ,
       child: BlocConsumer<CraftHomeCubit, CraftStates>(
         listener: (context, state) {
+
+          // CraftSavePostSuccessState
+          /*
           if (state is CraftSavePostSuccessState) {
             print('تم الحفظ بنجاح');
             showToast(
@@ -31,7 +35,7 @@ class HomeScreen extends StatelessWidget {
               msg: 'تم حفظ المنشور بنجاح',
             );
             CraftHomeCubit().getMySavedPostsId();
-          }
+          }*/
         },
         builder: (context, state) {
           var cubit = CraftHomeCubit.get(context);
@@ -54,11 +58,39 @@ class HomeScreen extends StatelessWidget {
                         backgroundColor: mainColor,
                         child: const Icon(Icons.add),
                       )
-                    :Container(),
+                    :Container(
+                  height: 1,
+                  width: 1,
+                  decoration:const BoxDecoration(
+                    shape: BoxShape.circle
+                  ),
+                ),
 
-                floatingActionButtonLocation:
-                    FloatingActionButtonLocation.centerDocked,
-                bottomNavigationBar: BottomNavigationBar(
+                  floatingActionButtonLocation:
+                  !cubit.isCrafter ?
+                  FloatingActionButtonLocation.centerDocked:
+                    FloatingActionButtonLocation.endTop,
+                bottomNavigationBar:AnimatedBottomNavigationBar(
+                  icons: [
+                    IconBroken.Home,
+                    !cubit.isCrafter ?
+                    IconBroken.Notification:Icons.bookmark_outline_sharp,
+                    IconBroken.Search,
+                    IconBroken.Profile,
+                  ],
+                  activeIndex: cubit.currentIndex,
+                  gapLocation: !cubit.isCrafter ? GapLocation.center : GapLocation.none,
+                  activeColor: mainColor,
+                  notchSmoothness: NotchSmoothness.defaultEdge,
+                  leftCornerRadius: 0,
+                  rightCornerRadius: 0,
+                  onTap: (index) {
+                    cubit.changeBottomNv(index);
+                  },
+                  //other params
+                )
+
+                /* BottomNavigationBar(
                   currentIndex: cubit.currentIndex,
                   type: BottomNavigationBarType.fixed,
                   selectedItemColor: mainColor,
@@ -91,7 +123,7 @@ class HomeScreen extends StatelessWidget {
                       label: '',
                     ),
                   ],
-                ),
+                )*/,
               ),
             ),
           ) : const Scaffold(body: Center(child: CircularProgressIndicator(),),);

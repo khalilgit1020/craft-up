@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:graduation/constants.dart';
@@ -24,11 +25,15 @@ class FeedScreen extends StatelessWidget {
       listener:(context, state){
 
       if (state is CraftSavePostSuccessState) {
-        print('تم الحفظ بنجاح');
         showToast(
           state: ToastState.SUCCESS,
           msg: 'تم حفظ المنشور بنجاح',
         );
+
+        if (kDebugMode) {
+          print('تم الحفظ بنجاح');
+        }
+
         CraftHomeCubit().getMySavedPostsId();
       }
 
@@ -39,7 +44,9 @@ class FeedScreen extends StatelessWidget {
 
       if (state is CraftGetAllUsersErrorState) {
 
-        print('${state.error.toString()} +++++++++');
+        if (kDebugMode) {
+          print('${state.error.toString()} +++++++++');
+        }
       }
 
       }  ,
