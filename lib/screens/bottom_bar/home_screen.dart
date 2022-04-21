@@ -17,118 +17,111 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => CraftHomeCubit()..getUserData()
-        ..getPosts()
-        ..getMySavedPostsId()
-        ..getNotifications()
-      ,
-      child: BlocConsumer<CraftHomeCubit, CraftStates>(
-        listener: (context, state) {
+    return BlocConsumer<CraftHomeCubit, CraftStates>(
+      listener: (context, state) {
 
-          // CraftSavePostSuccessState
-          /*
-          if (state is CraftSavePostSuccessState) {
-            print('تم الحفظ بنجاح');
-            showToast(
-              state: ToastState.SUCCESS,
-              msg: 'تم حفظ المنشور بنجاح',
-            );
-            CraftHomeCubit().getMySavedPostsId();
-          }*/
-        },
-        builder: (context, state) {
-          var cubit = CraftHomeCubit.get(context);
+        // CraftSavePostSuccessState
+        /*
+        if (state is CraftSavePostSuccessState) {
+          print('تم الحفظ بنجاح');
+          showToast(
+            state: ToastState.SUCCESS,
+            msg: 'تم حفظ المنشور بنجاح',
+          );
+          CraftHomeCubit().getMySavedPostsId();
+        }*/
+      },
+      builder: (context, state) {
+        var cubit = CraftHomeCubit.get(context);
 
-          return cubit.posts != null && cubit.UserModel != null ? SafeArea(
-            child: Directionality(
-              textDirection: TextDirection.rtl,
-              child: Scaffold(
-                backgroundColor: Colors.white,
-                body: cubit.isCrafter
-                    ? cubit.crafterScreens[cubit.currentIndex]
-                    : cubit.userScreens[cubit.currentIndex],
-                floatingActionButton: !cubit.isCrafter
-                    ?
-                FloatingActionButton(
-                        onPressed: () {
-                          Navigator.of(context).push(MaterialPageRoute(
-                              builder: (_) => NewPostScreen()));
-                        },
-                        backgroundColor: mainColor,
-                        child: const Icon(Icons.add),
-                      )
-                    :Container(
-                  height: 1,
-                  width: 1,
-                  decoration:const BoxDecoration(
-                    shape: BoxShape.circle
-                  ),
+        return cubit.posts != null && cubit.UserModel != null && cubit.users.isNotEmpty ? SafeArea(
+          child: Directionality(
+            textDirection: TextDirection.rtl,
+            child: Scaffold(
+              backgroundColor: Colors.white,
+              body: cubit.isCrafter
+                  ? cubit.crafterScreens[cubit.currentIndex]
+                  : cubit.userScreens[cubit.currentIndex],
+              floatingActionButton: !cubit.isCrafter
+                  ?
+              FloatingActionButton(
+                      onPressed: () {
+                        Navigator.of(context).push(MaterialPageRoute(
+                            builder: (_) => NewPostScreen()));
+                      },
+                      backgroundColor: mainColor,
+                      child: const Icon(Icons.add),
+                    )
+                  :Container(
+                height: 1,
+                width: 1,
+                decoration:const BoxDecoration(
+                  shape: BoxShape.circle
                 ),
-
-                  floatingActionButtonLocation:
-                  !cubit.isCrafter ?
-                  FloatingActionButtonLocation.centerDocked:
-                    FloatingActionButtonLocation.endTop,
-                bottomNavigationBar:AnimatedBottomNavigationBar(
-                  icons: [
-                    IconBroken.Home,
-                    !cubit.isCrafter ?
-                    IconBroken.Notification:Icons.bookmark_outline_sharp,
-                    IconBroken.Search,
-                    IconBroken.Profile,
-                  ],
-                  activeIndex: cubit.currentIndex,
-                  gapLocation: !cubit.isCrafter ? GapLocation.center : GapLocation.none,
-                  activeColor: mainColor,
-                  notchSmoothness: NotchSmoothness.defaultEdge,
-                  leftCornerRadius: 0,
-                  rightCornerRadius: 0,
-                  onTap: (index) {
-                    cubit.changeBottomNv(index);
-                  },
-                  //other params
-                )
-
-                /* BottomNavigationBar(
-                  currentIndex: cubit.currentIndex,
-                  type: BottomNavigationBarType.fixed,
-                  selectedItemColor: mainColor,
-                  unselectedItemColor: Colors.grey,
-                  backgroundColor: Colors.white,
-                  elevation: 20,
-                  onTap: (index) {
-                    cubit.changeBottomNv(index);
-                  },
-                  items: [
-                    const BottomNavigationBarItem(
-                      icon: Icon(IconBroken.Home),
-                      label: '',
-                    ),
-                    !cubit.isCrafter
-                        ? const BottomNavigationBarItem(
-                            icon: Icon(IconBroken.Notification),
-                            label: '',
-                          )
-                        : const BottomNavigationBarItem(
-                            icon: Icon(Icons.save),
-                            label: '',
-                          ),
-                    const BottomNavigationBarItem(
-                      icon: Icon(IconBroken.Search),
-                      label: '',
-                    ),
-                    const BottomNavigationBarItem(
-                      icon: Icon(IconBroken.Profile),
-                      label: '',
-                    ),
-                  ],
-                )*/,
               ),
+
+                floatingActionButtonLocation:
+                !cubit.isCrafter ?
+                FloatingActionButtonLocation.centerDocked:
+                  FloatingActionButtonLocation.endTop,
+              bottomNavigationBar:AnimatedBottomNavigationBar(
+                icons: [
+                  IconBroken.Home,
+                  !cubit.isCrafter ?
+                  IconBroken.Notification:Icons.bookmark_outline_sharp,
+                  IconBroken.Search,
+                  IconBroken.Profile,
+                ],
+                activeIndex: cubit.currentIndex,
+                gapLocation: !cubit.isCrafter ? GapLocation.center : GapLocation.none,
+                activeColor: mainColor,
+                notchSmoothness: NotchSmoothness.defaultEdge,
+                leftCornerRadius: 0,
+                rightCornerRadius: 0,
+                onTap: (index) {
+                  cubit.changeBottomNv(index);
+                },
+                //other params
+              )
+
+              /* BottomNavigationBar(
+                currentIndex: cubit.currentIndex,
+                type: BottomNavigationBarType.fixed,
+                selectedItemColor: mainColor,
+                unselectedItemColor: Colors.grey,
+                backgroundColor: Colors.white,
+                elevation: 20,
+                onTap: (index) {
+                  cubit.changeBottomNv(index);
+                },
+                items: [
+                  const BottomNavigationBarItem(
+                    icon: Icon(IconBroken.Home),
+                    label: '',
+                  ),
+                  !cubit.isCrafter
+                      ? const BottomNavigationBarItem(
+                          icon: Icon(IconBroken.Notification),
+                          label: '',
+                        )
+                      : const BottomNavigationBarItem(
+                          icon: Icon(Icons.save),
+                          label: '',
+                        ),
+                  const BottomNavigationBarItem(
+                    icon: Icon(IconBroken.Search),
+                    label: '',
+                  ),
+                  const BottomNavigationBarItem(
+                    icon: Icon(IconBroken.Profile),
+                    label: '',
+                  ),
+                ],
+              )*/,
             ),
-          ) : const Scaffold(body: Center(child: CircularProgressIndicator(),),);
-        },
-      ),
+          ),
+        ) : const Scaffold(body: Center(child: CircularProgressIndicator(),),);
+      },
     );
   }
 }

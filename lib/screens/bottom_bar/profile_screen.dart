@@ -24,7 +24,6 @@ class ProfileScreen extends StatelessWidget {
 
     return BlocConsumer<CraftHomeCubit, CraftStates>(
       listener: (context, state) {
-        CraftHomeCubit().getUserData();
         //CraftHomeCubit().getMyWorkImages();
       },
       builder: (context, state) {

@@ -418,3 +418,5 @@ class CraftResetPasswordErrorState extends CraftStates{
 
 class ConvertUserTypeSuccessState extends CraftStates{}
 
+
+
