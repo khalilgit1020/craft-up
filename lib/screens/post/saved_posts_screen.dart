@@ -6,7 +6,6 @@ import '../../bloc/craft_states.dart';
 import '../../bloc/home_cubit.dart';
 import '../../constants.dart';
 import '../../models/post_model.dart';
-import '../../widgets/build_post.dart';
 import '../../widgets/my_divider.dart';
 import '../other_user_profile.dart';
 
@@ -26,54 +25,57 @@ class SavedPostsScreen extends StatelessWidget {
           child: Directionality(
             textDirection: TextDirection.rtl,
             child: Scaffold(
-                body: Column(
-              children: [
-                Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
-                  color: mainColor,
-                  width: size.width,
-                  height: size.width / 4,
-                  child: const Center(
-                    child: Text(
-                      'المنشورات المحفوظة',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 22,
+              body: Column(
+                children: [
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                    color: mainColor,
+                    width: size.width,
+                    height: size.width / 4,
+                    child: const Center(
+                      child: Text(
+                        'المنشورات المحفوظة',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 22,
+                        ),
+                        // textAlign: TextAlign.center,
                       ),
-                      // textAlign: TextAlign.center,
                     ),
                   ),
-                ),
-                Expanded(
-                  child: cubit.mySavedPostsDetails!.isNotEmpty
-                      ? SingleChildScrollView(
-                          child: Padding(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 16.0, vertical: 20),
-                          child: ListView.separated(
-                            shrinkWrap: true,
-                            physics: const NeverScrollableScrollPhysics(),
-                            itemCount: cubit.mySavedPostsDetails!.length,
-                            separatorBuilder: (context, index) => MyDivider(),
-                            itemBuilder: (context, index) {
-                              return buildPost(
-                                context: context,
-                                model: cubit.mySavedPostsDetails![index],
-                                cubit: cubit,
-                                //userModel: cubit.UserModel!,
-                              );
-                            },
+                  Expanded(
+                    child: cubit.mySavedPostsDetails!.isNotEmpty
+                        ? SingleChildScrollView(
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 16.0, vertical: 20),
+                              child: ListView.separated(
+                                shrinkWrap: true,
+                                physics: const NeverScrollableScrollPhysics(),
+                                itemCount: cubit.mySavedPostsDetails!.length,
+                                separatorBuilder: (context, index) =>
+                                    MyDivider(),
+                                itemBuilder: (context, index) {
+                                  return buildPost(
+                                    context: context,
+                                    model: cubit.mySavedPostsDetails![index],
+                                    cubit: cubit,
+                                    //userModel: cubit.UserModel!,
+                                  );
+                                },
+                              ),
+                            ),
+                          )
+                        : const Center(
+                            child: Text(
+                              'لا يوجد لديك منشورات محفوظة',
+                            ),
                           ),
-                        ))
-                      : const Center(
-                          child: Text(
-                            'لا يوجد لديك منشورات محفوظة',
-                          ),
-                        ),
-                )
-              ],
-            )),
+                  ),
+                ],
+              ),
+            ),
           ),
         );
       },
@@ -101,9 +103,7 @@ class SavedPostsScreen extends StatelessWidget {
             InkWell(
               onTap: () {
                 Navigator.of(context).push(MaterialPageRoute(
-                    builder: (_) => OtherUserProfile(
-                          userModel: userModel,
-                        )));
+                    builder: (_) => OtherUserProfile(userModel: userModel)));
               },
               child: CircleAvatar(
                 radius: 40,
@@ -131,10 +131,8 @@ class SavedPostsScreen extends StatelessWidget {
         // post text
         InkWell(
           onTap: () {
-            Navigator.of(context).push(MaterialPageRoute(
-                builder: (_) => PostScreen(
-                      model: model,
-                    )));
+            Navigator.of(context).push(
+                MaterialPageRoute(builder: (_) => PostScreen(model: model)));
           },
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4),
@@ -161,9 +159,7 @@ class SavedPostsScreen extends StatelessWidget {
                 child: InkWell(
                   onTap: () {
                     Navigator.of(context).push(MaterialPageRoute(
-                        builder: (_) => PostScreen(
-                              model: model,
-                            )));
+                        builder: (_) => PostScreen(model: model)));
                   },
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(8),
@@ -223,8 +219,6 @@ class SavedPostsScreen extends StatelessWidget {
                   flex: 1,
                   child: IconButton(
                     onPressed: () {
-                      print(
-                          '${cubit.mySavedPostsDetails!.length} | ${cubit.mySavedPostsId!.length}');
                       cubit.savePost(postId: model.postId);
                     },
                     icon: cubit.mySavedPostsId!

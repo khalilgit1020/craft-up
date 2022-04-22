@@ -103,11 +103,11 @@ class EditProfileScreen extends StatelessWidget {
                                     cubit.getProfileImage();
                                   },
                                   child: const Text(
-                                    'تغيير الصورة الشخصيية',
+                                    'تغيير الصورة الشخصيَّة',
                                     style: TextStyle(
                                       fontSize: 18,
                                       fontWeight: FontWeight.bold,
-                                      color: Colors.black,
+                                      color: Colors.blue,
                                     ),
                                   ),
                                 ),
@@ -365,7 +365,6 @@ class EditProfileScreen extends StatelessWidget {
                                             craftType:
                                             craftTypeController.text == ''? userModel.craftType : craftTypeController.text,
                                           );
-
                                         },
                                         child: const Text(
                                           'حفظ التغييرات',
@@ -393,28 +392,30 @@ class EditProfileScreen extends StatelessWidget {
       },
     );
   }
-}
 
-Column userPicture(Size size, CraftUserModel userModel,profileImage) {
-  return Column(
-    children: [
-      SizedBox(
-        height: size.height / 30,
-      ),
-      Center(
-        child: Container(
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            border: Border.all(width: 4, color: Colors.blue.shade200),
-          ),
-          child: CircleAvatar(
-            radius: 50,
-            backgroundImage: profileImage == null
-                ? NetworkImage('${userModel.image}'):
-            FileImage(profileImage) as ImageProvider,
+  Column userPicture(Size size, CraftUserModel userModel,profileImage) {
+    return Column(
+      children: [
+        SizedBox(
+          height: size.height / 30,
+        ),
+        Center(
+          child: Container(
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              border: Border.all(width: 4, color: Colors.blue.shade200),
+            ),
+            child: CircleAvatar(
+              radius: 50,
+              backgroundImage: profileImage == null
+                  ? NetworkImage('${userModel.image}'):
+              FileImage(profileImage) as ImageProvider,
+            ),
           ),
         ),
-      ),
-    ],
-  );
+      ],
+    );
+  }
 }
+
+

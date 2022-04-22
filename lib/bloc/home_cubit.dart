@@ -111,10 +111,8 @@ class CraftHomeCubit extends Cubit<CraftStates> {
         location.isNotEmpty &&
         salary.isNotEmpty) {
       isEmpty = false;
-      emit(ChangeIsEmptyBoolState());
     } else {
       isEmpty = true;
-      emit(ChangeIsEmptyBoolState());
     }
   }
 
@@ -144,6 +142,8 @@ class CraftHomeCubit extends Cubit<CraftStates> {
         .then((value) {
       value.update({
         'postId': value.id,
+      }).then((value){
+        getPosts();
       });
       emit(CraftCreatePostSuccessState());
     }).catchError((error) {
@@ -187,24 +187,22 @@ class CraftHomeCubit extends Cubit<CraftStates> {
     });
   }
 
-  void getPosts() async {
+  void getPosts() {
     posts!.clear();
 
-    await FirebaseFirestore.instance.collection('posts').get().then((value) {
-      for (var element in value.docs) {
+    FirebaseFirestore.instance.collection('posts').orderBy('dateTime').snapshots().listen((event) {
+      for (var element in event.docs) {
         postId!.add(element.id);
         posts!.add(PostModel.fromJson(element.data()));
       }
       emit(CraftGetPostSuccessState());
-    }).catchError((error) {
-      emit(CraftGetPostErrorState(error.toString()));
     });
   }
 
-  void getComments({required String? postId}) async {
+  Future<void> getComments({required String? postId}) async {
     comments!.clear();
 
-    await FirebaseFirestore.instance
+    return FirebaseFirestore.instance
         .collection('posts')
         .doc(postId)
         .collection('comments')
@@ -411,7 +409,7 @@ class CraftHomeCubit extends Cubit<CraftStates> {
     emit(CraftGetOtherWorkImageLoadingState());
 
     otherWorkGallery.clear();
-    await FirebaseFirestore.instance
+    FirebaseFirestore.instance
         .collection('users')
         .doc(id)
         .collection('workGallery')
@@ -621,6 +619,7 @@ class CraftHomeCubit extends Cubit<CraftStates> {
   }
 
   List<CraftUserModel> users = [];
+  Map<String, CraftUserModel> specialUser = {};
 
   void getUsers() {
     users = [];
@@ -629,6 +628,8 @@ class CraftHomeCubit extends Cubit<CraftStates> {
       for (var element in value.docs) {
         if (element.data()['uId'] != UserModel!.uId) {
           users.add(CraftUserModel.fromJson(element.data()));
+          specialUser.addAll(
+              {element.data()['uId']: CraftUserModel.fromJson(element.data())});
         }
       }
       if (kDebugMode) {

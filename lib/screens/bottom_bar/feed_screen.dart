@@ -124,6 +124,7 @@ class FeedScreen extends StatelessWidget {
                                       height: 20,
                                     ),
                                     ListView.separated(
+                                      reverse: true,
                                       shrinkWrap: true,
                                       physics:
                                           const NeverScrollableScrollPhysics(),
@@ -160,8 +161,6 @@ class FeedScreen extends StatelessWidget {
     required PostModel model,
     required CraftHomeCubit cubit,
   }) {
-    var userModel =
-        cubit.users.firstWhere((element) => element.uId == model.uId);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -175,10 +174,17 @@ class FeedScreen extends StatelessWidget {
           children: [
             InkWell(
               onTap: () {
-                Navigator.of(context).push(MaterialPageRoute(
-                    builder: (_) => OtherUserProfile(
-                          userModel: userModel,
-                        )));
+                cubit.getOtherWorkImages(id: model.uId).then((value) {
+                  if(model.uId == cubit.UserModel!.uId){
+                    cubit.changeBottomNv(3);
+                  }else{
+                    Navigator.of(context).push(MaterialPageRoute(
+                        builder: (_) => OtherUserProfile(userModel: cubit.specialUser[model.uId]!)));
+                  }
+
+                }).catchError((error) {
+                  print(error.toString());
+                });
               },
               child: CircleAvatar(
                 radius: 40,
@@ -206,10 +212,15 @@ class FeedScreen extends StatelessWidget {
         // post text
         InkWell(
           onTap: () {
-            Navigator.of(context).push(MaterialPageRoute(
-                builder: (_) => PostScreen(
-                      model: model,
-                    )));
+            cubit.getComments(postId: model.postId).then((value){
+              Navigator.of(context).push(MaterialPageRoute(
+                  builder: (_) => PostScreen(
+                    model: model,
+                  )));
+            }).catchError((error){
+              print(error.toString());
+            });
+
           },
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4),

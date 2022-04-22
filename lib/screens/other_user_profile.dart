@@ -19,53 +19,48 @@ class OtherUserProfile extends StatelessWidget {
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
 
-    return BlocProvider(
-      create: (context) =>
-          CraftHomeCubit()..getOtherWorkImages(id: userModel.uId),
-      child: BlocConsumer<CraftHomeCubit, CraftStates>(
-        listener: (context, state) {
-          CraftHomeCubit().getOtherWorkImages(id: userModel.uId);
-        },
-        builder: (context, state) {
-          var cubit = CraftHomeCubit.get(context);
+    return BlocConsumer<CraftHomeCubit, CraftStates>(
+      listener: (context, state) {
+      },
+      builder: (context, state) {
+        var cubit = CraftHomeCubit.get(context);
 
-          return SafeArea(
-            child: Scaffold(
-              body: Stack(
-                children: [
-                  // for background color
-                  Container(
-                    color: mainColor,
-                    height: size.height / 5.5,
-                  ),
+        return SafeArea(
+          child: Scaffold(
+            body: Stack(
+              children: [
+                // for background color
+                Container(
+                  color: mainColor,
+                  height: size.height / 5.5,
+                ),
 
-                  // for information card and gallery works
-                  userInfoAndWorks(size, userModel, cubit,context),
+                // for information card and gallery works
+                userInfoAndWorks(size, userModel, cubit,context),
 
-                  // for user picture
-                  userPicture(context, size, userModel),
+                // for user picture
+                userPicture(context, size, userModel),
 
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Align(
-                      alignment: Alignment.topLeft,
-                      child: IconButton(
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                        },
-                        icon: const Icon(
-                          Icons.arrow_back_ios,
-                          color: Colors.white,
-                        ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Align(
+                    alignment: Alignment.topLeft,
+                    child: IconButton(
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                      icon: const Icon(
+                        Icons.arrow_back_ios,
+                        color: Colors.white,
                       ),
                     ),
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
-          );
-        },
-      ),
+          ),
+        );
+      },
     );
   }
 
