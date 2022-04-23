@@ -3,12 +3,14 @@ class CommentModel{
   String? userId;
   String? date;
   String? commentId;
+  String? postId;
 
   CommentModel({
     this.comment,
     this.userId,
     this.date,
     this.commentId,
+    this.postId,
   });
 
 
@@ -17,6 +19,7 @@ class CommentModel{
     userId = json['userId']!;
     date = json['date']!;
     commentId = json['commentId']!;
+    postId = json['postId']!;
   }
 
 
@@ -26,6 +29,7 @@ class CommentModel{
       'userId':userId,
       'date':date,
       'commentId':commentId,
+      'postId':postId,
     };
   }
 

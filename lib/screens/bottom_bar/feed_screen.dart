@@ -148,9 +148,11 @@ class FeedScreen extends StatelessWidget {
                               ),
                             ),
                           )
-                        : const Center(
-                            child: CircularProgressIndicator.adaptive(),
-                          )
+                        :const Expanded(
+                          child:  Center(
+                              child: CircularProgressIndicator.adaptive(),
+                            ),
+                        )
                   ],
                 )),
           ),
@@ -179,7 +181,8 @@ class FeedScreen extends StatelessWidget {
                 cubit.getOtherWorkImages(id: model.uId).then((value) {
                   if (model.uId == cubit.UserModel!.uId) {
                     cubit.changeBottomNv(3);
-                  } else {
+                  }
+                  else {
                     Navigator.of(context).push(MaterialPageRoute(
                         builder: (_) => OtherUserProfile(
                             userModel: cubit.specialUser![model.uId]!)));
@@ -243,6 +246,8 @@ class FeedScreen extends StatelessWidget {
                 flex: 5,
                 child: InkWell(
                   onTap: () {
+                    cubit.getCommentModel(userId: model.uId);
+                    cubit.getComments(postId: model.postId);
                     Navigator.of(context).push(MaterialPageRoute(
                         builder: (_) => PostScreen(
                               model: model,

@@ -73,7 +73,10 @@ class NotificationsScreen extends StatelessWidget {
                               itemCount: cubit.notifications.length,
                               separatorBuilder: (context,index)=> MyDivider(),
                               itemBuilder:(context,index){
-                                return BuildNotification(id:cubit.notifications[index] ,);
+                                return BuildNotification(
+                                  userId: cubit.notifications[index]['userId'],
+                                  postId: cubit.notifications[index]['postId'],
+                                );
                               },
                             ),
                           ),

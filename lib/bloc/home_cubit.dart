@@ -168,6 +168,7 @@ class CraftHomeCubit extends Cubit<CraftStates> {
   void sendComment({
     required String? text,
     required String? postId,
+   // required String?
   }) async {
     await FirebaseFirestore.instance
         .collection('posts')
@@ -177,6 +178,7 @@ class CraftHomeCubit extends Cubit<CraftStates> {
       'comment': text,
       'userId': uId,
       'date': DateTime.now().toString(),
+      'postId': postId,
     }).then((value) {
       value.update({
         'commentId': value.id,
@@ -253,8 +255,27 @@ class CraftHomeCubit extends Cubit<CraftStates> {
     });
   }
 
-  Future<void> getNotifications(// required String? postId
-      ) async {
+  PostModel? notificationPostModel;
+  getPostScreenFromNotification({
+    required String? id
+} )async{
+
+    await FirebaseFirestore.instance
+        .collection('posts')
+        .doc(id)
+        .get()
+        .then((value){
+          notificationPostModel = PostModel.fromJson(value.data()!);
+    })
+        .catchError((erro){
+
+    });
+
+
+  }
+
+  Future<void> getNotifications( )  // required String? postId
+      async {
     notifications.clear();
 
     await FirebaseFirestore.instance.collection('posts').get().then((value) {
@@ -265,7 +286,10 @@ class CraftHomeCubit extends Cubit<CraftStates> {
               if (kDebugMode) {
                 print('${el['userId']} 3333333333');
               }
-              notifications.add(el['userId']);
+              notifications.add({
+                'userId':el['userId'],
+                'postId':el['postId'],
+              });
               // giveSpecificUserNotification(id: el['userId']);
 
               emit(CraftGetPostCommentsNotificationUserSuccessState());
