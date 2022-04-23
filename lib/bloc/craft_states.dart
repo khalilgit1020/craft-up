@@ -114,6 +114,19 @@ class CraftGetAllUsersErrorState extends CraftStates
   CraftGetAllUsersErrorState(this.error);
 }
 
+class CraftGetAllUsersMessengerLoadingState extends CraftStates
+{}
+
+class CraftGetAllUsersMessengerSuccessState extends CraftStates
+{}
+
+class CraftGetAllUsersMessengerErrorState extends CraftStates
+{
+  final String error;
+
+  CraftGetAllUsersMessengerErrorState(this.error);
+}
+
 
 
 
@@ -189,6 +202,8 @@ class CraftGetPostCommentsUserErrorState extends CraftStates
 
 class CraftGetPostCommentsNotificationUserLoadingState extends CraftStates
 {}
+
+class CraftGetUserCommentState extends CraftStates{}
 
 
 
@@ -419,4 +434,6 @@ class CraftResetPasswordErrorState extends CraftStates{
 class ConvertUserTypeSuccessState extends CraftStates{}
 
 
+class CraftEnableCommentButtonState extends CraftStates{}
+class CraftUnableCommentButtonState extends CraftStates{}
 

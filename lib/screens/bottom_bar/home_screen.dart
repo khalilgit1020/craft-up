@@ -34,7 +34,7 @@ class HomeScreen extends StatelessWidget {
       builder: (context, state) {
         var cubit = CraftHomeCubit.get(context);
 
-        return cubit.posts != null && cubit.UserModel != null && cubit.users.isNotEmpty ? SafeArea(
+        return cubit.posts != null && cubit.UserModel != null && cubit.users.isNotEmpty && cubit.specialUser!.isNotEmpty ? SafeArea(
           child: Directionality(
             textDirection: TextDirection.rtl,
             child: Scaffold(

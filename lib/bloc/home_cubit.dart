@@ -142,7 +142,7 @@ class CraftHomeCubit extends Cubit<CraftStates> {
         .then((value) {
       value.update({
         'postId': value.id,
-      }).then((value){
+      }).then((value) {
         getPosts();
       });
       emit(CraftCreatePostSuccessState());
@@ -190,7 +190,11 @@ class CraftHomeCubit extends Cubit<CraftStates> {
   void getPosts() {
     posts!.clear();
 
-    FirebaseFirestore.instance.collection('posts').orderBy('dateTime').snapshots().listen((event) {
+    FirebaseFirestore.instance
+        .collection('posts')
+        .orderBy('dateTime')
+        .snapshots()
+        .listen((event) {
       for (var element in event.docs) {
         postId!.add(element.id);
         posts!.add(PostModel.fromJson(element.data()));
@@ -202,20 +206,26 @@ class CraftHomeCubit extends Cubit<CraftStates> {
   Future<void> getComments({required String? postId}) async {
     comments!.clear();
 
-    return FirebaseFirestore.instance
+    FirebaseFirestore.instance
         .collection('posts')
         .doc(postId)
         .collection('comments')
-        .get()
-        .then((value) {
-      for (var element in value.docs) {
+        .orderBy('date')
+        .snapshots()
+        .listen((event) {
+      print('************** Get Comments ***************');
+      for (var element in event.docs) {
         comments!.add(CommentModel.fromJson(element.data()));
+        emit(CraftGetPostCommentsUserSuccessState());
       }
-
-      emit(CraftGetPostCommentsSuccessState());
-    }).catchError((error) {
-      emit(CraftGetPostCommentsErrorState(error.toString()));
     });
+  }
+
+  CraftUserModel? userComment;
+
+  getCommentModel({required String? userId}) {
+    userComment = specialUser![userId];
+    emit(CraftGetUserCommentState());
   }
 
   List notifications = [];
@@ -619,7 +629,7 @@ class CraftHomeCubit extends Cubit<CraftStates> {
   }
 
   List<CraftUserModel> users = [];
-  Map<String, CraftUserModel> specialUser = {};
+  Map<String, CraftUserModel>? specialUser = {};
 
   void getUsers() {
     users = [];
@@ -628,7 +638,7 @@ class CraftHomeCubit extends Cubit<CraftStates> {
       for (var element in value.docs) {
         if (element.data()['uId'] != UserModel!.uId) {
           users.add(CraftUserModel.fromJson(element.data()));
-          specialUser.addAll(
+          specialUser!.addAll(
               {element.data()['uId']: CraftUserModel.fromJson(element.data())});
         }
       }
@@ -646,29 +656,29 @@ class CraftHomeCubit extends Cubit<CraftStates> {
     });
   }
 
-/*
+  List<CraftUserModel>? usersMessenger = [];
 
-  void getUsersChatList() {
-    print('***************');
-    users!.clear();
-
-       FirebaseFirestore.instance.collection('users').doc(uId).collection('chats').get().then((value) {
-        value.docs.forEach((element) {
-
-          print('${element.id}   ----------------' );
-          //if (element.data()['uid'] != UserModel!.uId) {
-            print('88888888888888888888');
-            users!.add(CraftUserModel.fromJson(element.data()));
-          //}
-
-          emit(CraftGetAllUsersSuccessState());
-        });
-      }).catchError((error) {
-        emit(CraftGetAllUsersErrorState(error.toString()));
-      });
+  void selectUserMessenger(String userId){
 
   }
-*/
+
+  Future<void> getUsersChatList() async {
+    print('***************');
+    emit(CraftGetAllUsersMessengerLoadingState());
+
+    FirebaseFirestore.instance
+        .collection('users')
+        .doc(UserModel!.uId)
+        .collection('chats').orderBy('dateTime').snapshots().listen((value) {
+          usersMessenger = [];
+          print('****************** ${value.docs.length} *******************');
+          for(var item in value.docs){
+            print('helloooooooooooooooooooooo');
+            usersMessenger!.insert(0, specialUser![item.id]!);
+          }
+          emit(CraftGetAllUsersMessengerSuccessState());
+    });
+  }
 
   List<MessageModel> messages = [];
   String currentMessage = '';
@@ -729,6 +739,7 @@ class CraftHomeCubit extends Cubit<CraftStates> {
         .collection('messages')
         .add(model.toMap())
         .then((value) {
+          FirebaseFirestore.instance.collection('users').doc(UserModel!.uId).collection('chats').doc(receiverId).set({'dateTime': dateTime});
       emit(CraftSendMessageSuccessState());
     }).catchError((error) {
       emit(CraftSendMessageErrorState());
@@ -867,5 +878,17 @@ class CraftHomeCubit extends Cubit<CraftStates> {
         emit(CraftLogoutErrorState());
       });
     });
+  }
+
+  String currentComment = '';
+
+  enableCommentButton({required String comment}) {
+    currentComment = comment;
+    emit(CraftEnableCommentButtonState());
+  }
+
+  unableCommentButton({required String comment}) {
+    currentComment = '';
+    emit(CraftUnableCommentButtonState());
   }
 }

@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:graduation/bloc/home_cubit.dart';
@@ -20,8 +19,7 @@ class OtherUserProfile extends StatelessWidget {
     final size = MediaQuery.of(context).size;
 
     return BlocConsumer<CraftHomeCubit, CraftStates>(
-      listener: (context, state) {
-      },
+      listener: (context, state) {},
       builder: (context, state) {
         var cubit = CraftHomeCubit.get(context);
 
@@ -36,7 +34,7 @@ class OtherUserProfile extends StatelessWidget {
                 ),
 
                 // for information card and gallery works
-                userInfoAndWorks(size, userModel, cubit,context),
+                userInfoAndWorks(size, userModel, cubit, context),
 
                 // for user picture
                 userPicture(context, size, userModel),
@@ -99,7 +97,7 @@ class OtherUserProfile extends StatelessWidget {
     Size size,
     CraftUserModel userModel,
     CraftHomeCubit cubit,
-    BuildContext  context,
+    BuildContext context,
   ) {
     return Column(
       children: [
@@ -135,13 +133,13 @@ class OtherUserProfile extends StatelessWidget {
                       const SizedBox(
                         height: 10,
                       ),
-
                       InkWell(
-                        onTap: (){
-
-                           //CraftHomeCubit.get(context).getMessage(receiverId: userModel.uId!);
+                        onTap: () {
+                          CraftHomeCubit.get(context)
+                              .getMessage(receiverId: userModel.uId!);
                           Navigator.of(context).push(MaterialPageRoute(
-                              builder: (context) => ChatDetailsScreen(userModel: userModel)));
+                              builder: (context) =>
+                                  ChatDetailsScreen(userModel: userModel)));
                         },
                         child: Container(
                           width: size.width / 4.5,
@@ -150,14 +148,13 @@ class OtherUserProfile extends StatelessWidget {
                             color: mainColor,
                             borderRadius: BorderRadius.circular(16),
                           ),
-                          child:const Center(
+                          child: const Center(
                             child: Text(
                               'مراسلة',
                               style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold
-                              ),
+                                  color: Colors.white,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold),
                             ),
                           ),
                         ),

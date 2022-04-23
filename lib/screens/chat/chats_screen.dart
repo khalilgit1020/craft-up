@@ -157,15 +157,15 @@ class ChatScreen extends StatelessWidget {
                       ],
                     ),
                   ),
-                  cubit.users.isNotEmpty
+                  cubit.usersMessenger!.isNotEmpty
                       ? Expanded(
                           child: ListView.separated(
                             physics: const BouncingScrollPhysics(),
                             itemBuilder: (context, index) =>
-                                buildChatItem(cubit.users[index], context),
+                                buildChatItem(cubit.usersMessenger![index], context),
                             separatorBuilder: (context, index) =>
                                 const Divider(),
-                            itemCount: cubit.users.length,
+                            itemCount: cubit.usersMessenger!.length,
                           ),
                         )
                       : const Expanded(

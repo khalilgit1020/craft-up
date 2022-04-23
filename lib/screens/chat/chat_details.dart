@@ -539,6 +539,13 @@ class ChatDetailsScreen extends StatelessWidget {
               elevation: 0,
               centerTitle: true,
               backgroundColor: mainColor,
+              leading: IconButton(
+                onPressed: (){
+                  //cubit.getUsersChatList();
+                  Navigator.pop(context);
+                },
+                icon: const Icon(Icons.arrow_back, color: Colors.white,),
+              ),
               title: Column(
                 children: [
                   Text(

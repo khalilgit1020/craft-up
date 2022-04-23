@@ -101,8 +101,11 @@ class FeedScreen extends StatelessWidget {
                             ),
                             IconButton(
                               onPressed: () {
-                                Navigator.of(context).push(MaterialPageRoute(
-                                    builder: (_) => const ChatScreen()));
+                                cubit.getUsersChatList();
+                                  Navigator.of(context).push(MaterialPageRoute(
+                                      builder: (_) => const ChatScreen()));
+
+
                               },
                               icon: const Icon(Icons.message),
                               iconSize: 33,
@@ -161,7 +164,6 @@ class FeedScreen extends StatelessWidget {
     required PostModel model,
     required CraftHomeCubit cubit,
   }) {
-
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -175,13 +177,13 @@ class FeedScreen extends StatelessWidget {
             InkWell(
               onTap: () {
                 cubit.getOtherWorkImages(id: model.uId).then((value) {
-                  if(model.uId == cubit.UserModel!.uId){
+                  if (model.uId == cubit.UserModel!.uId) {
                     cubit.changeBottomNv(3);
-                  }else{
+                  } else {
                     Navigator.of(context).push(MaterialPageRoute(
-                        builder: (_) => OtherUserProfile(userModel: cubit.specialUser[model.uId]!)));
+                        builder: (_) => OtherUserProfile(
+                            userModel: cubit.specialUser![model.uId]!)));
                   }
-
                 }).catchError((error) {
                   print(error.toString());
                 });
@@ -212,15 +214,10 @@ class FeedScreen extends StatelessWidget {
         // post text
         InkWell(
           onTap: () {
-            cubit.getComments(postId: model.postId).then((value){
-              Navigator.of(context).push(MaterialPageRoute(
-                  builder: (_) => PostScreen(
-                    model: model,
-                  )));
-            }).catchError((error){
-              print(error.toString());
-            });
-
+            cubit.getCommentModel(userId: model.uId);
+            cubit.getComments(postId: model.postId);
+            Navigator.of(context).push(
+                MaterialPageRoute(builder: (_) => PostScreen(model: model)));
           },
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4),
