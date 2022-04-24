@@ -186,6 +186,8 @@ class CraftGetPostCommentsErrorState extends CraftStates
 class CraftGetPostCommentsUserSuccessState extends CraftStates
 {}
 
+class CraftGetPostCommentsUserLoadingState extends CraftStates{}
+
 class CraftGetPostCommentsUserErrorState extends CraftStates
 {
   final String error;

@@ -286,7 +286,7 @@ class _PostScreenState extends State<PostScreen> {
                               itemBuilder: (context, index) {
                                 // cubit.getComments(postId: model.postId);
 
-                                return buildComment(context: context, model: cubit.comments![index], cubit: cubit);
+                                return buildComment(context: context, index: index, model: cubit.comments![index], cubit: cubit);
                               },
                             ),
 
@@ -307,7 +307,7 @@ class _PostScreenState extends State<PostScreen> {
     );
   }
 
-  Widget buildComment({required BuildContext context, required CommentModel model, required CraftHomeCubit cubit}){
+  Widget buildComment({required BuildContext context, required int index, required CommentModel model, required CraftHomeCubit cubit,}){
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 12.0),
       child: Row(
@@ -319,12 +319,12 @@ class _PostScreenState extends State<PostScreen> {
               onTap: () {
                 Navigator.of(context).push(MaterialPageRoute(
                     builder: (_) => OtherUserProfile(
-                      userModel: cubit.userComment!,
+                      userModel: cubit.specialUser![model.userId]!,
                     )));
               },
               child: CircleAvatar(
                 radius: 30,
-                backgroundImage: NetworkImage(cubit.userComment!.image!),
+                backgroundImage: NetworkImage(cubit.specialUser![model.userId]!.image!),
               ),
             ),
           ),
@@ -335,7 +335,7 @@ class _PostScreenState extends State<PostScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  cubit.userComment!.name!,
+                  cubit.specialUser![model.userId]!.name!,
                   style:const TextStyle(
                     fontSize: 16,
                   ),

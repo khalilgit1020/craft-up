@@ -223,7 +223,7 @@ class SavedPostsScreen extends StatelessWidget {
                     },
                     icon: cubit.mySavedPostsId!
                             .any((element) => element == model.postId)
-                        ? const Icon(Icons.bookmark_sharp)
+                        ? Icon(Icons.bookmark_sharp, color: mainColor,)
                         : const Icon(Icons.bookmark_outline_sharp),
                   ),
                 ),

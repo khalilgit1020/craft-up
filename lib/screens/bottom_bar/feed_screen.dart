@@ -217,7 +217,6 @@ class FeedScreen extends StatelessWidget {
         // post text
         InkWell(
           onTap: () {
-            cubit.getCommentModel(userId: model.uId);
             cubit.getComments(postId: model.postId);
             Navigator.of(context).push(
                 MaterialPageRoute(builder: (_) => PostScreen(model: model)));
@@ -246,7 +245,6 @@ class FeedScreen extends StatelessWidget {
                 flex: 5,
                 child: InkWell(
                   onTap: () {
-                    cubit.getCommentModel(userId: model.uId);
                     cubit.getComments(postId: model.postId);
                     Navigator.of(context).push(MaterialPageRoute(
                         builder: (_) => PostScreen(
@@ -311,13 +309,11 @@ class FeedScreen extends StatelessWidget {
                   flex: 1,
                   child: IconButton(
                     onPressed: () {
-                      print(
-                          '${cubit.mySavedPostsDetails!.length} | ${cubit.mySavedPostsId!.length}');
                       cubit.savePost(postId: model.postId);
                     },
                     icon: cubit.mySavedPostsId!
                             .any((element) => element == model.postId)
-                        ? const Icon(Icons.bookmark_sharp)
+                        ? Icon(Icons.bookmark_sharp, color: mainColor,)
                         : const Icon(Icons.bookmark_outline_sharp),
                   ),
                 ),

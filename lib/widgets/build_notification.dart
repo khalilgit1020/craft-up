@@ -58,7 +58,7 @@ class BuildNotification extends StatelessWidget {
                   onTap: ()async{
 
                     print('${postId}');
-                    cubit.getCommentModel(userId: postId);
+                    //cubit.getCommentModel(userId: postId);
                     cubit.getComments(postId: postId);
                     Navigator.of(context).push(
                         MaterialPageRoute(builder: (_) => PostScreen(model: cubit.notificationPostModel!)));

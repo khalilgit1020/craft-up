@@ -46,7 +46,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => CraftHomeCubit()..getUserData()..getNotifications()..getPosts()..getMySavedPostsId()..getUsers(),
+      create: (context) => CraftHomeCubit()..getUserData()..getNotifications()..getPosts()..getMySavedPostsId(),
       child: BlocConsumer<CraftHomeCubit,CraftStates>(
         listener:(context,state){} ,
         builder: (context,state){
