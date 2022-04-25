@@ -728,9 +728,10 @@ class CraftHomeCubit extends Cubit<CraftStates> {
   void getMessage({
     required String receiverId,
   }) {
+    emit(CraftGetMessageLoadingState());
     FirebaseFirestore.instance
         .collection('users')
-        .doc(UserModel!.uId)
+        .doc(uId)
         .collection('chats')
         .doc(receiverId)
         .collection('messages')
