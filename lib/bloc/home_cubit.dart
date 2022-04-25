@@ -771,7 +771,10 @@ class CraftHomeCubit extends Cubit<CraftStates> {
         .collection('messages')
         .add(model.toMap())
         .then((value) {
-          FirebaseFirestore.instance.collection('users').doc(UserModel!.uId).collection('chats').doc(receiverId).set({'dateTime': dateTime});
+          FirebaseFirestore.instance.collection('users').doc(UserModel!.uId)
+              .collection('chats')
+              .doc(receiverId)
+              .set({'dateTime': dateTime});
       emit(CraftSendMessageSuccessState());
     }).catchError((error) {
       emit(CraftSendMessageErrorState());
@@ -786,6 +789,12 @@ class CraftHomeCubit extends Cubit<CraftStates> {
         .collection('messages')
         .add(model.toMap())
         .then((value) {
+          FirebaseFirestore.instance.collection('users')
+              .doc(receiverId)
+              .collection('chats')
+              .doc(UserModel!.uId)
+              .set({'dateTime': dateTime});
+
       emit(CraftSendMessageSuccessState());
     }).catchError((error) {
       emit(CraftSendMessageErrorState());
