@@ -64,7 +64,8 @@ class NotificationsScreen extends StatelessWidget {
                           onRefresh: () {
                             return cubit.getNotifications();
                           },
-                        child: SingleChildScrollView(
+                        child: cubit.notifications.isNotEmpty?
+                        SingleChildScrollView(
                           child: Padding(
                             padding: const EdgeInsets.symmetric(horizontal: 18.0,vertical: 12),
                             child: ListView.separated(
@@ -80,7 +81,16 @@ class NotificationsScreen extends StatelessWidget {
                               },
                             ),
                           ),
-                        ),
+                        ):
+                            const Center(
+                              child: Text(
+                                'لا يوجد لديك إشعارات بعد...',
+                                style: TextStyle(
+                                  fontSize: 20,
+                                ),
+                              ),
+                            )
+                        ,
                       ),
                     ),
                   ],

@@ -1,4 +1,5 @@
 import 'package:animated_bottom_navigation_bar/animated_bottom_navigation_bar.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -12,15 +13,41 @@ import '../../widgets/show_taost.dart';
 import '../../widgets/styles/icon_broken.dart';
 import '../onBoarding.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
+
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    checkIfLocationPermissionAllowedd();
+    getPositionn();
+    FirebaseFirestore.instance
+        .collection('users')
+        .doc(FirebaseAuth.instance.currentUser!.uid).update({
+      'longitude':cPosition.longitude,
+      'latitude':cPosition.latitude
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<CraftHomeCubit, CraftStates>(
       listener: (context, state) {
 
-        // CraftSavePostSuccessState
+
+        if (state is CraftGetLocationErrorState){
+          print(state.error);
+        }
+
+        // CraftSavePostSuccessState  CraftGetLocationErrorState
         /*
         if (state is CraftSavePostSuccessState) {
           print('تم الحفظ بنجاح');
@@ -34,7 +61,7 @@ class HomeScreen extends StatelessWidget {
       builder: (context, state) {
         var cubit = CraftHomeCubit.get(context);
 
-        return cubit.posts != null && cubit.UserModel != null && cubit.users.isNotEmpty ? SafeArea(
+        return cPosition != null && cubit.posts != null && cubit.UserModel != null && cubit.users.isNotEmpty ? SafeArea(
           child: Directionality(
             textDirection: TextDirection.rtl,
             child: Scaffold(

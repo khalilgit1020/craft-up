@@ -431,11 +431,22 @@ class CraftResetPasswordErrorState extends CraftStates{
 
 
 
-
-
 class ConvertUserTypeSuccessState extends CraftStates{}
 
 
 class CraftEnableCommentButtonState extends CraftStates{}
 class CraftUnableCommentButtonState extends CraftStates{}
+
+
+
+class CraftGetLocationLoadingState extends CraftStates{}
+class CraftGetLocationSuccessState extends CraftStates{}
+
+class CraftGetLocationErrorState extends CraftStates{
+
+  final String error;
+  CraftGetLocationErrorState(this.error);
+
+}
+
 

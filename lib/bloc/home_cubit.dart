@@ -5,6 +5,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:graduation/models/comment_model.dart';
 import 'package:graduation/screens/bottom_bar/profile_screen.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_staorage;
@@ -921,4 +923,49 @@ class CraftHomeCubit extends Cubit<CraftStates> {
     currentComment = '';
     emit(CraftUnableCommentButtonState());
   }
+
+
+
+
+/*
+
+   Position? cPosition;
+  getMyPositionn()async{
+
+    emit(CraftGetLocationLoadingState());
+
+
+    await FirebaseFirestore.instance
+        .collection('users')
+        .doc(CacheHelper.getData(key: 'uId'))
+        .update({
+      'longitude':cPosition!.longitude,
+      'latitude':cPosition!.latitude,
+    }).then((value) {
+      emit(CraftGetLocationSuccessState());
+    }).catchError((error){
+      emit(CraftGetLocationErrorState(error));
+    });
+
+  }
+
+*/
+
+/*
+
+  checkIfLocationPermissionAllowedd() async {
+    locationPermission = await Geolocator.requestPermission();
+
+    if (locationPermission == LocationPermission.denied) {
+      locationPermission = await Geolocator.requestPermission();
+    }
+  }
+
+  getPositionn()async{
+
+    cPosition = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.high);
+  }
+*/
+
 }
