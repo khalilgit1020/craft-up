@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:collection';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:geolocator/geolocator.dart';
@@ -14,11 +15,9 @@ import '../bloc/home_cubit.dart';
 
 class MapScreen extends StatefulWidget {
 
-  final double lat;
-  final double long;
   final CraftUserModel cubit;
 
-  const MapScreen({Key? key,required this.lat,required this.long,required this.cubit}) : super(key: key);
+  const MapScreen({Key? key,required this.cubit}) : super(key: key);
 
   @override
   _MapScreenState createState() => _MapScreenState();
@@ -27,6 +26,14 @@ class MapScreen extends StatefulWidget {
 class _MapScreenState extends State<MapScreen> {
   final Completer<GoogleMapController> _controllerGoogleMap = Completer();
   GoogleMapController? newGoogleMapController;
+
+
+
+   double? lat;
+   double? long;
+
+
+
 
   static const CameraPosition _kGooglePlex = CameraPosition(
     target: LatLng(31.5, 34.46667),
@@ -104,27 +111,33 @@ class _MapScreenState extends State<MapScreen> {
         .animateCamera(CameraUpdate.newCameraPosition(cameraPosition));
   }
 
+  giveLatLong()async{
+    await FirebaseFirestore.instance
+        .collection('users')
+        .doc(widget.cubit.uId)
+        .get().then((value) {
+          setState(() {
+            lat = value['latitude'];
+            long = value['longitude'];
+          });
+          print(value['latitude']);
+          print(value['longitude']);
+    })
+        .catchError((error){
+          print(error.toString());
+    });
+  }
+
   @override
   void initState() {
     super.initState();
     checkIfLocationPermissionAllowed();
     getPositionn();
-   // getMarkerData();
 
-   // getCustomMarker();
-    /*initMarkerData(
-      cPosition.longitude,
-      cPosition.latitude,
-      'خليل حميد',
-      'ههندس',
-      1,
-    );*/
+    giveLatLong();
     print('${cPosition.latitude} ++++++++++++');
 
     print('${cPosition.longitude} ++++++++++++');
-    print('${widget.lat} ++++++++++++');
-
-    print('${widget.long} ++++++++++++');
   }
 
 
@@ -187,7 +200,11 @@ class _MapScreenState extends State<MapScreen> {
                           position:  LatLng(cPosition.latitude,cPosition.longitude),
                           infoWindow: InfoWindow(
                               title: myCubit.UserModel!.name,
-                              snippet: myCubit.UserModel!.craftType,
+                              snippet: myCubit.UserModel!.craftType != '' ?
+                              '${myCubit.UserModel!.craftType} || ${myCubit.UserModel!.phone} '
+                                  :
+                              '${myCubit.UserModel!.phone} '
+                              ,
                               onTap: () {
                                 print('marker is printed**************************');
                               })
@@ -198,10 +215,14 @@ class _MapScreenState extends State<MapScreen> {
 
                       myMarkers.add(Marker(
                           markerId: const MarkerId('2'),
-                          position:  LatLng(31.569852,widget.long),
+                          position:  LatLng(lat!,long!),
                           infoWindow: InfoWindow(
                               title: widget.cubit.name,
-                              snippet: widget.cubit.craftType,
+                              snippet: myCubit.UserModel!.craftType != '' ?
+                              '${myCubit.UserModel!.craftType} || ${myCubit.UserModel!.phone} '
+                                  :
+                              '${myCubit.UserModel!.phone} '
+                              ,
                               onTap: () {
                                 print('marker is printed**************************');
                               })

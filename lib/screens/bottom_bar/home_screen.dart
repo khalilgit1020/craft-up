@@ -29,12 +29,6 @@ class _HomeScreenState extends State<HomeScreen> {
     super.initState();
     checkIfLocationPermissionAllowedd();
     getPositionn();
-    FirebaseFirestore.instance
-        .collection('users')
-        .doc(FirebaseAuth.instance.currentUser!.uid).update({
-      'longitude':cPosition.longitude,
-      'latitude':cPosition.latitude
-    });
   }
 
   @override

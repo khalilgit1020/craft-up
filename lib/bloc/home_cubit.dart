@@ -900,9 +900,9 @@ class CraftHomeCubit extends Cubit<CraftStates> {
       CacheHelper.removeData(
         key: 'uId',
       ).then((value) {
+        emit(CraftLogoutSuccessState());
         Navigator.of(context).pushReplacement(
             MaterialPageRoute(builder: (_) => const OnBoardingScreen()));
-        emit(CraftLogoutSuccessState());
       }).catchError((error) {
         if (kDebugMode) {
           print(error.toString());
@@ -924,48 +924,5 @@ class CraftHomeCubit extends Cubit<CraftStates> {
     emit(CraftUnableCommentButtonState());
   }
 
-
-
-
-/*
-
-   Position? cPosition;
-  getMyPositionn()async{
-
-    emit(CraftGetLocationLoadingState());
-
-
-    await FirebaseFirestore.instance
-        .collection('users')
-        .doc(CacheHelper.getData(key: 'uId'))
-        .update({
-      'longitude':cPosition!.longitude,
-      'latitude':cPosition!.latitude,
-    }).then((value) {
-      emit(CraftGetLocationSuccessState());
-    }).catchError((error){
-      emit(CraftGetLocationErrorState(error));
-    });
-
-  }
-
-*/
-
-/*
-
-  checkIfLocationPermissionAllowedd() async {
-    locationPermission = await Geolocator.requestPermission();
-
-    if (locationPermission == LocationPermission.denied) {
-      locationPermission = await Geolocator.requestPermission();
-    }
-  }
-
-  getPositionn()async{
-
-    cPosition = await Geolocator.getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.high);
-  }
-*/
 
 }

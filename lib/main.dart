@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:graduation/bloc/craft_states.dart';
 import 'package:graduation/bloc/home_cubit.dart';
 import 'package:graduation/helpers/cache_helper.dart';
+import 'package:graduation/helpers/custom_error.dart';
 import 'package:graduation/screens/bottom_bar/home_screen.dart';
 import 'package:graduation/screens/onBoarding.dart';
 
@@ -12,6 +13,7 @@ import 'constants.dart';
 
 void main()async {
   WidgetsFlutterBinding.ensureInitialized();
+  customErrorScreen();
   await Firebase.initializeApp();
 
 

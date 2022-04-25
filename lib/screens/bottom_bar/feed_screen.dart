@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -8,15 +10,33 @@ import 'package:graduation/widgets/my_divider.dart';
 
 import '../../bloc/craft_states.dart';
 import '../../bloc/home_cubit.dart';
-import '../../widgets/build_post.dart';
 import '../../widgets/show_taost.dart';
+import '../onBoarding.dart';
 import '../other_user_profile.dart';
 import '../post/post_screen.dart';
 
-class FeedScreen extends StatelessWidget {
+class FeedScreen extends StatefulWidget {
   FeedScreen({Key? key}) : super(key: key);
 
+  @override
+  State<FeedScreen> createState() => _FeedScreenState();
+}
+
+class _FeedScreenState extends State<FeedScreen> {
   var searchController = TextEditingController();
+
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    FirebaseFirestore.instance
+        .collection('users')
+        .doc(FirebaseAuth.instance.currentUser!.uid).update({
+      'longitude':cPosition.longitude,
+      'latitude':cPosition.latitude
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
