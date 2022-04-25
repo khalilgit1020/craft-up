@@ -27,8 +27,8 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    checkIfLocationPermissionAllowedd();
-    getPositionn();
+   // checkIfLocationPermissionAllowedd();
+   // getPositionn();
   }
 
   @override
@@ -55,7 +55,7 @@ class _HomeScreenState extends State<HomeScreen> {
       builder: (context, state) {
         var cubit = CraftHomeCubit.get(context);
 
-        return cPosition != null && cubit.posts != null && cubit.UserModel != null && cubit.users.isNotEmpty ? SafeArea(
+        return  cubit.posts != null && cubit.UserModel != null && cubit.users.isNotEmpty ? SafeArea(
           child: Directionality(
             textDirection: TextDirection.rtl,
             child: Scaffold(

@@ -11,30 +11,28 @@ import 'package:graduation/screens/onBoarding.dart';
 import 'bloc/bloc_observer.dart';
 import 'constants.dart';
 
-void main()async {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   customErrorScreen();
   await Firebase.initializeApp();
 
-
   await CacheHelper.init();
-
-
 
   Widget widget;
   uId = CacheHelper.getData(key: 'uId');
 
-  if(uId != null) {
-    widget =const HomeScreen();
+  if (uId != null) {
+    widget = const HomeScreen();
   } else {
-    widget =const OnBoardingScreen();
+    widget = const OnBoardingScreen();
   }
 
-
   BlocOverrides.runZoned(
-        () {
+    () {
       // Use cubits...
-      runApp( MyApp(widget: widget,));
+      runApp(MyApp(
+        widget: widget,
+      ));
     },
     blocObserver: SimpleBlocObserver(),
   );
@@ -42,30 +40,35 @@ void main()async {
 
 class MyApp extends StatelessWidget {
   Widget widget;
+
   MyApp({required this.widget});
 
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => CraftHomeCubit()..getUserData()..getNotifications()..getPosts()..getMySavedPostsId(),
-      child: BlocConsumer<CraftHomeCubit,CraftStates>(
-        listener:(context,state){} ,
-        builder: (context,state){
-          return
-            MaterialApp(
-              debugShowCheckedModeBanner: false,
-              title: 'graduation project',
-              theme: ThemeData(
-                primarySwatch: Colors.blue,
+      create: (context) => CraftHomeCubit()
+        ..getUserData()
+        ..getNotifications()
+        ..getPosts()
+        ..getMySavedPostsId()
+        ..checkIfLocationPermissionAllowedd(),
+      child: BlocConsumer<CraftHomeCubit, CraftStates>(
+        listener: (context, state) {},
+        builder: (context, state) {
+          return MaterialApp(
+            debugShowCheckedModeBanner: false,
+            title: 'graduation project',
+            theme: ThemeData(
+              primarySwatch: Colors.blue,
+            ),
+            home: SafeArea(
+              child: Directionality(
+                textDirection: TextDirection.rtl,
+                child: widget,
               ),
-              home: SafeArea(
-                child:  Directionality(
-                  textDirection: TextDirection.rtl,
-                  child: widget,
-                ),
-              ),
-            );
+            ),
+          );
         },
       ),
     );

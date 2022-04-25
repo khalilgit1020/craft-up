@@ -8,10 +8,11 @@ import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:graduation/constants.dart';
 import 'package:graduation/models/craft_user_model.dart';
-import 'package:graduation/screens/onBoarding.dart';
+
 
 import '../bloc/craft_states.dart';
 import '../bloc/home_cubit.dart';
+import '../helpers/cache_helper.dart';
 
 class MapScreen extends StatefulWidget {
 
@@ -31,6 +32,8 @@ class _MapScreenState extends State<MapScreen> {
 
    double? lat;
    double? long;
+  double? myLat;
+  double? myLong;
 
 
 
@@ -61,40 +64,12 @@ class _MapScreenState extends State<MapScreen> {
     });
   }
 
-  // select users longitude and latitude
-  void getMarkerData() {
-
-    setState(() {
-      markers.clear();
-
-      initMarkerData(
-        cPosition.longitude,
-        cPosition.latitude,
-        'خليل حميد',
-        'ههندس',
-        1,
-      );
-    });
-
-    print('**********');
-
-  }
-
-
 
   Position? userCurrentPosition;
   var geoLocator = Geolocator();
 
   LocationPermission? _locationPermission;
   double bottomPaddingOfMap = 0;
-
-  checkIfLocationPermissionAllowed() async {
-    _locationPermission = await Geolocator.requestPermission();
-
-    if (_locationPermission == LocationPermission.denied) {
-      _locationPermission = await Geolocator.requestPermission();
-    }
-  }
 
   locateUserPosition() async {
     Position cPosition = await Geolocator.getCurrentPosition(
@@ -112,6 +87,8 @@ class _MapScreenState extends State<MapScreen> {
   }
 
   giveLatLong()async{
+
+    // get other lat and long
     await FirebaseFirestore.instance
         .collection('users')
         .doc(widget.cubit.uId)
@@ -127,17 +104,32 @@ class _MapScreenState extends State<MapScreen> {
           print(error.toString());
     });
   }
+  giveMuLatLong()async{
+
+  // get my lat and long
+  await FirebaseFirestore.instance
+      .collection('users')
+      .doc(CacheHelper.getData(key: 'uId'))
+      .get().then((value) {
+  setState(() {
+  myLat = value['latitude'];
+  myLong = value['longitude'];
+  });
+  print(value['latitude']);
+  print(value['longitude']);
+  })
+      .catchError((error){
+  print(error.toString());
+  });
+
+}
 
   @override
   void initState() {
     super.initState();
-    checkIfLocationPermissionAllowed();
-    getPositionn();
 
     giveLatLong();
-    print('${cPosition.latitude} ++++++++++++');
-
-    print('${cPosition.longitude} ++++++++++++');
+    giveMuLatLong();
   }
 
 
@@ -195,9 +187,11 @@ class _MapScreenState extends State<MapScreen> {
 
                     setState(() {
                       bottomPaddingOfMap = 240;
+
+                      // my marker
                       myMarkers.add(Marker(
                           markerId: const MarkerId('1'),
-                          position:  LatLng(cPosition.latitude,cPosition.longitude),
+                          position:  LatLng(myLat!,myLong!),
                           infoWindow: InfoWindow(
                               title: myCubit.UserModel!.name,
                               snippet: myCubit.UserModel!.craftType != '' ?
@@ -210,14 +204,12 @@ class _MapScreenState extends State<MapScreen> {
                               })
                       ));
 
-                    });
-                    setState(() {
-
+                      // other marker
                       myMarkers.add(Marker(
                           markerId: const MarkerId('2'),
                           position:  LatLng(lat!,long!),
                           infoWindow: InfoWindow(
-                              title: widget.cubit.name,
+                              title: widget.cubit.name!,
                               snippet: myCubit.UserModel!.craftType != '' ?
                               '${myCubit.UserModel!.craftType} || ${myCubit.UserModel!.phone} '
                                   :

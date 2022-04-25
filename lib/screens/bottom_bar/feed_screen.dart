@@ -25,17 +25,15 @@ class FeedScreen extends StatefulWidget {
 class _FeedScreenState extends State<FeedScreen> {
   var searchController = TextEditingController();
 
-
   @override
   void initState() {
     // TODO: implement initState
-    super.initState();
+    super.initState();/*
     FirebaseFirestore.instance
         .collection('users')
-        .doc(FirebaseAuth.instance.currentUser!.uid).update({
-      'longitude':cPosition.longitude,
-      'latitude':cPosition.latitude
-    });
+        .doc(FirebaseAuth.instance.currentUser!.uid)
+        .update(
+            {'longitude': cPosition.longitude, 'latitude': cPosition.latitude});*/
   }
 
   @override
@@ -56,7 +54,9 @@ class _FeedScreenState extends State<FeedScreen> {
         }
 
         if (state is CraftGetPostErrorState) {
-          print('${state.error.toString()} +++++++++');
+          if (kDebugMode) {
+            print('${state.error.toString()} +++++++++');
+          }
         }
 
         if (state is CraftGetAllUsersErrorState) {
@@ -68,7 +68,7 @@ class _FeedScreenState extends State<FeedScreen> {
       builder: (context, state) {
         var cubit = CraftHomeCubit.get(context);
 
-        var UserModel = CraftHomeCubit.get(context).UserModel;
+        // var UserModel = CraftHomeCubit.get(context).UserModel;
 
         return SafeArea(
           child: Directionality(
@@ -80,15 +80,24 @@ class _FeedScreenState extends State<FeedScreen> {
                     Container(
                       height: size.height / 8,
                       padding: const EdgeInsets.symmetric(
-                          vertical: 8.0, horizontal: 12),
+                        vertical: 8.0,
+                        horizontal: 12,
+                      ),
                       decoration: BoxDecoration(
                         color: mainColor,
                       ),
                       child: Center(
                         child: Row(
                           children: [
-                            Expanded(
-                              child: Row(
+                            const Expanded(
+                              child: Text(
+                                'Craft Up',
+                                style: TextStyle(
+                                    fontSize: 32,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.white),
+                              )
+                              /*Row(
                                 children: [
                                   CircleAvatar(
                                     radius: 40,
@@ -114,7 +123,8 @@ class _FeedScreenState extends State<FeedScreen> {
                                     ],
                                   )
                                 ],
-                              ),
+                              )*/
+                              ,
                             ),
                             const SizedBox(
                               width: 4,
@@ -122,10 +132,8 @@ class _FeedScreenState extends State<FeedScreen> {
                             IconButton(
                               onPressed: () {
                                 cubit.getUsersChatList();
-                                  Navigator.of(context).push(MaterialPageRoute(
-                                      builder: (_) => const ChatScreen()));
-
-
+                                Navigator.of(context).push(MaterialPageRoute(
+                                    builder: (_) => const ChatScreen()));
                               },
                               icon: const Icon(Icons.message),
                               iconSize: 33,
@@ -168,11 +176,11 @@ class _FeedScreenState extends State<FeedScreen> {
                               ),
                             ),
                           )
-                        :const Expanded(
-                          child:  Center(
+                        : const Expanded(
+                            child: Center(
                               child: CircularProgressIndicator.adaptive(),
                             ),
-                        )
+                          )
                   ],
                 )),
           ),
@@ -201,14 +209,15 @@ class _FeedScreenState extends State<FeedScreen> {
                 cubit.getOtherWorkImages(id: model.uId).then((value) {
                   if (model.uId == cubit.UserModel!.uId) {
                     cubit.changeBottomNv(3);
-                  }
-                  else {
+                  } else {
                     Navigator.of(context).push(MaterialPageRoute(
                         builder: (_) => OtherUserProfile(
                             userModel: cubit.specialUser![model.uId]!)));
                   }
                 }).catchError((error) {
-                  print(error.toString());
+                  if (kDebugMode) {
+                    print(error.toString());
+                  }
                 });
               },
               child: CircleAvatar(
@@ -333,7 +342,10 @@ class _FeedScreenState extends State<FeedScreen> {
                     },
                     icon: cubit.mySavedPostsId!
                             .any((element) => element == model.postId)
-                        ? Icon(Icons.bookmark_sharp, color: mainColor,)
+                        ? Icon(
+                            Icons.bookmark_sharp,
+                            color: mainColor,
+                          )
                         : const Icon(Icons.bookmark_outline_sharp),
                   ),
                 ),

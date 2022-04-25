@@ -6,6 +6,7 @@ import 'auth/login_screen.dart';
 import '../helpers/cache_helper.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
+/*
 
 
 // to get latitude and longitude and store it in firebase
@@ -25,6 +26,7 @@ getPositionn()async{
       desiredAccuracy: LocationAccuracy.high);
 }
 
+*/
 
 
 class OnBoardingScreen extends StatefulWidget {
@@ -73,8 +75,8 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    checkIfLocationPermissionAllowedd();
-    getPositionn();
+    //checkIfLocationPermissionAllowedd();
+   // getPositionn();
   }
 
 
