@@ -59,7 +59,7 @@ class NotificationsScreen extends StatelessWidget {
                     ),
 
                     const SizedBox(height: 12,),
-                    Expanded(
+                    /*Expanded(
                       child: RefreshIndicator(
                           onRefresh: () {
                             return cubit.getNotifications();
@@ -92,7 +92,7 @@ class NotificationsScreen extends StatelessWidget {
                             )
                         ,
                       ),
-                    ),
+                    ),*/
                   ],
                 ),
               ),
