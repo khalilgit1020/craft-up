@@ -59,6 +59,8 @@ class ChatDetailsScreen extends StatelessWidget {
                   onPressed: (){
                     Navigator.of(context).push(MaterialPageRoute(builder: (_)=> MapScreen(
                       cubit: userModel,
+                      long: cubit.cPosition.longitude,
+                      lat: cubit.cPosition.latitude,
                     )));
                   },
                   icon:const Icon(Icons.location_on_sharp),

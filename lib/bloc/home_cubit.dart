@@ -483,7 +483,7 @@ class CraftHomeCubit extends Cubit<CraftStates> {
 
     FirebaseFirestore.instance
         .collection('users')
-        .doc(uId)
+        .doc(CacheHelper.getData(key: 'uId'))
         .collection('savedPosts')
         .get()
         .then((value) {
@@ -728,7 +728,6 @@ class CraftHomeCubit extends Cubit<CraftStates> {
   void getMessage({
     required String receiverId,
   }) {
-    emit(CraftGetMessageLoadingState());
     FirebaseFirestore.instance
         .collection('users')
         .doc(UserModel!.uId)
@@ -966,6 +965,17 @@ class CraftHomeCubit extends Cubit<CraftStates> {
         desiredAccuracy: LocationAccuracy.high);
     emit(CraftGetLocationSuccessState());
   }
+
+updateLocation(){
+
+  FirebaseFirestore.instance
+      .collection('users')
+      .doc(FirebaseAuth.instance.currentUser!.uid)
+      .update(
+  {'longitude': cPosition.longitude, 'latitude': cPosition.latitude});
+
+}
+
 
 
 

@@ -317,6 +317,7 @@ class _PostScreenState extends State<PostScreen> {
             flex: 2,
             child: InkWell(
               onTap: () {
+                print(cubit.specialUser![model.userId]!.uId);
                 Navigator.of(context).push(MaterialPageRoute(
                     builder: (_) => OtherUserProfile(
                       userModel: cubit.specialUser![model.userId]!,
