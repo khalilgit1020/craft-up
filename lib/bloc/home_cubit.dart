@@ -729,7 +729,6 @@ class CraftHomeCubit extends Cubit<CraftStates> {
     required String receiverId,
   }) {
     emit(CraftGetMessageLoadingState());
-    messages = [];
     FirebaseFirestore.instance
         .collection('users')
         .doc(UserModel!.uId)
@@ -739,7 +738,7 @@ class CraftHomeCubit extends Cubit<CraftStates> {
         .orderBy('dateTime')
         .snapshots()
         .listen((event) {
-
+      messages = [];
 
       for (var element in event.docs) {
         messages.insert(0, MessageModel.fromJson(element.data()));
