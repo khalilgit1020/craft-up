@@ -26,15 +26,22 @@ class FeedScreen extends StatefulWidget {
 class _FeedScreenState extends State<FeedScreen> {
   var searchController = TextEditingController();
 
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();/*
-    FirebaseFirestore.instance
+
+  updateLocation(){
+
+     FirebaseFirestore.instance
         .collection('users')
         .doc(FirebaseAuth.instance.currentUser!.uid)
         .update(
-            {'longitude': cPosition.longitude, 'latitude': cPosition.latitude});*/
+        {'longitude': cPosition.longitude, 'latitude': cPosition.latitude});
+
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+
   }
 
   @override
