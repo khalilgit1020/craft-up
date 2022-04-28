@@ -3,7 +3,6 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:graduation/models/comment_model.dart';
@@ -20,7 +19,6 @@ import '../models/craft_user_model.dart';
 import '../models/post_model.dart';
 import '../screens/bottom_bar/feed_screen.dart';
 import '../screens/bottom_bar/notifications_screen.dart';
-import '../screens/onBoarding.dart';
 import 'craft_states.dart';
 
 class CraftHomeCubit extends Cubit<CraftStates> {
@@ -91,11 +89,12 @@ class CraftHomeCubit extends Cubit<CraftStates> {
   ];
 
   void changeBottomNv(int index) {
-    if (index == 1) {
+    if (isCrafter && index == 1) {
       getMySavedPostsId();
+    } else if (!isCrafter && index == 1) {
+      getNotifications();
     }
     currentIndex = index;
-
     emit(CraftChangeBottomNavState());
   }
 
@@ -169,7 +168,7 @@ class CraftHomeCubit extends Cubit<CraftStates> {
   void sendComment({
     required String? text,
     required String? postId,
-   // required String?
+    // required String?
   }) async {
     await FirebaseFirestore.instance
         .collection('posts')
@@ -203,6 +202,7 @@ class CraftHomeCubit extends Cubit<CraftStates> {
         postId!.add(element.id);
         posts!.add(PostModel.fromJson(element.data()));
       }
+      getNotifications();
       emit(CraftGetPostSuccessState());
     });
   }
@@ -215,7 +215,8 @@ class CraftHomeCubit extends Cubit<CraftStates> {
     FirebaseFirestore.instance
         .collection('posts')
         .doc(postId)
-        .collection('comments').orderBy('date')
+        .collection('comments')
+        .orderBy('date')
         .get()
         .then((value) {
       print('************** Get Comments ***************');
@@ -224,7 +225,7 @@ class CraftHomeCubit extends Cubit<CraftStates> {
         usersComment!.add(specialUser![element.data()['userId']]!);
       }
       emit(CraftGetPostCommentsSuccessState());
-    }).catchError((error){
+    }).catchError((error) {
       print(error.toString());
       emit(CraftGetPostCommentsErrorState(error.toString()));
     });
@@ -263,46 +264,47 @@ class CraftHomeCubit extends Cubit<CraftStates> {
   }
 
   PostModel? notificationPostModel;
-  getPostScreenFromNotification({
-    required String? id
-} )async{
 
+  getPostScreenFromNotification({required String? id}) async {
     await FirebaseFirestore.instance
         .collection('posts')
         .doc(id)
         .get()
-        .then((value){
-          notificationPostModel = PostModel.fromJson(value.data()!);
-    })
-        .catchError((erro){
-
-    });
-
-
+        .then((value) {
+      notificationPostModel = PostModel.fromJson(value.data()!);
+    }).catchError((erro) {});
   }
 
-  Future<void> getNotifications( )  // required String? postId
-      async {
-    notifications.clear();
+  List<CraftUserModel>? notificationUsers = [];
+  List<PostModel>? notificationPosts = [];
 
-    await FirebaseFirestore.instance.collection('posts').get().then((value) {
+  Future<void> getNotifications() async {
+    emit(CraftGetNotificationsLoadingState());
+    FirebaseFirestore.instance.collection('posts').get().then((value) {
+      notificationUsers = [];
+      notificationPosts = [];
       for (var element in value.docs) {
-        if (FirebaseAuth.instance.currentUser!.uid == element['uId']) {
-          element.reference.collection('comments').get().then((val) {
+        if (UserModel!.uId == element['uId']) {
+          element.reference
+              .collection('comments')
+              .orderBy('date')
+              .get()
+              .then((val) {
             for (var el in val.docs) {
-              if (kDebugMode) {
-                print('${el['userId']} 3333333333');
-              }
-              notifications.add({
-                'userId':el['userId'],
-                'postId':el['postId'],
-              });
-              // giveSpecificUserNotification(id: el['userId']);
+              if (UserModel!.uId != el['userId']) {
+                notifications.add({
+                  'userId': el['userId'],
+                  'postId': el['postId'],
+                });
+                notificationUsers!.insert(0, specialUser![el['userId']]!);
+                notificationPosts!.insert(
+                    0,
+                    posts!.firstWhere(
+                        (element) => element.postId == el['postId']));
 
-              emit(CraftGetPostCommentsNotificationUserSuccessState());
-            }
-            if (kDebugMode) {
-              print(notifications.length.toString());
+                // giveSpecificUserNotification(id: el['userId']);
+              }
+              emit(CraftGetNotificationsSuccessState());
             }
           }).catchError((error) {});
 
@@ -312,8 +314,11 @@ class CraftHomeCubit extends Cubit<CraftStates> {
         /* if (kDebugMode) {
             print('${element.data()} 3333333333' );
           }*/
-      }
-    }).catchError((error) {});
+      } //emit(CraftGetNotificationsSuccessState());
+    }).catchError((error) {
+      print(error.toString());
+      emit(CraftGetNotificationsErrorState());
+    });
   }
 
   CraftUserModel? commentUserModel;
@@ -690,9 +695,7 @@ class CraftHomeCubit extends Cubit<CraftStates> {
 
   List<CraftUserModel>? usersMessenger = [];
 
-  void selectUserMessenger(String userId){
-
-  }
+  void selectUserMessenger(String userId) {}
 
   Future<void> getUsersChatList() async {
     print('***************');
@@ -701,14 +704,17 @@ class CraftHomeCubit extends Cubit<CraftStates> {
     FirebaseFirestore.instance
         .collection('users')
         .doc(UserModel!.uId)
-        .collection('chats').orderBy('dateTime').snapshots().listen((value) {
-          usersMessenger = [];
-          print('****************** ${value.docs.length} *******************');
-          for(var item in value.docs){
-            print('helloooooooooooooooooooooo');
-            usersMessenger!.insert(0, specialUser![item.id]!);
-          }
-          emit(CraftGetAllUsersMessengerSuccessState());
+        .collection('chats')
+        .orderBy('dateTime')
+        .snapshots()
+        .listen((value) {
+      usersMessenger = [];
+      print('****************** ${value.docs.length} *******************');
+      for (var item in value.docs) {
+        print('helloooooooooooooooooooooo');
+        usersMessenger!.insert(0, specialUser![item.id]!);
+      }
+      emit(CraftGetAllUsersMessengerSuccessState());
     });
   }
 
@@ -772,10 +778,12 @@ class CraftHomeCubit extends Cubit<CraftStates> {
         .collection('messages')
         .add(model.toMap())
         .then((value) {
-          FirebaseFirestore.instance.collection('users').doc(UserModel!.uId)
-              .collection('chats')
-              .doc(receiverId)
-              .set({'dateTime': dateTime});
+      FirebaseFirestore.instance
+          .collection('users')
+          .doc(UserModel!.uId)
+          .collection('chats')
+          .doc(receiverId)
+          .set({'dateTime': dateTime});
       emit(CraftSendMessageSuccessState());
     }).catchError((error) {
       emit(CraftSendMessageErrorState());
@@ -790,11 +798,12 @@ class CraftHomeCubit extends Cubit<CraftStates> {
         .collection('messages')
         .add(model.toMap())
         .then((value) {
-          FirebaseFirestore.instance.collection('users')
-              .doc(receiverId)
-              .collection('chats')
-              .doc(UserModel!.uId)
-              .set({'dateTime': dateTime});
+      FirebaseFirestore.instance
+          .collection('users')
+          .doc(receiverId)
+          .collection('chats')
+          .doc(UserModel!.uId)
+          .set({'dateTime': dateTime});
 
       emit(CraftSendMessageSuccessState());
     }).catchError((error) {
@@ -903,22 +912,16 @@ class CraftHomeCubit extends Cubit<CraftStates> {
     });
   }
 
-  void logOut(context) {
+  void logOut() {
     emit(CraftLogoutLoadingState());
 
     FirebaseAuth.instance.signOut().then((value) {
-      CacheHelper.removeData(
-        key: 'uId',
-      ).then((value) {
-        emit(CraftLogoutSuccessState());
-        Navigator.of(context).pushReplacement(
-            MaterialPageRoute(builder: (_) => const OnBoardingScreen()));
-      }).catchError((error) {
-        if (kDebugMode) {
-          print(error.toString());
-        }
-        emit(CraftLogoutErrorState());
-      });
+      emit(CraftLogoutSuccessState());
+    }).catchError((error) {
+      if (kDebugMode) {
+        print(error.toString());
+      }
+      emit(CraftLogoutErrorState());
     });
   }
 
@@ -934,40 +937,55 @@ class CraftHomeCubit extends Cubit<CraftStates> {
     emit(CraftUnableCommentButtonState());
   }
 
-
-
-
-
   late Position cPosition;
   LocationPermission? locationPermission;
-  checkIfLocationPermissionAllowedd() async {
 
+  checkIfLocationPermissionAllowedd() async {
     locationPermission = await Geolocator.requestPermission().then((value) {
       getPositionn();
-      //emit(CraftGetLocationSuccessState());
-    }).catchError((error){
+      updateLocation();
+      emit(CraftGetLocationSuccessState());
+    }).catchError((error) {
       emit(CraftGetLocationErrorState(error.toString()));
-
     });
 
     if (locationPermission == LocationPermission.denied) {
       locationPermission = await Geolocator.requestPermission().then((value) {
         getPositionn();
-       // emit(CraftGetLocationSuccessState());
-      }).catchError((error){
+        updateLocation();
+        emit(CraftGetLocationSuccessState());
+      }).catchError((error) {
         emit(CraftGetLocationErrorState(error.toString()));
-
       });
     }
   }
-  getPositionn()async{
 
+  getPositionn() async {
     cPosition = await Geolocator.getCurrentPosition(
         desiredAccuracy: LocationAccuracy.high);
     emit(CraftGetLocationSuccessState());
   }
 
+  updateLocation() {
+    FirebaseFirestore.instance
+        .collection('users')
+        .doc(FirebaseAuth.instance.currentUser!.uid)
+        .update(
+            {'longitude': cPosition.longitude, 'latitude': cPosition.latitude});
+  }
 
+  double? otherLat;
+  double? otherLong;
 
-
+  getOtherLocation({required String userId}) {
+    FirebaseFirestore.instance
+        .collection('users')
+        .doc(userId)
+        .get()
+        .then((value){
+          otherLat = value.data()!['latitude'];
+          otherLong = value.data()!['longitude'];
+    })
+        .catchError((error) {});
+  }
 }

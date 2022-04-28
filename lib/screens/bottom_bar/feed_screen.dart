@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
@@ -223,7 +224,19 @@ class _FeedScreenState extends State<FeedScreen> {
               child: CircleAvatar(
                 radius: 40,
                 backgroundColor: mainColor,
-                backgroundImage: NetworkImage(model.image!),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(50.0),
+                  child: CachedNetworkImage(
+                    height: double.infinity,
+                    width: double.infinity,
+                    imageUrl: model.image!,
+                    placeholder: (context, url) => CircleAvatar(
+                      radius: 25.0,
+                      backgroundColor: Colors.grey[300],
+                    ),
+                    fit: BoxFit.cover,
+                  ),
+                ),
               ),
             ),
             const SizedBox(
@@ -254,7 +267,7 @@ class _FeedScreenState extends State<FeedScreen> {
             padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4),
             child: Text(
               model.text!,
-              style: const TextStyle(fontSize: 14, color: Colors.black54),
+              style: const TextStyle(fontSize: 14, color: Colors.black, fontWeight: FontWeight.w700),
               maxLines: 2,
               overflow: TextOverflow.ellipsis,
               textAlign: TextAlign.start,

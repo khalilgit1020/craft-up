@@ -449,4 +449,10 @@ class CraftGetLocationErrorState extends CraftStates{
 
 }
 
+class CraftGetNotificationsLoadingState extends CraftStates{}
+
+class CraftGetNotificationsSuccessState extends CraftStates{}
+
+class CraftGetNotificationsErrorState extends CraftStates{}
+
 

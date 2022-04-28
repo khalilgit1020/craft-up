@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:graduation/bloc/home_cubit.dart';
@@ -162,7 +163,7 @@ class ChatScreen extends StatelessWidget {
                           child: ListView.separated(
                             physics: const BouncingScrollPhysics(),
                             itemBuilder: (context, index) =>
-                                buildChatItem(cubit.usersMessenger![index], context),
+                                buildChatItem(cubit.usersMessenger![index], context, cubit),
                             separatorBuilder: (context, index) =>
                                 const Divider(),
                             itemCount: cubit.usersMessenger!.length,
@@ -186,10 +187,11 @@ class ChatScreen extends StatelessWidget {
     );
   }
 
-  Widget buildChatItem(CraftUserModel model, context) {
+  Widget buildChatItem(CraftUserModel model, context, CraftHomeCubit cubit) {
     return InkWell(
       onTap: () {
-        CraftHomeCubit.get(context).getMessage(receiverId: model.uId!);
+        cubit.getMessage(receiverId: model.uId!);
+        cubit.getOtherLocation(userId: model.uId!);
         Navigator.of(context).push(MaterialPageRoute(
             builder: (context) => ChatDetailsScreen(userModel: model)));
       },
@@ -199,8 +201,18 @@ class ChatScreen extends StatelessWidget {
           children: [
             CircleAvatar(
               radius: 40,
-              backgroundImage: NetworkImage(
-                '${model.image}',
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(50.0),
+                child: CachedNetworkImage(
+                  height: double.infinity,
+                  width: double.infinity,
+                  imageUrl: model.image!,
+                  placeholder: (context, url) => CircleAvatar(
+                    radius: 25.0,
+                    backgroundColor: Colors.grey[300],
+                  ),
+                  fit: BoxFit.cover,
+                ),
               ),
             ),
             const SizedBox(

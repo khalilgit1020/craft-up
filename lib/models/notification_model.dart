@@ -4,14 +4,12 @@ class NotificationModel{
   String? userId;
   String? date;
   String? postId;
-  String? commentId;
 
   NotificationModel({
     this.image,
     this.userId,
     this.name,
     this.postId,
-    this.commentId,
     this.date,
   });
 
@@ -22,7 +20,6 @@ class NotificationModel{
     name = json['name']!;
     userId = json['userId']!;
     date = json['date']!;
-    commentId = json['commentId']!;
   }
 
 
@@ -33,7 +30,6 @@ class NotificationModel{
       'postId':postId,
       'userId':userId,
       'date':date,
-      'commentId':commentId,
     };
   }
 

@@ -1,5 +1,7 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:graduation/screens/settings_screen/image_zoom_screen.dart';
 import 'package:graduation/widgets/styles/icon_broken.dart';
 
 import '../../bloc/craft_states.dart';
@@ -126,10 +128,22 @@ class MyWorksGallery extends StatelessWidget {
                                 deleteImageModalBottomSheet(context, cubit.myWorkGallery[index]['id']);
                               },
                               onTap:() {
+                                Navigator.of(context).push(MaterialPageRoute(
+                                    builder: (_) => ImageZoomScreen(
+                                      tag: index.toString(),
+                                      url: url,
+                                    )));
                               },
-                              child: Image.network(
-                                '$url',
-                                fit: BoxFit.fill,
+                              child: Hero(
+                                tag: index.toString(),
+                                child: CachedNetworkImage(
+                                  imageUrl: url,
+                                  placeholder: (context, url) => Container(
+                                    color: Colors.grey[300],
+                                  ),
+                                  errorWidget: (context, url, error) => const Icon(Icons.error),
+                                  fit: BoxFit.cover,
+                                ),
                               ),
                             );
                           },

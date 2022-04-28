@@ -1,4 +1,4 @@
-
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
 import '../bloc/home_cubit.dart';
@@ -6,10 +6,11 @@ import '../constants.dart';
 import '../models/craft_user_model.dart';
 import '../screens/settings_screen/image_zoom_screen.dart';
 
-
 Column UserInfoAndWorks(
-    Size size, CraftUserModel userModel, CraftHomeCubit cubit,
-    ) {
+  Size size,
+  CraftUserModel userModel,
+  CraftHomeCubit cubit,
+) {
   return Column(
     children: [
       SizedBox(
@@ -37,9 +38,8 @@ Column UserInfoAndWorks(
                       height: size.height / 20,
                     ),
                     textUser(userModel.name, 20),
-                    if(userModel.craftType != '')
+                    if (userModel.craftType != '')
                       textUser(userModel.craftType, 14),
-
                     textUser('${userModel.address} | ${userModel.phone}', 14),
                     textUser(userModel.email, 14),
                     const SizedBox(
@@ -54,76 +54,79 @@ Column UserInfoAndWorks(
       ),
       userModel.userType!
           ? Expanded(
+              child: RefreshIndicator(
+                onRefresh: () {
+                  return cubit.getMyWorkImages();
+                },
+                child: cubit.myWorkGallery.isNotEmpty
+                    ? GridView.builder(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 20, vertical: 2),
+                        gridDelegate:
+                            const SliverGridDelegateWithMaxCrossAxisExtent(
+                          maxCrossAxisExtent: 200,
+                          childAspectRatio: 3 / 3,
+                          crossAxisSpacing: 18,
+                          mainAxisSpacing: 14,
+                        ),
+                        itemCount: cubit.myWorkGallery.length,
+                        itemBuilder: (context, index) {
+                          var url = cubit.myWorkGallery[index]['image'];
 
-          child: RefreshIndicator(
-            onRefresh: () {
-              return cubit.getMyWorkImages();
-            },
-            child: cubit.myWorkGallery.isNotEmpty
-                ? GridView.builder(
-              padding: const EdgeInsets.symmetric(
-                  horizontal: 20, vertical: 2),
-              gridDelegate:
-              const SliverGridDelegateWithMaxCrossAxisExtent(
-                maxCrossAxisExtent: 200,
-                childAspectRatio: 3 / 3,
-                crossAxisSpacing: 18,
-                mainAxisSpacing: 14,
+                          return InkWell(
+                            onTap: () {
+                              Navigator.of(context).push(MaterialPageRoute(
+                                  builder: (_) => ImageZoomScreen(
+                                        tag: index.toString(),
+                                        url: url,
+                                      )));
+                            },
+                            child: Hero(
+                              tag: index.toString(),
+                              child: CachedNetworkImage(
+                                imageUrl: url,
+                                placeholder: (context, url) => Container(
+                                  color: Colors.grey[300],
+                                ),
+                                errorWidget: (context, url, error) => Icon(Icons.error),
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                          );
+                        },
+                      )
+                    : Center(
+                        child: Text(
+                          'لا يوجد لديك صور في معرضك الخاص, أضف بعض الصور...',
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                            color: mainColor,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
               ),
-              itemCount: cubit.myWorkGallery.length,
-              itemBuilder: (context, index) {
-                var url = cubit.myWorkGallery[index]['image'];
-
-                return InkWell(
-                  onTap: () {
-                    Navigator.of(context).push(MaterialPageRoute(
-                        builder: (_) => ImageZoomScreen(
-                          tag: index.toString(),
-                          url: url,
-                        )));
-                  },
-                  child: Hero(
-                    tag: index.toString(),
-                    child: Image.network(
-                      '$url',
-                      fit: BoxFit.fill,
-                    ),
-                  ),
-                );
-              },
             )
-                : Center(
-              child: Text(
-                'لا يوجد لديك صور في معرضك الخاص, أضف بعض الصور...',
-                style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                    color: mainColor,
+          : Expanded(
+              child: Center(
+                child: Stack(
+                  children: [
+                    Align(
+                      alignment: const Alignment(-2, -0.7),
+                      child: Image.asset('assets/images/profile2.png'),
+                    ),
+                    Align(
+                      alignment: const Alignment(0, -1),
+                      child: Image.asset('assets/images/profile.png'),
+                    ),
+                  ],
                 ),
-                textAlign: TextAlign.center,
               ),
             ),
-          ))
-          : Expanded(
-        child: Center(
-          child: Stack(
-            children: [
-              Align(
-                alignment: const Alignment(-2, -0.7),
-                child: Image.asset('assets/images/profile2.png'),
-              ),
-              Align(
-                alignment: const Alignment(0, -1),
-                child: Image.asset('assets/images/profile.png'),
-              ),
-            ],
-          ),
-        ),
-      ),
     ],
   );
 }
-
 
 Center textUser(userModel, double size) {
   return Center(
@@ -133,13 +136,11 @@ Center textUser(userModel, double size) {
         fontSize: size,
         fontWeight: FontWeight.bold,
       ),
-
     ),
   );
 }
 
-
-Column UserPicture(context,Size size, CraftUserModel userModel) {
+Column UserPicture(context, Size size, CraftUserModel userModel) {
   return Column(
     children: [
       SizedBox(
@@ -152,17 +153,28 @@ Column UserPicture(context,Size size, CraftUserModel userModel) {
             border: Border.all(width: 4, color: Colors.blue.shade200),
           ),
           child: InkWell(
-            onTap:(){
+            onTap: () {
               Navigator.of(context).push(MaterialPageRoute(
                   builder: (_) => ImageZoomScreen(
-                    tag: 'profile'.toString(),
-                    url: userModel.image!,
-                  )));
-            } ,
+                        tag: 'profile'.toString(),
+                        url: userModel.image!,
+                      )));
+            },
             child: CircleAvatar(
               radius: 50,
-              backgroundImage: NetworkImage(userModel.image!),
-
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(50.0),
+                child: CachedNetworkImage(
+                  height: double.infinity,
+                  width: double.infinity,
+                  imageUrl: userModel.image!,
+                  placeholder: (context, url) => CircleAvatar(
+                    radius: 25.0,
+                    backgroundColor: Colors.grey[300],
+                  ),
+                  fit: BoxFit.cover,
+                ),
+              ),
             ),
           ),
         ),
@@ -170,4 +182,3 @@ Column UserPicture(context,Size size, CraftUserModel userModel) {
     ],
   );
 }
-

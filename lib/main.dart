@@ -49,7 +49,6 @@ class MyApp extends StatelessWidget {
     return BlocProvider(
       create: (context) => CraftHomeCubit()
         ..getUserData()
-        ..getNotifications()
         ..getPosts()
         ..getMySavedPostsId()
         ..checkIfLocationPermissionAllowedd(),

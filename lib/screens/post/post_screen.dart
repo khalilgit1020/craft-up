@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:graduation/constants.dart';
@@ -238,7 +239,8 @@ class _PostScreenState extends State<PostScreen> {
                                                 postId: widget.model.postId,
                                               );
                                               commentController.clear();
-                                              FocusManager.instance.primaryFocus?.unfocus();
+                                              FocusManager.instance.primaryFocus
+                                                  ?.unfocus();
                                             }
                                       /*(){
                                           if(commentController.text.isNotEmpty){
@@ -250,7 +252,9 @@ class _PostScreenState extends State<PostScreen> {
 
                                         }*/
                                       ,
-                                      color: cubit.currentComment == '' ? Colors.grey : Colors.blue,
+                                      color: cubit.currentComment == ''
+                                          ? Colors.grey
+                                          : Colors.blue,
                                       icon: const Icon(IconBroken.Send),
                                     ),
                                   ],
@@ -286,7 +290,11 @@ class _PostScreenState extends State<PostScreen> {
                               itemBuilder: (context, index) {
                                 // cubit.getComments(postId: model.postId);
 
-                                return buildComment(context: context, index: index, model: cubit.comments![index], cubit: cubit);
+                                return buildComment(
+                                    context: context,
+                                    index: index,
+                                    model: cubit.comments![index],
+                                    cubit: cubit);
                               },
                             ),
 
@@ -307,7 +315,12 @@ class _PostScreenState extends State<PostScreen> {
     );
   }
 
-  Widget buildComment({required BuildContext context, required int index, required CommentModel model, required CraftHomeCubit cubit,}){
+  Widget buildComment({
+    required BuildContext context,
+    required int index,
+    required CommentModel model,
+    required CraftHomeCubit cubit,
+  }) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 12.0),
       child: Row(
@@ -317,18 +330,35 @@ class _PostScreenState extends State<PostScreen> {
             flex: 2,
             child: InkWell(
               onTap: () {
-                Navigator.of(context).push(MaterialPageRoute(
-                    builder: (_) => OtherUserProfile(
-                      userModel: cubit.specialUser![model.userId]!,
-                    )));
+                cubit.getOtherWorkImages(id: model.userId).then((value) {
+                  if (model.userId != cubit.UserModel!.uId) {
+                    Navigator.of(context).push(MaterialPageRoute(
+                        builder: (_) => OtherUserProfile(
+                            userModel: cubit.specialUser![model.userId]!)));
+                  }
+                });
               },
               child: CircleAvatar(
-                radius: 30,
-                backgroundImage: NetworkImage(cubit.specialUser![model.userId]!.image!),
+                radius: 35,
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(50.0),
+                  child: CachedNetworkImage(
+                    height: double.infinity,
+                    width: double.infinity,
+                    imageUrl: cubit.specialUser![model.userId]!.image!,
+                    placeholder: (context, url) => CircleAvatar(
+                      radius: 25.0,
+                      backgroundColor: Colors.grey[300],
+                    ),
+                    fit: BoxFit.cover,
+                  ),
+                ),
               ),
             ),
           ),
-          const SizedBox(width: 8,),
+          const SizedBox(
+            width: 10,
+          ),
           Expanded(
             flex: 8,
             child: Column(
@@ -336,15 +366,15 @@ class _PostScreenState extends State<PostScreen> {
               children: [
                 Text(
                   cubit.specialUser![model.userId]!.name!,
-                  style:const TextStyle(
+                  style: const TextStyle(
                     fontSize: 16,
+                    fontWeight: FontWeight.bold
                   ),
                 ),
                 Text(
                   model.comment.toString(),
-                  style:const TextStyle(
+                  style: const TextStyle(
                     fontSize: 14,
-
                   ),
                 ),
               ],

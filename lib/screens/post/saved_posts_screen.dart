@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:graduation/screens/post/post_screen.dart';
@@ -108,7 +109,19 @@ class SavedPostsScreen extends StatelessWidget {
               child: CircleAvatar(
                 radius: 40,
                 backgroundColor: mainColor,
-                backgroundImage: NetworkImage(model.image!),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(50.0),
+                  child: CachedNetworkImage(
+                    height: double.infinity,
+                    width: double.infinity,
+                    imageUrl: model.image!,
+                    placeholder: (context, url) => CircleAvatar(
+                      radius: 25.0,
+                      backgroundColor: Colors.grey[300],
+                    ),
+                    fit: BoxFit.cover,
+                  ),
+                ),
               ),
             ),
             const SizedBox(
@@ -131,6 +144,7 @@ class SavedPostsScreen extends StatelessWidget {
         // post text
         InkWell(
           onTap: () {
+            cubit.getComments(postId: model.postId);
             Navigator.of(context).push(
                 MaterialPageRoute(builder: (_) => PostScreen(model: model)));
           },
@@ -158,6 +172,7 @@ class SavedPostsScreen extends StatelessWidget {
                 flex: 5,
                 child: InkWell(
                   onTap: () {
+                    cubit.getComments(postId: model.postId);
                     Navigator.of(context).push(MaterialPageRoute(
                         builder: (_) => PostScreen(model: model)));
                   },

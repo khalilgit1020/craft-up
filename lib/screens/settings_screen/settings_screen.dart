@@ -1,16 +1,16 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:graduation/helpers/cache_helper.dart';
+import 'package:graduation/screens/auth/login_screen.dart';
 import 'package:graduation/screens/settings_screen/write_suggestion.dart';
 import 'package:graduation/widgets/my_divider.dart';
 
 import '../../bloc/craft_states.dart';
 import '../../bloc/home_cubit.dart';
 import '../../constants.dart';
-import '../../helpers/cache_helper.dart';
 import '../../widgets/styles/icon_broken.dart';
 import 'app_information.dart';
-import '../onBoarding.dart';
 
 class SettingsProfileScreen extends StatelessWidget {
   const SettingsProfileScreen({Key? key}) : super(key: key);
@@ -20,7 +20,16 @@ class SettingsProfileScreen extends StatelessWidget {
     var size = MediaQuery.of(context).size;
 
     return BlocConsumer<CraftHomeCubit, CraftStates>(
-      listener: (context, state) {},
+      listener: (context, state) {
+        if(state is CraftLogoutSuccessState){
+          CacheHelper.removeData(key: 'uId').then((value){
+            if(value){
+              Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=> CraftLoginScreen()));
+            }
+          });
+
+        }
+      },
       builder: (context, state) {
         // var userModel = CraftHomeCubit.get(context).UserModel;
 
@@ -76,7 +85,7 @@ class SettingsProfileScreen extends StatelessWidget {
                           //  cubit.getNotifications();
                           }),
                           buildListTileForSettings(IconBroken.Logout,'تسجيل الخروج',(){
-                            cubit.logOut(context);
+                            cubit.logOut();
                           }),
                         ],
                       ),
@@ -91,11 +100,11 @@ class SettingsProfileScreen extends StatelessWidget {
     );
   }
 
-  Column buildListTileForSettings(IconData icon,title,Function() ontap) {
+  Column buildListTileForSettings(IconData icon,title,Function() onTap) {
     return Column(
       children: [
         ListTile(
-          onTap:ontap ,
+          onTap:onTap ,
           leading: Icon(
             icon,
             color: Colors.black,

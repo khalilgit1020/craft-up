@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:graduation/bloc/home_cubit.dart';
@@ -84,7 +85,19 @@ class OtherUserProfile extends StatelessWidget {
               },
               child: CircleAvatar(
                 radius: 50,
-                backgroundImage: NetworkImage(userModel.image!),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(50.0),
+                  child: CachedNetworkImage(
+                    height: double.infinity,
+                    width: double.infinity,
+                    imageUrl: userModel.image!,
+                    placeholder: (context, url) => CircleAvatar(
+                      radius: 25.0,
+                      backgroundColor: Colors.grey[300],
+                    ),
+                    fit: BoxFit.cover,
+                  ),
+                ),
               ),
             ),
           ),
@@ -199,9 +212,13 @@ class OtherUserProfile extends StatelessWidget {
                             },
                             child: Hero(
                               tag: index.toString(),
-                              child: Image.network(
-                                '$url',
-                                fit: BoxFit.fill,
+                              child: CachedNetworkImage(
+                                imageUrl: url,
+                                placeholder: (context, url) => Container(
+                                  color: Colors.grey[300],
+                                ),
+                                errorWidget: (context, url, error) => const Icon(Icons.error),
+                                fit: BoxFit.cover,
                               ),
                             ),
                           );

@@ -2,23 +2,26 @@ import 'dart:async';
 import 'dart:collection';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:graduation/constants.dart';
 import 'package:graduation/models/craft_user_model.dart';
-
+import 'package:graduation/screens/other_user_profile.dart';
 
 import '../bloc/craft_states.dart';
 import '../bloc/home_cubit.dart';
-import '../helpers/cache_helper.dart';
 
 class MapScreen extends StatefulWidget {
-
   final CraftUserModel cubit;
+  final double lat;
+  final double long;
 
-  const MapScreen({Key? key,required this.cubit}) : super(key: key);
+  const MapScreen(
+      {Key? key, required this.cubit, required this.lat, required this.long})
+      : super(key: key);
 
   @override
   _MapScreenState createState() => _MapScreenState();
@@ -27,16 +30,6 @@ class MapScreen extends StatefulWidget {
 class _MapScreenState extends State<MapScreen> {
   final Completer<GoogleMapController> _controllerGoogleMap = Completer();
   GoogleMapController? newGoogleMapController;
-
-
-
-   double? lat;
-   double? long;
-  double? myLat;
-  double? myLong;
-
-
-
 
   static const CameraPosition _kGooglePlex = CameraPosition(
     target: LatLng(31.5, 34.46667),
@@ -60,15 +53,14 @@ class _MapScreenState extends State<MapScreen> {
       ),
     );
     setState(() {
-      markers[markerId] = marker;
+      myMarkers.add(marker);
     });
   }
-
 
   Position? userCurrentPosition;
   var geoLocator = Geolocator();
 
-  LocationPermission? _locationPermission;
+  //LocationPermission? _locationPermission;
   double bottomPaddingOfMap = 0;
 
   locateUserPosition() async {
@@ -86,149 +78,97 @@ class _MapScreenState extends State<MapScreen> {
         .animateCamera(CameraUpdate.newCameraPosition(cameraPosition));
   }
 
-  giveLatLong()async{
-
-    // get other lat and long
-    await FirebaseFirestore.instance
-        .collection('users')
-        .doc(widget.cubit.uId)
-        .get().then((value) {
-          setState(() {
-            lat = value['latitude'];
-            long = value['longitude'];
-          });
-          print(value['latitude']);
-          print(value['longitude']);
-    })
-        .catchError((error){
-          print(error.toString());
-    });
-  }
-  giveMuLatLong()async{
-
-  // get my lat and long
-  await FirebaseFirestore.instance
-      .collection('users')
-      .doc(CacheHelper.getData(key: 'uId'))
-      .get().then((value) {
-  setState(() {
-  myLat = value['latitude'];
-  myLong = value['longitude'];
-  });
-  print(value['latitude']);
-  print(value['longitude']);
-  })
-      .catchError((error){
-  print(error.toString());
-  });
-
-}
-
-  @override
-  void initState() {
-    super.initState();
-
-    giveLatLong();
-    giveMuLatLong();
-  }
-
-
   HashSet<Marker> myMarkers = HashSet<Marker>();
 
   @override
   Widget build(BuildContext context) {
-
     return BlocConsumer<CraftHomeCubit, CraftStates>(
       listener: (context, state) {
-
-
-        if (state is CraftGetLocationErrorState){
+        if (state is CraftGetLocationErrorState) {
           print(state.error);
         }
-
       },
       builder: (context, state) {
         var myCubit = CraftHomeCubit.get(context);
 
-        return
-          Scaffold(
-            appBar: AppBar(
-              backgroundColor: mainColor,
-              elevation: 0,
-              actions: const [
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 16.0),
-                  child: Center(
-                    child: Text(
-                      'الموقع',
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                      ),
+        return Scaffold(
+          appBar: AppBar(
+            backgroundColor: mainColor,
+            elevation: 0,
+            actions: const [
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 16.0),
+                child: Center(
+                  child: Text(
+                    'الموقع',
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
                 ),
-              ],
-            ),
-            body: Stack(
-              children: [
-                GoogleMap(
-                  padding: EdgeInsets.only(bottom: bottomPaddingOfMap),
-                  mapType: MapType.normal,
-                  markers: myMarkers,
-                  myLocationEnabled: true,
-                  zoomGesturesEnabled: true,
-                  zoomControlsEnabled: true,
-                  initialCameraPosition: _kGooglePlex,
-                  onMapCreated: (GoogleMapController controller) {
+              ),
+            ],
+          ),
+          body: Stack(
+            children: [
+              GoogleMap(
+                padding: EdgeInsets.only(bottom: bottomPaddingOfMap),
+                mapType: MapType.normal,
+                markers: myMarkers,
+                myLocationEnabled: true,
+                zoomGesturesEnabled: true,
+                zoomControlsEnabled: true,
+                initialCameraPosition: _kGooglePlex,
+                onMapCreated: (GoogleMapController controller) {
+                  _controllerGoogleMap.complete(controller);
+                  newGoogleMapController = controller;
 
-                    _controllerGoogleMap.complete(controller);
-                    newGoogleMapController = controller;
+                  setState(() {
+                    bottomPaddingOfMap = 240;
 
-                    setState(() {
-                      bottomPaddingOfMap = 240;
+                    //initMarkerData(myLong!, myLat!,  myCubit.UserModel!.name, myCubit.UserModel!.craftType,const MarkerId('1'),);
+                    // initMarkerData(long!, lat!,   widget.cubit.name!,myCubit.UserModel!.craftType,const MarkerId('2'),);
 
-                      // my marker
-                      myMarkers.add(Marker(
-                          markerId: const MarkerId('1'),
-                          position:  LatLng(myLat!,myLong!),
-                          infoWindow: InfoWindow(
-                              title: myCubit.UserModel!.name,
-                              snippet: myCubit.UserModel!.craftType != '' ?
-                              '${myCubit.UserModel!.craftType} || ${myCubit.UserModel!.phone} '
-                                  :
-                              '${myCubit.UserModel!.phone} '
-                              ,
-                              onTap: () {
-                                print('marker is printed**************************');
-                              })
-                      ));
+                    myMarkers.add(
+                      Marker(
+                        markerId: const MarkerId('1'),
+                        position: LatLng(myCubit.cPosition.latitude,
+                            myCubit.cPosition.longitude),
+                        icon: BitmapDescriptor.defaultMarkerWithHue(
+                            BitmapDescriptor.hueRed),
+                        infoWindow: InfoWindow(
+                          title: myCubit.UserModel!.name,
+                          snippet: myCubit.UserModel!.craftType,
+                        ),
+                      ),
+                    );
 
-                      // other marker
-                      myMarkers.add(Marker(
-                          markerId: const MarkerId('2'),
-                          position:  LatLng(lat!,long!),
-                          infoWindow: InfoWindow(
-                              title: widget.cubit.name!,
-                              snippet: myCubit.UserModel!.craftType != '' ?
-                              '${myCubit.UserModel!.craftType} || ${myCubit.UserModel!.phone} '
-                                  :
-                              '${myCubit.UserModel!.phone} '
-                              ,
-                              onTap: () {
-                                print('marker is printed**************************');
-                              })
-                      ));
-                    });
+                    myMarkers.add(Marker(
+                      markerId: const MarkerId('2'),
+                      position: LatLng(widget.lat, widget.long),
+                      icon: BitmapDescriptor.defaultMarkerWithHue(
+                          BitmapDescriptor.hueYellow),
+                      infoWindow: InfoWindow(
+                          title: widget.cubit.name,
+                          snippet: widget.cubit.craftType,
+                          onTap: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => OtherUserProfile(
+                                        userModel: widget.cubit)));
+                          },),
+                    ),);
+                  },);
 
-                    locateUserPosition();
-                  },
-                ),
-              ],
-            ),
-          );
-        },
+                  locateUserPosition();
+                },
+              ),
+            ],
+          ),
+        );
+      },
     );
   }
 }
-

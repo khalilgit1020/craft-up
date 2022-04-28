@@ -31,37 +31,47 @@ class ChatDetailsScreen extends StatelessWidget {
               centerTitle: true,
               backgroundColor: mainColor,
               leading: IconButton(
-                onPressed: (){
+                onPressed: () {
                   //cubit.getUsersChatList();
                   Navigator.pop(context);
                 },
-                icon: const Icon(Icons.arrow_back, color: Colors.white,),
+                icon: const Icon(
+                  Icons.arrow_back,
+                  color: Colors.white,
+                ),
               ),
               title: Column(
                 children: [
                   Text(
-                    userModel.name!,style:const TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
+                    userModel.name!,
+                    style: const TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
-                  ),
-
                   Text(
-                    userModel.address!,style:const TextStyle(
-                    fontSize: 14,
+                    userModel.address!,
+                    style: const TextStyle(
+                      fontSize: 14,
+                    ),
                   ),
-                  ),
-
                 ],
               ),
               actions: [
                 IconButton(
-                  onPressed: (){
-                    Navigator.of(context).push(MaterialPageRoute(builder: (_)=> MapScreen(
-                      cubit: userModel,
-                    )));
+                  onPressed: () {
+                    cubit.updateLocation();
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (_) => MapScreen(
+                          cubit: userModel,
+                          lat: cubit.otherLat!,
+                          long: cubit.otherLong!,
+                        ),
+                      ),
+                    );
                   },
-                  icon:const Icon(Icons.location_on_sharp),
+                  icon: const Icon(Icons.location_on_sharp),
                 ),
               ],
             ),
@@ -73,49 +83,48 @@ class ChatDetailsScreen extends StatelessWidget {
                   Expanded(
                     child: cubit.messages.length > 0
                         ? Padding(
-                      padding: const EdgeInsets.all(20.0),
-                      child: Column(
-                        children: [
-                          Expanded(
-                            child: ListView.separated(
-                              reverse:true,
-                              physics: const BouncingScrollPhysics(),
-                              itemBuilder: (context, index) {
-                                var message = cubit.messages[index];
+                            padding: const EdgeInsets.all(20.0),
+                            child: Column(
+                              children: [
+                                Expanded(
+                                  child: ListView.separated(
+                                    reverse: true,
+                                    physics: const BouncingScrollPhysics(),
+                                    itemBuilder: (context, index) {
+                                      var message = cubit.messages[index];
 
-                                if (cubit.UserModel!.uId ==
-                                    message.senderId)
-                                  return buildMyMessage(
-                                      message, context);
+                                      if (cubit.UserModel!.uId ==
+                                          message.senderId)
+                                        return buildMyMessage(message, context);
 
-                                return buildMessage(message);
-                              },
-                              separatorBuilder: (context, index) =>
-                                  SizedBox(
-                                    height: 15,
+                                      return buildMessage(message);
+                                    },
+                                    separatorBuilder: (context, index) =>
+                                        SizedBox(
+                                      height: 15,
+                                    ),
+                                    itemCount: cubit.messages.length,
                                   ),
-                              itemCount: cubit.messages.length,
+                                ),
+                                const SizedBox(
+                                  width: 5,
+                                ),
+                              ],
+                            ),
+                          )
+                        : const Padding(
+                            padding: EdgeInsets.all(20.0),
+                            child: Center(
+                              child: Text(
+                                'لا توجد رسائل بعد, قل مرحبا...',
+                                style: TextStyle(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.grey,
+                                ),
+                              ),
                             ),
                           ),
-                          const SizedBox(
-                            width: 5,
-                          ),
-                        ],
-                      ),
-                    )
-                        : const Padding(
-                      padding: EdgeInsets.all(20.0),
-                      child: Center(
-                        child: Text(
-                          'لا توجد رسائل بعد, قل مرحبا...',
-                          style: TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.grey,
-                          ),
-                        ),
-                      ),
-                    ),
                   ),
                   Container(
                     decoration: BoxDecoration(
@@ -131,18 +140,18 @@ class ChatDetailsScreen extends StatelessWidget {
                               color: Colors.grey.shade300,
                             ),
                             padding:
-                            const EdgeInsets.symmetric(horizontal: 15.0),
+                                const EdgeInsets.symmetric(horizontal: 15.0),
                             child: TextFormField(
                               enabled: true,
                               controller: textController,
-                              decoration:  InputDecoration(
+                              decoration: InputDecoration(
                                 hintText: 'أكتب هنا',
                                 border: InputBorder.none,
                                 suffixIcon: IconButton(
-                                  onPressed: (){
+                                  onPressed: () {
                                     cubit.getMessageImage();
                                   },
-                                  icon:  Icon(
+                                  icon: Icon(
                                     IconBroken.Image,
                                     color: mainColor,
                                   ),
@@ -162,20 +171,17 @@ class ChatDetailsScreen extends StatelessWidget {
                           ),
                           child: MaterialButton(
                             onPressed: () {
-
-                              cubit.messageImage == null ?
-                              cubit.sendMessage(
-                                receiverId: userModel.uId!,
-                                dateTime: DateTime.now().toString(),
-                                text: textController.text,
-                              ):cubit.uploadMessageImage(
-                                dateTime: DateTime.now().toString(),
-                                text: textController.text,
-                                receiverId: userModel.uId!,
-                              );
-
-
-
+                              cubit.messageImage == null
+                                  ? cubit.sendMessage(
+                                      receiverId: userModel.uId!,
+                                      dateTime: DateTime.now().toString(),
+                                      text: textController.text,
+                                    )
+                                  : cubit.uploadMessageImage(
+                                      dateTime: DateTime.now().toString(),
+                                      text: textController.text,
+                                      receiverId: userModel.uId!,
+                                    );
 
                               if (cubit.messageImage == '') {
                                 cubit.sendMessage(
@@ -184,11 +190,9 @@ class ChatDetailsScreen extends StatelessWidget {
                                   text: textController.text,
                                 );
                               }
-
-
                             },
                             minWidth: 1,
-                            child:const Icon(
+                            child: const Icon(
                               IconBroken.Send,
                               color: Colors.white,
                             ),
@@ -205,27 +209,27 @@ class ChatDetailsScreen extends StatelessWidget {
   }
 
   Widget buildMessage(MessageModel model) => Align(
-    alignment: AlignmentDirectional.centerEnd,
-    child: Container(
-      padding: const EdgeInsets.symmetric(
-        vertical: 5,
-        horizontal: 10,
-      ),
-      decoration: BoxDecoration(
-        color: Colors.grey[300],
-        borderRadius: const BorderRadiusDirectional.only(
-          topEnd: Radius.circular(10),
-          topStart: Radius.circular(10),
-          //   bottomEnd: Radius.circular(6),
-          bottomStart: Radius.circular(10),
+        alignment: AlignmentDirectional.centerEnd,
+        child: Container(
+          padding: const EdgeInsets.symmetric(
+            vertical: 5,
+            horizontal: 10,
+          ),
+          decoration: BoxDecoration(
+            color: Colors.grey[300],
+            borderRadius: const BorderRadiusDirectional.only(
+              topEnd: Radius.circular(10),
+              topStart: Radius.circular(10),
+              //   bottomEnd: Radius.circular(6),
+              bottomStart: Radius.circular(10),
+            ),
+          ),
+          child: Text(
+            model.text.toString(),
+            style: TextStyle(fontSize: 17),
+          ),
         ),
-      ),
-      child: Text(
-        model.text.toString(),
-        style: TextStyle(fontSize: 17),
-      ),
-    ),
-  );
+      );
 
   Widget buildMyMessage(MessageModel model, context) {
     return Align(
@@ -261,19 +265,17 @@ class ChatDetailsScreen extends StatelessWidget {
                     ),
                     Text(
                       model.text.toString(),
-                      style:const TextStyle(fontSize: 17,color: Colors.white),
+                      style: const TextStyle(fontSize: 17, color: Colors.white),
                     ),
                   ],
                 ),
               if (model.messageImage == '')
                 Text(
                   model.text.toString(),
-                  style:const TextStyle(fontSize: 17,color: Colors.white),
+                  style: const TextStyle(fontSize: 17, color: Colors.white),
                 ),
             ],
           )),
     );
   }
 }
-
-
