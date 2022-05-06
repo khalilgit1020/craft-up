@@ -1,6 +1,4 @@
 import 'package:animated_bottom_navigation_bar/animated_bottom_navigation_bar.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:graduation/bloc/home_cubit.dart';
@@ -8,28 +6,11 @@ import 'package:graduation/constants.dart';
 import 'package:graduation/screens/bottom_bar/new_post_screen.dart';
 
 import '../../bloc/craft_states.dart';
-import '../../helpers/cache_helper.dart';
-import '../../widgets/show_taost.dart';
 import '../../widgets/styles/icon_broken.dart';
-import '../onBoarding.dart';
 
-class HomeScreen extends StatefulWidget {
+class HomeScreen extends StatelessWidget {
   const HomeScreen({Key? key}) : super(key: key);
 
-  @override
-  State<HomeScreen> createState() => _HomeScreenState();
-}
-
-class _HomeScreenState extends State<HomeScreen> {
-
-
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-   // checkIfLocationPermissionAllowedd();
-   // getPositionn();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -55,7 +36,7 @@ class _HomeScreenState extends State<HomeScreen> {
       builder: (context, state) {
         var cubit = CraftHomeCubit.get(context);
 
-        return  cubit.posts != null && cubit.UserModel != null && cubit.users.isNotEmpty ? SafeArea(
+        return  cubit.posts != null && cubit.UserModel != null ? SafeArea(
           child: Directionality(
             textDirection: TextDirection.rtl,
             child: Scaffold(
@@ -68,7 +49,7 @@ class _HomeScreenState extends State<HomeScreen> {
               FloatingActionButton(
                       onPressed: () {
                         Navigator.of(context).push(MaterialPageRoute(
-                            builder: (_) => NewPostScreen()));
+                            builder: (_) => const NewPostScreen()));
                       },
                       backgroundColor: mainColor,
                       child: const Icon(Icons.add),

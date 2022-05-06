@@ -163,6 +163,8 @@ class CraftSearchErrorStates extends CraftStates
   CraftSearchErrorStates(this.error);
 }
 
+class CraftClearSearchListState extends CraftStates{}
+
 
 
 
@@ -225,7 +227,11 @@ class CraftGetPostCommentsNotificationUserErrorState extends CraftStates
 
 
 class CraftCreateUserSuccessState extends CraftStates
-{}
+{
+  final String? uId;
+
+  CraftCreateUserSuccessState(this.uId);
+}
 
 class CraftCreateUserErrorState extends CraftStates
 {
@@ -406,6 +412,10 @@ class CraftSendMessageSuccessState extends CraftStates{}
 
 class CraftSendMessageErrorState extends CraftStates{}
 
+class CraftSendMessageToOtherUserSuccessState extends CraftStates{}
+
+class CraftSendMessageToOtherUserErrorState extends CraftStates{}
+
 
 
 class CraftGetMessageLoadingState extends CraftStates{}
@@ -440,6 +450,7 @@ class CraftUnableCommentButtonState extends CraftStates{}
 
 
 class CraftGetLocationLoadingState extends CraftStates{}
+
 class CraftGetLocationSuccessState extends CraftStates{}
 
 class CraftGetLocationErrorState extends CraftStates{

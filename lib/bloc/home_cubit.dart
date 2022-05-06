@@ -54,8 +54,6 @@ class CraftHomeCubit extends Cubit<CraftStates> {
         isCrafter = false;
         emit(CraftMakeIsCrafterFalseState());
       }
-      getMyWorkImages();
-      getMySavedPostsId();
       emit(CraftGetUserSuccessState());
     }).catchError((error) {
       emit(CraftGetUserErrorState(error.toString()));
@@ -65,7 +63,7 @@ class CraftHomeCubit extends Cubit<CraftStates> {
   int currentIndex = 0;
 
   List crafterScreens = [
-    FeedScreen(),
+    const FeedScreen(),
     // const NotificationsScreen(),
     const SavedPostsScreen(),
     SearchsScreen(),
@@ -73,7 +71,7 @@ class CraftHomeCubit extends Cubit<CraftStates> {
   ];
 
   List userScreens = [
-    FeedScreen(),
+    const FeedScreen(),
     const NotificationsScreen(),
     //const SavedPostsScreen(),
     SearchsScreen(),
@@ -93,6 +91,8 @@ class CraftHomeCubit extends Cubit<CraftStates> {
       getMySavedPostsId();
     } else if (!isCrafter && index == 1) {
       getNotifications();
+    } else if(isCrafter && index == 3){
+      getMyWorkImages();
     }
     currentIndex = index;
     emit(CraftChangeBottomNavState());
@@ -152,7 +152,7 @@ class CraftHomeCubit extends Cubit<CraftStates> {
   }
 
   List<PostModel>? posts = [];
-  List<String>? postId = [];
+  Map<String, PostModel>? specificPost = {};
   List<CommentModel>? comments = [];
 
   bool enableComment({required String text}) {
@@ -191,18 +191,20 @@ class CraftHomeCubit extends Cubit<CraftStates> {
   }
 
   void getPosts() {
-    posts!.clear();
-
     FirebaseFirestore.instance
         .collection('posts')
         .orderBy('dateTime')
         .snapshots()
         .listen((event) {
+      posts = [];
+      specificPost = {};
       for (var element in event.docs) {
-        postId!.add(element.id);
         posts!.add(PostModel.fromJson(element.data()));
+        specificPost!.addAll(
+            {element.data()['postId']: PostModel.fromJson(element.data())});
       }
       getNotifications();
+      getMySavedPostsId();
       emit(CraftGetPostSuccessState());
     });
   }
@@ -373,7 +375,6 @@ class CraftHomeCubit extends Cubit<CraftStates> {
         print(pickedFile.path);
       }
       uploadWorkImage();
-      emit(CraftWorkImagePickedSuccessState());
     } else {
       if (kDebugMode) {
         print('no image');
@@ -418,18 +419,20 @@ class CraftHomeCubit extends Cubit<CraftStates> {
     });
   }
 
-  List<Map> myWorkGallery = [];
+  List<Map<String, String>> myWorkGallery = [];
 
-  Future getMyWorkImages() async {
+  Future<void> getMyWorkImages() async {
     emit(CraftGetMyWorkImageLoadingState());
 
     myWorkGallery.clear();
-    await FirebaseFirestore.instance
+    FirebaseFirestore.instance
         .collection('users')
         .doc(uId)
         .collection('workGallery')
-        .get()
-        .then((value) {
+        .orderBy('dateTime')
+        .snapshots()
+        .listen((value) {
+      myWorkGallery = [];
       for (var element in value.docs) {
         myWorkGallery.add({
           'image': element['imageUrl'],
@@ -444,8 +447,6 @@ class CraftHomeCubit extends Cubit<CraftStates> {
       emit(CraftGetMyWorkImageSuccessState());
 
       // print('${value.docs.forEach((element) {element})}  ***********');
-    }).catchError((error) {
-      emit(CraftGetMyWorkImageErrorState());
     });
   }
 
@@ -462,6 +463,7 @@ class CraftHomeCubit extends Cubit<CraftStates> {
         .collection('workGallery')
         .get()
         .then((value) {
+      otherWorkGallery = [];
       for (var element in value.docs) {
         otherWorkGallery.add({
           'image': element['imageUrl'],
@@ -490,30 +492,15 @@ class CraftHomeCubit extends Cubit<CraftStates> {
         .collection('users')
         .doc(uId)
         .collection('savedPosts')
-        .get()
-        .then((value) {
+        .snapshots()
+        .listen((value) {
       mySavedPostsId = [];
       mySavedPostsDetails = [];
       for (var element in value.docs) {
-        mySavedPostsId!.add(element['postId']);
-        mySavedPostsDetails!
-            .add(posts!.firstWhere((item) => item.postId == element['postId']));
-
-        /*FirebaseFirestore.instance.collection('posts').get().then((value) {
-          for (var el in value.docs) {
-            if (kDebugMode) {
-              print('${element['postId']} 555555');
-            }
-            if (element['postId'] == el.id) {
-              mySavedPostsDetails!.add(PostModel.fromJson(el.data()));
-            }
-          }
-        });*/
+        mySavedPostsId!.add(element.data()['postId']);
+        mySavedPostsDetails!.add(specificPost![element.data()['postId']]!);
       }
       emit(CraftGetSavedPostsSuccessState());
-    }).catchError((error) {
-      print(error.toString());
-      emit(CraftGetSavedPostsErrorState());
     });
   }
 
@@ -550,11 +537,11 @@ class CraftHomeCubit extends Cubit<CraftStates> {
     return false;
   }
 
-  Future<void> savePost({required String? postId}) {
+  void savePost({required String? postId}) {
     if (!mySavedPostsId!.any((element) => element == postId)) {
-      return FirebaseFirestore.instance
+      FirebaseFirestore.instance
           .collection('users')
-          .doc(FirebaseAuth.instance.currentUser!.uid)
+          .doc(uId)
           .collection('savedPosts')
           .doc(postId)
           .set({
@@ -566,12 +553,12 @@ class CraftHomeCubit extends Cubit<CraftStates> {
         emit(CraftSavePostErrorState());
       });
     } else {
-      return deleteSavedPost(postId: postId);
+      deleteSavedPost(postId: postId);
     }
   }
 
-  Future<void> deleteSavedPost({required String? postId}) {
-    return FirebaseFirestore.instance
+  void deleteSavedPost({required String? postId}) {
+    FirebaseFirestore.instance
         .collection('users')
         .doc(uId)
         .collection('savedPosts')
@@ -581,6 +568,7 @@ class CraftHomeCubit extends Cubit<CraftStates> {
       getMySavedPostsId();
       emit(CraftDeleteSavePostSuccessState());
     }).catchError((error) {
+
       emit(CraftDeleteSavePostErrorState());
     });
   }
@@ -595,17 +583,16 @@ class CraftHomeCubit extends Cubit<CraftStates> {
         .doc(id)
         .delete()
         .then((value) {
-      getMyWorkImages();
       emit(CraftDeleteWorkImageSuccessState());
     }).catchError((error) {
       emit(CraftDeleteWorkImageErrorState());
     });
   }
 
-  void uploadWorkImage() async {
+  Future<void> uploadWorkImage() async {
     emit(CraftUploadWorkImageLoadingState());
 
-    await firebase_staorage.FirebaseStorage.instance
+    firebase_staorage.FirebaseStorage.instance
         .ref()
         .child('workGallery/${Uri.file(workImage!.path).pathSegments.last}')
         .putFile(workImage!)
@@ -620,6 +607,7 @@ class CraftHomeCubit extends Cubit<CraftStates> {
             .collection('workGallery')
             .add({
           'imageUrl': value,
+          'dateTime': DateTime.now().toString(),
         }).then((value) {
           emit(CraftUploadWorkImageSuccessState());
         }).catchError((error) {
@@ -679,6 +667,7 @@ class CraftHomeCubit extends Cubit<CraftStates> {
         specialUser!.addAll(
             {element.data()['uId']: CraftUserModel.fromJson(element.data())});
       }
+      getPosts();
       if (kDebugMode) {
         print(
             "${users.length}ssssssssssssssssssssssssssssssssssssssssssssssssssssssss");
@@ -805,9 +794,9 @@ class CraftHomeCubit extends Cubit<CraftStates> {
           .doc(UserModel!.uId)
           .set({'dateTime': dateTime});
 
-      emit(CraftSendMessageSuccessState());
+      emit(CraftSendMessageToOtherUserSuccessState());
     }).catchError((error) {
-      emit(CraftSendMessageErrorState());
+      emit(CraftSendMessageToOtherUserErrorState());
     });
   }
 
@@ -832,11 +821,11 @@ class CraftHomeCubit extends Cubit<CraftStates> {
     }
   }
 
-  void uploadMessageImage({
+  Future<void> uploadMessageImage({
     required String dateTime,
     required String text,
     required String? receiverId,
-  }) {
+  }) async {
     emit(CraftUploadMessageImageLoadingState());
 
     firebase_staorage.FirebaseStorage.instance
@@ -853,8 +842,6 @@ class CraftHomeCubit extends Cubit<CraftStates> {
           text: text,
           messageImage: value,
         );
-
-        messageImage = File('');
       }).catchError((error) {
         sendMessage(
           receiverId: receiverId!,
@@ -893,9 +880,8 @@ class CraftHomeCubit extends Cubit<CraftStates> {
 
   void getSearch({required String? text}) async {
     search = [];
-
-    await FirebaseFirestore.instance.collection('posts').get().then((value) {
-      emit(NewsSearchLoadingStates());
+    emit(NewsSearchLoadingStates());
+    FirebaseFirestore.instance.collection('posts').get().then((value) {
       for (var element in value.docs) {
         if (element['jobName'].toString().contains(text!) ||
             element['text'].toString().contains(text)) {
@@ -910,6 +896,11 @@ class CraftHomeCubit extends Cubit<CraftStates> {
       }
       emit(CraftSearchErrorStates(error));
     });
+  }
+
+  void clearSearchList() {
+    search!.clear();
+    emit(CraftClearSearchListState());
   }
 
   void logOut() {
@@ -946,6 +937,7 @@ class CraftHomeCubit extends Cubit<CraftStates> {
       updateLocation();
       emit(CraftGetLocationSuccessState());
     }).catchError((error) {
+      print(error.toString());
       emit(CraftGetLocationErrorState(error.toString()));
     });
 
@@ -982,10 +974,9 @@ class CraftHomeCubit extends Cubit<CraftStates> {
         .collection('users')
         .doc(userId)
         .get()
-        .then((value){
-          otherLat = value.data()!['latitude'];
-          otherLong = value.data()!['longitude'];
-    })
-        .catchError((error) {});
+        .then((value) {
+      otherLat = value.data()!['latitude'];
+      otherLong = value.data()!['longitude'];
+    }).catchError((error) {});
   }
 }

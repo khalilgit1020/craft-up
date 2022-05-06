@@ -54,59 +54,54 @@ Column UserInfoAndWorks(
       ),
       userModel.userType!
           ? Expanded(
-              child: RefreshIndicator(
-                onRefresh: () {
-                  return cubit.getMyWorkImages();
-                },
-                child: cubit.myWorkGallery.isNotEmpty
-                    ? GridView.builder(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 20, vertical: 2),
-                        gridDelegate:
-                            const SliverGridDelegateWithMaxCrossAxisExtent(
-                          maxCrossAxisExtent: 200,
-                          childAspectRatio: 3 / 3,
-                          crossAxisSpacing: 18,
-                          mainAxisSpacing: 14,
-                        ),
-                        itemCount: cubit.myWorkGallery.length,
-                        itemBuilder: (context, index) {
-                          var url = cubit.myWorkGallery[index]['image'];
-
-                          return InkWell(
-                            onTap: () {
-                              Navigator.of(context).push(MaterialPageRoute(
-                                  builder: (_) => ImageZoomScreen(
-                                        tag: index.toString(),
-                                        url: url,
-                                      )));
-                            },
-                            child: Hero(
-                              tag: index.toString(),
-                              child: CachedNetworkImage(
-                                imageUrl: url,
-                                placeholder: (context, url) => Container(
-                                  color: Colors.grey[300],
-                                ),
-                                errorWidget: (context, url, error) => Icon(Icons.error),
-                                fit: BoxFit.cover,
-                              ),
-                            ),
-                          );
-                        },
-                      )
-                    : Center(
-                        child: Text(
-                          'لا يوجد لديك صور في معرضك الخاص, أضف بعض الصور...',
-                          style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                            color: mainColor,
-                          ),
-                          textAlign: TextAlign.center,
-                        ),
+              child: cubit.myWorkGallery.isNotEmpty
+                  ? GridView.builder(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 20, vertical: 2),
+                      gridDelegate:
+                          const SliverGridDelegateWithMaxCrossAxisExtent(
+                        maxCrossAxisExtent: 200,
+                        childAspectRatio: 3 / 3,
+                        crossAxisSpacing: 18,
+                        mainAxisSpacing: 14,
                       ),
-              ),
+                      itemCount: cubit.myWorkGallery.length,
+                      itemBuilder: (context, index) {
+                        var url = cubit.myWorkGallery[index]['image'];
+
+                        return InkWell(
+                          onTap: () {
+                            Navigator.of(context).push(MaterialPageRoute(
+                                builder: (_) => ImageZoomScreen(
+                                      tag: index.toString(),
+                                      url: url!,
+                                    )));
+                          },
+                          child: Hero(
+                            tag: index.toString(),
+                            child: CachedNetworkImage(
+                              imageUrl: url!,
+                              placeholder: (context, url) => Container(
+                                color: Colors.grey[300],
+                              ),
+                              errorWidget: (context, url, error) => Icon(Icons.error),
+                              fit: BoxFit.cover,
+                            ),
+                          ),
+                        );
+                      },
+                    )
+                  : Center(
+                      child: Text(
+                        'لا يوجد لديك صور في معرضك الخاص, أضف بعض الصور...',
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          color: mainColor,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
             )
           : Expanded(
               child: Center(

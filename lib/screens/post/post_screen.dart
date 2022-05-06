@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:graduation/constants.dart';
 import 'package:graduation/models/comment_model.dart';
 import 'package:graduation/widgets/my_divider.dart';
@@ -8,16 +9,13 @@ import 'package:graduation/widgets/styles/icon_broken.dart';
 
 import '../../bloc/craft_states.dart';
 import '../../bloc/home_cubit.dart';
-import '../../models/craft_user_model.dart';
 import '../../models/post_model.dart';
-import '../../widgets/build_comment.dart';
-import '../../widgets/show_taost.dart';
 import '../other_user_profile.dart';
 
 class PostScreen extends StatefulWidget {
   final PostModel model;
 
-  PostScreen({Key? key, required this.model}) : super(key: key);
+  const PostScreen({Key? key, required this.model}) : super(key: key);
 
   @override
   State<PostScreen> createState() => _PostScreenState();
@@ -27,15 +25,23 @@ class _PostScreenState extends State<PostScreen> {
   var commentController = TextEditingController();
 
   @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+    commentController.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
 
     return BlocConsumer<CraftHomeCubit, CraftStates>(
       listener: (context, state) {
         if (state is CraftWriteCommentSuccessState) {
-          showToast(
-            state: ToastState.SUCCESS,
-            msg: 'تم نشر تعليقك',
+          EasyLoading.showToast(
+            'تم إضافة التعليق',
+            toastPosition: EasyLoadingToastPosition.bottom,
+            duration: const Duration(milliseconds: 1000),
           );
           //CraftHomeCubit().getNotifications();
         }
@@ -52,7 +58,7 @@ class _PostScreenState extends State<PostScreen> {
               backgroundColor: mainColor,
               body: Column(
                 children: [
-                  Container(
+                  SizedBox(
                     width: size.width,
                     height: size.height / 7.5,
                     child: Stack(

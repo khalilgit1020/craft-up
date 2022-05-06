@@ -116,7 +116,7 @@ class NotificationsScreen extends StatelessWidget {
                 child: CachedNetworkImage(
                   height: double.infinity,
                   width: double.infinity,
-                  imageUrl: user.image!,
+                  imageUrl: cubit.specialUser![user.uId]!.image!,
                   placeholder: (context, url) => CircleAvatar(
                     radius: 25.0,
                     backgroundColor: Colors.grey[300],
@@ -143,7 +143,7 @@ class NotificationsScreen extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  user.name!,
+                  cubit.specialUser![user.uId]!.name!,
                   style: const TextStyle(
                       fontSize: 18, fontWeight: FontWeight.bold),
                 ),

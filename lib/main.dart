@@ -1,6 +1,8 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:graduation/bloc/craft_states.dart';
 import 'package:graduation/bloc/home_cubit.dart';
 import 'package:graduation/helpers/cache_helper.dart';
@@ -14,7 +16,14 @@ import 'constants.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp,
+    DeviceOrientation.portraitDown
+  ]);
+
   customErrorScreen();
+
   await Firebase.initializeApp();
 
   await CacheHelper.init();
@@ -50,7 +59,6 @@ class MyApp extends StatelessWidget {
     return BlocProvider(
       create: (context) => CraftHomeCubit()
         ..getUserData()
-        ..getPosts()
         ..getMySavedPostsId()
         ..checkIfLocationPermissionAllowedd(),
       child: BlocConsumer<CraftHomeCubit, CraftStates>(
@@ -68,6 +76,7 @@ class MyApp extends StatelessWidget {
                 child: widget,
               ),
             ),
+            builder: EasyLoading.init(),
           );
         },
       ),

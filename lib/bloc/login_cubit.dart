@@ -16,15 +16,16 @@ class CraftLoginCubit extends Cubit<CraftStates> {
   }) {
     emit(CraftLoginLoadingState());
 
-    FirebaseAuth.instance.signInWithEmailAndPassword(
+    FirebaseAuth.instance
+        .signInWithEmailAndPassword(
       email: email!,
       password: password!,
-    ).then((value) {
-
+    )
+        .then((value) {
       print(value.user!.email);
       print(value.user!.uid);
       emit(CraftLoginSuccessState(value.user!.uid));
-    }).catchError((error){
+    }).catchError((error) {
       emit(CraftLoginErrorState(error.toString()));
     });
   }

@@ -6,7 +6,6 @@ import '../../bloc/craft_states.dart';
 import '../../bloc/home_cubit.dart';
 import '../../constants.dart';
 import '../../models/post_model.dart';
-import '../../widgets/build_post.dart';
 import '../../widgets/my_divider.dart';
 import '../../widgets/styles/icon_broken.dart';
 import '../other_user_profile.dart';
@@ -59,12 +58,17 @@ class SearchsScreen extends StatelessWidget {
                         child: TextFormField(
                           controller: searchController,
                           keyboardType: TextInputType.text,
-                          onChanged: (value) {
-                            cubit.getSearch(text: value);
-                          },
-                          validator: (value) {
+                          validator: (String? value) {
                             if (value!.isEmpty) {
-                              return 'خانة البحث فارغة';
+                              return 'Please enter key word to search';
+                            }
+                            return null;
+                          },
+                          onChanged: (value) {
+                            if(!RegExp(r'^[ ]*$').hasMatch(value)){
+                              cubit.getSearch(text: value);
+                            }else{
+                              cubit.clearSearchList();
                             }
                           },
                           decoration: InputDecoration(
@@ -85,42 +89,42 @@ class SearchsScreen extends StatelessWidget {
                       ),
                     ),
                   ),
-                  cubit.search!.isEmpty
-                      ? const Expanded(
-                          child: Center(
-                            child: CircularProgressIndicator.adaptive(),
-                          ),
-                        )
-                      : Expanded(
-                          child: SingleChildScrollView(
-                            child: Padding(
-                              padding: const EdgeInsets.all(16.0),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  const SizedBox(
-                                    height: 20,
-                                  ),
-                                  ListView.separated(
-                                    shrinkWrap: true,
-                                    physics:
-                                        const NeverScrollableScrollPhysics(),
-                                    itemCount: cubit.search!.length,
-                                    separatorBuilder: (context, index) =>
-                                        MyDivider(),
-                                    itemBuilder: (context, index) {
-                                      return buildPost(
-                                        context: context,
-                                        model: cubit.search![index],
-                                        cubit: cubit,
-                                      );
-                                    },
-                                  ),
-                                ],
+                  if (state is NewsSearchLoadingStates && state is! CraftClearSearchListState)
+                    const Expanded(
+                      child: Center(
+                        child: CircularProgressIndicator.adaptive(),
+                      ),
+                    ),
+                  if (state is CraftSearchSuccessStates && state is! CraftClearSearchListState)
+                    Expanded(
+                      child: SingleChildScrollView(
+                        child: Padding(
+                          padding: const EdgeInsets.all(16.0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const SizedBox(
+                                height: 20,
                               ),
-                            ),
+                              ListView.separated(
+                                shrinkWrap: true,
+                                physics: const NeverScrollableScrollPhysics(),
+                                itemCount: cubit.search!.length,
+                                separatorBuilder: (context, index) =>
+                                    MyDivider(),
+                                itemBuilder: (context, index) {
+                                  return buildPost(
+                                    context: context,
+                                    model: cubit.search![index],
+                                    cubit: cubit,
+                                  );
+                                },
+                              ),
+                            ],
                           ),
-                        )
+                        ),
+                      ),
+                    )
                 ],
               ),
             ),
@@ -227,9 +231,7 @@ class SearchsScreen extends StatelessWidget {
                   onTap: () {
                     cubit.getComments(postId: model.postId);
                     Navigator.of(context).push(MaterialPageRoute(
-                        builder: (_) => PostScreen(
-                              model: model
-                            )));
+                        builder: (_) => PostScreen(model: model)));
                   },
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(8),

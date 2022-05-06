@@ -1,11 +1,10 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import '../../bloc/craft_states.dart';
 import '../../bloc/home_cubit.dart';
 import '../../constants.dart';
-import '../../widgets/show_taost.dart';
-
 class WriteSuggetion extends StatelessWidget {
    WriteSuggetion({Key? key}) : super(key: key);
 
@@ -22,10 +21,7 @@ class WriteSuggetion extends StatelessWidget {
 
         if (state is CraftWriteSuggestionSuccessState ) {
 
-          showToast(
-            state: ToastState.SUCCESS,
-            msg: 'تم تسجيل إرسال اقتراحك بنجاح',
-          );
+          EasyLoading.showSuccess('تم الإرسال', maskType: EasyLoadingMaskType.black, duration: const Duration(milliseconds: 1500));
         }
 
 
@@ -97,10 +93,12 @@ class WriteSuggetion extends StatelessWidget {
                           if (value!.isEmpty) {
                             return 'تأكد من إدخال اقتراح جيد';
                           }
+                          return null;
                         },
                         decoration: const InputDecoration(
                           hintText: 'أدخل محتوى الاقتراح',
                           border: InputBorder.none,
+                          contentPadding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 12),
                         ),
                       ),
                     ),

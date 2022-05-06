@@ -114,7 +114,7 @@ class SavedPostsScreen extends StatelessWidget {
                   child: CachedNetworkImage(
                     height: double.infinity,
                     width: double.infinity,
-                    imageUrl: model.image!,
+                    imageUrl: cubit.specialUser![model.uId]!.image!,
                     placeholder: (context, url) => CircleAvatar(
                       radius: 25.0,
                       backgroundColor: Colors.grey[300],
@@ -128,7 +128,7 @@ class SavedPostsScreen extends StatelessWidget {
               width: 20,
             ),
             Text(
-              model.name!,
+              cubit.specialUser![model.uId]!.name!,
               style: const TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,

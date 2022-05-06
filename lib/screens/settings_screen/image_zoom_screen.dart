@@ -26,7 +26,7 @@ class ImageZoomScreen extends StatelessWidget {
               child: Hero(
                 tag: tag,
                 child: Image.network(
-                  '$url',
+                  url,
                   fit: BoxFit.contain,
                 ),
               ),

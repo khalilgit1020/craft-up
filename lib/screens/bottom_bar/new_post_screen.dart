@@ -1,21 +1,39 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:graduation/constants.dart';
 
 import '../../bloc/craft_states.dart';
 import '../../bloc/home_cubit.dart';
-import '../../widgets/show_taost.dart';
 import 'home_screen.dart';
 
-class NewPostScreen extends StatelessWidget {
-  NewPostScreen({Key? key}) : super(key: key);
+class NewPostScreen extends StatefulWidget {
+  const NewPostScreen({Key? key}) : super(key: key);
 
+  @override
+  State<NewPostScreen> createState() => _NewPostScreenState();
+}
+
+class _NewPostScreenState extends State<NewPostScreen> {
   var formKey = GlobalKey<FormState>();
 
   TextEditingController textController = TextEditingController();
+
   TextEditingController nameController = TextEditingController();
+
   TextEditingController locationController = TextEditingController();
+
   TextEditingController salaryController = TextEditingController();
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+    textController.dispose();
+    nameController.dispose();
+    locationController.dispose();
+    salaryController.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -23,23 +41,25 @@ class NewPostScreen extends StatelessWidget {
 
     return BlocConsumer<CraftHomeCubit, CraftStates>(
       listener: (context, state) {
+        if (state is CraftCreatePostSuccessState) {
 
-        if (state is CraftCreatePostSuccessState ) {
-
-          showToast(
-            state: ToastState.SUCCESS,
-            msg: 'تم إنشاء المنشور بنجاح',
+          EasyLoading.showToast(
+            'تم النشر',
+            toastPosition: EasyLoadingToastPosition.bottom,
+            duration: const Duration(milliseconds: 1000),
           );
+
           CraftHomeCubit.get(context).getPosts();
-          Navigator.of(context).pushReplacement(
-              MaterialPageRoute(builder: (_) => HomeScreen()));
+          Navigator.of(context)
+              .pushReplacement(MaterialPageRoute(builder: (_) => HomeScreen()));
         }
 
-        if (state is CraftCreatePostErrorState ) {
+        if (state is CraftCreatePostErrorState) {
 
-          showToast(
-            state: ToastState.ERROR,
-            msg: 'يوجد خطا ما...',
+          EasyLoading.showToast(
+            'حدث خطأ، الرجاء المحاولة مرة آخرى',
+            toastPosition: EasyLoadingToastPosition.bottom,
+            duration: const Duration(milliseconds: 2000),
           );
         }
       },
@@ -90,7 +110,6 @@ class NewPostScreen extends StatelessWidget {
                         ],
                       ),
                     ),
-
                     Form(
                       key: formKey,
                       child: Column(
@@ -121,7 +140,7 @@ class NewPostScreen extends StatelessWidget {
                                       if (value!.isEmpty) {
                                         return 'اكتب نص المنشور هنا';
                                       }
-                                      return null ;
+                                      return null;
                                     },
                                     decoration: const InputDecoration(
                                       border: InputBorder.none,
@@ -134,7 +153,7 @@ class NewPostScreen extends StatelessWidget {
                                   height: 15,
                                 ),
 
-                                    // for name of job field
+                                // for name of job field
                                 Text(
                                   'اسم الوظيفة أو الخدمة ',
                                   style: Theme.of(context)
@@ -168,7 +187,7 @@ class NewPostScreen extends StatelessWidget {
                                       if (value!.isEmpty) {
                                         return 'يرجى ادخال اسم الوظيفة او الخدمة';
                                       }
-                                      return null ;
+                                      return null;
                                     },
                                     decoration: const InputDecoration(
                                       border: InputBorder.none,
@@ -181,7 +200,7 @@ class NewPostScreen extends StatelessWidget {
                                   height: 15,
                                 ),
 
-                                  // for location field
+                                // for location field
                                 Text(
                                   'الموقع ',
                                   style: Theme.of(context)
@@ -215,7 +234,7 @@ class NewPostScreen extends StatelessWidget {
                                       if (value!.isEmpty) {
                                         return 'يرجى تحديد موقع الوظيفة او الخدمة';
                                       }
-                                      return null ;
+                                      return null;
                                     },
                                     decoration: const InputDecoration(
                                       border: InputBorder.none,
@@ -262,7 +281,7 @@ class NewPostScreen extends StatelessWidget {
                                       if (value!.isEmpty) {
                                         return 'يرجى إدخال سعر الوظيفة او الخدمة المعلن عنها';
                                       }
-                                      return null ;
+                                      return null;
                                     },
                                     decoration: const InputDecoration(
                                       border: InputBorder.none,
@@ -280,8 +299,6 @@ class NewPostScreen extends StatelessWidget {
                           SizedBox(
                             height: size.height / 15,
                           ),
-
-
                           Center(
                             child: MaterialButton(
                               onPressed: () {
@@ -291,11 +308,15 @@ class NewPostScreen extends StatelessWidget {
                                         if (formKey.currentState!.validate())
                                           {
                                             cubit.createPost(
-                                              dateTime: DateTime.now().toString(),
+                                              dateTime:
+                                                  DateTime.now().toString(),
                                               text: textController.text.trim(),
-                                              jobName: nameController.text.trim(),
-                                              location: locationController.text.trim(),
-                                              salary: salaryController.text.trim(),
+                                              jobName:
+                                                  nameController.text.trim(),
+                                              location: locationController.text
+                                                  .trim(),
+                                              salary:
+                                                  salaryController.text.trim(),
                                             )
                                           }
                                       };

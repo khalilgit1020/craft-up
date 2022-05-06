@@ -27,8 +27,6 @@ class ProfileScreen extends StatelessWidget {
         //CraftHomeCubit().getMyWorkImages();
       },
       builder: (context, state) {
-        CraftHomeCubit().getMyWorkImages();
-
         var cubit = CraftHomeCubit.get(context);
 
         //  cubit.getUserData();

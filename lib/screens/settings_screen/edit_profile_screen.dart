@@ -3,12 +3,12 @@ import 'dart:ui';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:graduation/constants.dart';
 
 import '../../bloc/craft_states.dart';
 import '../../bloc/home_cubit.dart';
 import '../../models/craft_user_model.dart';
-import '../../widgets/show_taost.dart';
 
 class EditProfileScreen extends StatelessWidget {
   EditProfileScreen({Key? key}) : super(key: key);
@@ -26,10 +26,8 @@ class EditProfileScreen extends StatelessWidget {
     return BlocConsumer<CraftHomeCubit, CraftStates>(
       listener: (context, state) {
         if (state is CraftUserUpdateSuccessState) {
-          showToast(
-            state: ToastState.SUCCESS,
-            msg: 'تم تعديل البيانات الشخصية',
-          );
+
+          EasyLoading.showToast('تم تعديل البيانات', toastPosition: EasyLoadingToastPosition.bottom, duration: const Duration(milliseconds: 1500));
 
           CraftHomeCubit.get(context).getUserData();
           Navigator.of(context).pop();
@@ -145,9 +143,11 @@ class EditProfileScreen extends StatelessWidget {
                                   if (value!.isEmpty) {
                                     return 'الرجاء إدخال اسمك';
                                   }
+                                  return null;
                                 },
                                 decoration: const InputDecoration(
                                   border: InputBorder.none,
+                                  contentPadding: EdgeInsets.symmetric(horizontal: 8.0),
                                   //  label: Text('البريد الالكتروني'),
                                   //  prefixIcon: Icon(Icons.email_outlined),
                                 ),
@@ -193,9 +193,11 @@ class EditProfileScreen extends StatelessWidget {
                                       if (value!.isEmpty) {
                                         return 'الرجاء إدخال حرفتك الخاصة';
                                       }
+                                      return null;
                                     },
                                     decoration: const InputDecoration(
                                       border: InputBorder.none,
+                                      contentPadding: EdgeInsets.symmetric(horizontal: 8.0),
                                        // label: Text(name),
                                       //  prefixIcon: Icon(Icons.email_outlined),
                                     ),
@@ -238,9 +240,11 @@ class EditProfileScreen extends StatelessWidget {
                                   if (value!.isEmpty) {
                                     return 'الرجاء إدخال عنوانك';
                                   }
+                                  return null;
                                 },
                                 decoration: const InputDecoration(
                                   border: InputBorder.none,
+                                  contentPadding: EdgeInsets.symmetric(horizontal: 8.0),
                                   //  label: Text('البريد الالكتروني'),
                                   //  prefixIcon: Icon(Icons.email_outlined),
                                 ),
@@ -281,9 +285,11 @@ class EditProfileScreen extends StatelessWidget {
                                   if (value!.isEmpty) {
                                     return 'الرجاء إدخال رقم هاتفك';
                                   }
+                                  return null;
                                 },
                                 decoration: const InputDecoration(
                                   border: InputBorder.none,
+                                  contentPadding: EdgeInsets.symmetric(horizontal: 8.0),
                                 ),
                               ),
                             ),
@@ -323,6 +329,7 @@ class EditProfileScreen extends StatelessWidget {
 
                                 decoration: const InputDecoration(
                                   border: InputBorder.none,
+                                  contentPadding: EdgeInsets.symmetric(horizontal: 8.0),
                                   //  label: Text('البريد الالكتروني'),
                                   //  prefixIcon: Icon(Icons.email_outlined),
                                 ),

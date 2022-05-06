@@ -1,9 +1,8 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:graduation/constants.dart';
 import 'package:graduation/models/post_model.dart';
 import 'package:graduation/screens/chat/chats_screen.dart';
@@ -11,38 +10,11 @@ import 'package:graduation/widgets/my_divider.dart';
 
 import '../../bloc/craft_states.dart';
 import '../../bloc/home_cubit.dart';
-import '../../widgets/show_taost.dart';
-import '../onBoarding.dart';
 import '../other_user_profile.dart';
 import '../post/post_screen.dart';
 
-class FeedScreen extends StatefulWidget {
-  FeedScreen({Key? key}) : super(key: key);
-
-  @override
-  State<FeedScreen> createState() => _FeedScreenState();
-}
-
-class _FeedScreenState extends State<FeedScreen> {
-  var searchController = TextEditingController();
-
-
-  updateLocation(){
-
-     FirebaseFirestore.instance
-        .collection('users')
-        .doc(FirebaseAuth.instance.currentUser!.uid)
-        .update(
-        {'longitude': cPosition.longitude, 'latitude': cPosition.latitude});
-
-  }
-
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-
-  }
+class FeedScreen extends StatelessWidget {
+  const FeedScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -51,9 +23,10 @@ class _FeedScreenState extends State<FeedScreen> {
     return BlocConsumer<CraftHomeCubit, CraftStates>(
       listener: (context, state) {
         if (state is CraftSavePostSuccessState) {
-          showToast(
-            state: ToastState.SUCCESS,
-            msg: 'تم حفظ المنشور بنجاح',
+          EasyLoading.showToast(
+            'تم الحفظ',
+            toastPosition: EasyLoadingToastPosition.bottom,
+            duration: const Duration(milliseconds: 1000),
           );
 
           if (kDebugMode) {
@@ -185,9 +158,7 @@ class _FeedScreenState extends State<FeedScreen> {
                             ),
                           )
                         : const Expanded(
-                            child: Center(
-                              child: CircularProgressIndicator.adaptive(),
-                            ),
+                            child: SizedBox(),
                           )
                   ],
                 )),
@@ -236,7 +207,7 @@ class _FeedScreenState extends State<FeedScreen> {
                   child: CachedNetworkImage(
                     height: double.infinity,
                     width: double.infinity,
-                    imageUrl: model.image!,
+                    imageUrl: cubit.specialUser![model.uId]!.image!,
                     placeholder: (context, url) => CircleAvatar(
                       radius: 25.0,
                       backgroundColor: Colors.grey[300],
@@ -250,7 +221,7 @@ class _FeedScreenState extends State<FeedScreen> {
               width: 20,
             ),
             Text(
-              model.name!,
+              cubit.specialUser![model.uId]!.name!,
               style: const TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
@@ -274,7 +245,10 @@ class _FeedScreenState extends State<FeedScreen> {
             padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4),
             child: Text(
               model.text!,
-              style: const TextStyle(fontSize: 14, color: Colors.black, fontWeight: FontWeight.w700),
+              style: const TextStyle(
+                  fontSize: 14,
+                  color: Colors.black,
+                  fontWeight: FontWeight.w700),
               maxLines: 2,
               overflow: TextOverflow.ellipsis,
               textAlign: TextAlign.start,

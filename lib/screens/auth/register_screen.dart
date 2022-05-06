@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:graduation/constants.dart';
+import 'package:graduation/main.dart';
 import 'package:graduation/screens/auth/login_screen.dart';
-import 'package:graduation/widgets/show_taost.dart';
 
 import '../../bloc/craft_states.dart';
 import '../../bloc/home_cubit.dart';
@@ -10,16 +11,42 @@ import '../../bloc/register_cubit.dart';
 import '../../helpers/cache_helper.dart';
 import '../bottom_bar/home_screen.dart';
 
+class CraftRegisterScreen extends StatefulWidget {
+  const CraftRegisterScreen({Key? key}) : super(key: key);
 
-class CraftRegisterScreen extends StatelessWidget {
+  @override
+  State<CraftRegisterScreen> createState() => _CraftRegisterScreenState();
+}
+
+class _CraftRegisterScreenState extends State<CraftRegisterScreen> {
   var formKey = GlobalKey<FormState>();
+
   var emailController = TextEditingController();
+
   var addressController = TextEditingController();
+
   var craftTypeController = TextEditingController();
+
   var nameController = TextEditingController();
+
   var passwordController = TextEditingController();
+
   var ConfirmPasswordController = TextEditingController();
+
   var phoneController = TextEditingController();
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+    emailController.dispose();
+    addressController.dispose();
+    craftTypeController.dispose();
+    nameController.dispose();
+    passwordController.dispose();
+    ConfirmPasswordController.dispose();
+    passwordController.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -27,50 +54,51 @@ class CraftRegisterScreen extends StatelessWidget {
       create: (context) => CraftRegisterCubit(),
       child: BlocConsumer<CraftRegisterCubit, CraftStates>(
         listener: (context, state) {
-
-
-          if(state is CraftRegisterSuccessState){
+          /*if(state is CraftRegisterSuccessState){
             CacheHelper.saveData(
               key: 'uId',
               value: state.uid,
             ).then((value){
-              Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (_)=>const HomeScreen()));
+              uId = state.uid;
+              Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (_)=> MyApp(widget: const HomeScreen())));
             }).catchError((error){
+              print(error.toString());
+            });
+          }*/
+
+          if (state is CraftCreateUserSuccessState) {
+
+            CacheHelper.saveData(
+              key: 'uId',
+              value: state.uId,
+            ).then((value) {
+              uId = state.uId;
+              CraftHomeCubit().getUserData();
+              Navigator.of(context).pushReplacement(MaterialPageRoute(
+                  builder: (_) => MyApp(widget: const HomeScreen())));
+            }).catchError((error) {
               print(error.toString());
             });
           }
 
+          if (state is CraftRegisterErrorState) {
+            if (state.error ==
+                '[firebase_auth/email-already-in-use] The email address is already in use by another account.') {
+              EasyLoading.showInfo(
+                'البريد الإالكتروني الذي أدخلته تم استخدامه بالفعل، الرجاء استخدام بريد إلكتروني آخر',
+                maskType: EasyLoadingMaskType.black,
+                duration: const Duration(milliseconds: 3000),
+              );
+            } else {
 
-
-          if (state is CraftCreateUserSuccessState ) {
-
-            showToast(
-              state: ToastState.SUCCESS,
-              msg: 'تم تسجيل الحساب بنجاح',
-            );
-
-            CraftHomeCubit().getUserData();
-            Navigator.of(context).pushReplacement(
-
-                MaterialPageRoute(builder: (_) =>const HomeScreen()));
-          }
-
-
-            if (state is CraftRegisterErrorState ){
-                if(state.error == '[firebase_auth/email-already-in-use] The email address is already in use by another account.' ) {
-                  showToast(
-                    state: ToastState.ERROR,
-                    msg: 'البريد الإالكتروني الذي أدخلته موجود مسبقا,الرجاء كتابة البريد الإالكتروني اخر',
-                  );
-                }else{
-                  showToast(
-                    state: ToastState.ERROR,
-                    msg: 'يوجد خطأ, الرجاء تسجيل حساب جديد مرة أخرى',
-                  );
-                }
-              print(state.error);
+              EasyLoading.showInfo(
+                'حدث خطأ، الرجاء المحاولة مرة آخرى',
+                maskType: EasyLoadingMaskType.black,
+                duration: const Duration(milliseconds: 2000),
+              );
             }
-
+            print(state.error);
+          }
         },
         builder: (context, state) {
           var cubit = CraftRegisterCubit.get(context);
@@ -108,7 +136,7 @@ class CraftRegisterScreen extends StatelessWidget {
                                   child: Column(
                                     children: [
                                       Text(
-                                        'حرفيا',
+                                        'حرفي',
                                         style: TextStyle(
                                           color: mainColor,
                                           fontWeight: FontWeight.bold,
@@ -196,9 +224,12 @@ class CraftRegisterScreen extends StatelessWidget {
                                     if (value!.isEmpty) {
                                       return 'الرجاء إدخال اسمك';
                                     }
+                                    return null;
                                   },
                                   decoration: const InputDecoration(
                                     border: InputBorder.none,
+                                    contentPadding:
+                                        EdgeInsets.symmetric(horizontal: 8.0),
                                     //  label: Text('البريد الالكتروني'),
                                     //  prefixIcon: Icon(Icons.email_outlined),
                                   ),
@@ -241,9 +272,12 @@ class CraftRegisterScreen extends StatelessWidget {
                                     } else if (!value.contains('@')) {
                                       return 'الرجاء إدخال الإيميل بالصيغة الرسمية';
                                     }
+                                    return null;
                                   },
                                   decoration: const InputDecoration(
                                     border: InputBorder.none,
+                                    contentPadding:
+                                        EdgeInsets.symmetric(horizontal: 8.0),
                                     //  label: Text('البريد الالكتروني'),
                                     //  prefixIcon: Icon(Icons.email_outlined),
                                   ),
@@ -280,16 +314,19 @@ class CraftRegisterScreen extends StatelessWidget {
                                 child: TextFormField(
                                   obscureText: cubit.isPassword,
                                   controller: passwordController,
-                                  keyboardType: TextInputType.number,
+                                  keyboardType: TextInputType.text,
                                   validator: (value) {
                                     if (value!.isEmpty) {
                                       return 'الرجاء إدخال كلمة السر الخاصة بك';
-                                    }else if(value.length < 6 ){
+                                    } else if (value.length < 6) {
                                       return 'كلمة السر قصيرة,يحب ان تكون على الأقل 6 حروف او أرقام';
                                     }
+                                    return null;
                                   },
                                   decoration: InputDecoration(
                                     border: InputBorder.none,
+                                    contentPadding: const EdgeInsets.symmetric(
+                                        horizontal: 8.0, vertical: 14),
                                     //label:const Text('كلمة السر'),
                                     // prefixIcon:const Icon(Icons.lock_outline),
                                     suffixIcon: IconButton(
@@ -335,7 +372,7 @@ class CraftRegisterScreen extends StatelessWidget {
                                 child: TextFormField(
                                   obscureText: cubit.isPassword,
                                   controller: ConfirmPasswordController,
-                                  keyboardType: TextInputType.number,
+                                  keyboardType: TextInputType.text,
                                   validator: (value) {
                                     if (value!.isEmpty) {
                                       return 'الرجاء إدخال تأكيد كلمة السر الخاصة بك';
@@ -343,9 +380,12 @@ class CraftRegisterScreen extends StatelessWidget {
                                         passwordController.text) {
                                       return 'كلمة السر غير متطابقة';
                                     }
+                                    return null;
                                   },
                                   decoration: InputDecoration(
                                     border: InputBorder.none,
+                                    contentPadding: const EdgeInsets.symmetric(
+                                        horizontal: 8.0, vertical: 14),
                                     //label:const Text('كلمة السر'),
                                     // prefixIcon:const Icon(Icons.lock_outline),
                                     suffixIcon: IconButton(
@@ -395,9 +435,12 @@ class CraftRegisterScreen extends StatelessWidget {
                                     if (value!.isEmpty) {
                                       return 'الرجاء إدخال عنوانك';
                                     }
+                                    return null;
                                   },
                                   decoration: const InputDecoration(
                                     border: InputBorder.none,
+                                    contentPadding:
+                                        EdgeInsets.symmetric(horizontal: 8.0),
                                     //  label: Text('البريد الالكتروني'),
                                     //  prefixIcon: Icon(Icons.email_outlined),
                                   ),
@@ -436,11 +479,16 @@ class CraftRegisterScreen extends StatelessWidget {
                                   keyboardType: TextInputType.number,
                                   validator: (value) {
                                     if (value!.isEmpty) {
-                                      return 'الرجاء إدخال رقم هاتفك';
+                                      return 'الرجاء إدخال رقم الهاتف الخاص بك';
+                                    } else if (value.length < 7) {
+                                      return 'يجب أن يتكون رقم الهاتف من 7 أرقام على الأقل';
                                     }
+                                    return null;
                                   },
                                   decoration: const InputDecoration(
                                     border: InputBorder.none,
+                                    contentPadding:
+                                        EdgeInsets.symmetric(horizontal: 8.0),
                                   ),
                                 ),
                               ),
@@ -478,15 +526,17 @@ class CraftRegisterScreen extends StatelessWidget {
                                       ),
                                       child: TextFormField(
                                         controller: craftTypeController,
-                                        keyboardType:
-                                            TextInputType.text,
+                                        keyboardType: TextInputType.text,
                                         validator: (value) {
                                           if (value!.isEmpty) {
                                             return 'الرجاء إدخال حرفتك الخاصة';
                                           }
+                                          return null;
                                         },
                                         decoration: const InputDecoration(
                                           border: InputBorder.none,
+                                          contentPadding: EdgeInsets.symmetric(
+                                              horizontal: 8.0),
                                           //  label: Text('البريد الالكتروني'),
                                           //  prefixIcon: Icon(Icons.email_outlined),
                                         ),

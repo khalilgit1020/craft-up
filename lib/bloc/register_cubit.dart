@@ -43,7 +43,6 @@ class CraftRegisterCubit extends Cubit<CraftStates> {
       print(value.user!.uid);
 
       emit(CraftRegisterSuccessState(value.user!.uid));
-
     }).catchError((error) {
       emit(CraftRegisterErrorState(error.toString()));
     });
@@ -57,24 +56,25 @@ class CraftRegisterCubit extends Cubit<CraftStates> {
     required String address,
     required String craftType,
     required bool userType,
-  }) async{
+  }) {
     CraftUserModel model = CraftUserModel(
       name: name,
       email: email,
       phone: phone,
       uId: uId,
       address: address,
-      image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/fd/000080_Navy_Blue_Square.svg/2048px-000080_Navy_Blue_Square.svg.png',
+      image:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/f/fd/000080_Navy_Blue_Square.svg/2048px-000080_Navy_Blue_Square.svg.png',
       craftType: craftType,
       userType: userType,
     );
 
-    await FirebaseFirestore.instance
+    FirebaseFirestore.instance
         .collection('users')
         .doc(uId)
         .set(model.toMap())
         .then((value) {
-    //  emit(CraftCreateUserSuccessState());
+      emit(CraftCreateUserSuccessState(uId));
     }).catchError((error) {
       emit(CraftCreateUserErrorState(error.toString()));
     });

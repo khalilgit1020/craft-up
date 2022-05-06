@@ -65,7 +65,7 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
       if(value){
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => CraftLoginScreen()),
+          MaterialPageRoute(builder: (context) => const CraftLoginScreen()),
         );
       }
     });

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:graduation/bloc/home_cubit.dart';
 import 'package:graduation/bloc/login_cubit.dart';
 import 'package:graduation/constants.dart';
@@ -10,9 +11,10 @@ import 'package:graduation/screens/auth/register_screen.dart';
 
 import '../../bloc/craft_states.dart';
 import '../../helpers/cache_helper.dart';
-import '../../widgets/show_taost.dart';
 
 class CraftLoginScreen extends StatefulWidget {
+  const CraftLoginScreen({Key? key}) : super(key: key);
+
   @override
   State<CraftLoginScreen> createState() => _CraftLoginScreenState();
 }
@@ -58,22 +60,30 @@ class _CraftLoginScreenState extends State<CraftLoginScreen> {
           if (state is CraftLoginErrorState) {
             if (state.error ==
                 '[firebase_auth/wrong-password] The password is invalid or the user does not have a password.') {
-              showToast(
-                state: ToastState.ERROR,
-                msg:
-                    'يوجد خطا في البريد الإلكتروني او كلمة المرور, الرجاء التأكد منهم',
+
+              EasyLoading.showInfo(
+                'لا يمكن تسجيل الدخول، الرجاء التأكد من البريد الإلكتروني أو كلمة المرور',
+                maskType: EasyLoadingMaskType.black,
+                duration: const Duration(milliseconds: 3000),
               );
+
             } else if (state.error ==
                 '[firebase_auth/user-not-found] There is no user record corresponding to this identifier. The user may have been deleted.') {
-              showToast(
-                state: ToastState.ERROR,
-                msg: 'لا يوجد حساب لهذا البريد الألكتروني, قد يكون تم حذفه',
+
+              EasyLoading.showInfo(
+                'لم يتم العثور على الحساب، الرجاء التأكد من البريد الإلكتروني',
+                maskType: EasyLoadingMaskType.black,
+                duration: const Duration(milliseconds: 2500),
               );
+
             } else {
-              showToast(
-                state: ToastState.ERROR,
-                msg: 'يوجد خطأ, الرجاء تسجيل حساب جديد مرة أخرى',
+
+              EasyLoading.showInfo(
+                'حدث خطأ، الرجاء المحاولة مرة آخرى',
+                maskType: EasyLoadingMaskType.black,
+                duration: const Duration(milliseconds: 2000),
               );
+
             }
             print(state.error);
           }
@@ -148,6 +158,7 @@ class _CraftLoginScreenState extends State<CraftLoginScreen> {
                                 },
                                 decoration: const InputDecoration(
                                   border: InputBorder.none,
+                                  contentPadding: EdgeInsets.symmetric(horizontal: 8.0),
                                   //  label: Text('البريد الالكتروني'),
                                   //  prefixIcon: Icon(Icons.email_outlined),
                                 ),
@@ -184,7 +195,7 @@ class _CraftLoginScreenState extends State<CraftLoginScreen> {
                               child: TextFormField(
                                 obscureText: cubit.isPasswordShown,
                                 controller: passwordController,
-                                keyboardType: TextInputType.number,
+                                keyboardType: TextInputType.text,
                                 validator: (value) {
                                   if (value!.isEmpty) {
                                     return 'الرجاء إدخال كلمة السر الخاصة بك';
@@ -193,6 +204,7 @@ class _CraftLoginScreenState extends State<CraftLoginScreen> {
                                 },
                                 decoration: InputDecoration(
                                   border: InputBorder.none,
+                                  contentPadding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 14),
                                   //label:const Text('كلمة السر'),
                                   // prefixIcon:const Icon(Icons.lock_outline),
                                   suffixIcon: IconButton(

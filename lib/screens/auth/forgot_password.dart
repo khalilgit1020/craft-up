@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:graduation/bloc/reset_passord_cubit.dart';
 import 'package:graduation/constants.dart';
 
 import '../../bloc/craft_states.dart';
-import '../../widgets/show_taost.dart';
 
 class ForgotPassword extends StatelessWidget {
   ForgotPassword({Key? key}) : super(key: key);
@@ -17,27 +17,22 @@ class ForgotPassword extends StatelessWidget {
       create: (context) => CraftResetPasswordCubit(),
       child: BlocConsumer<CraftResetPasswordCubit, CraftStates>(
         listener: (context, state) {
+          if (state is CraftResetPasswordSuccessState) {
 
-          if (state is CraftResetPasswordSuccessState ){
-
-            showToast(
-              state: ToastState.SUCCESS,
-              msg: 'تم إرسال رسالة الى بريدك الإلكتروني, يرجى تفقدها',
+            EasyLoading.showSuccess(
+              'تم الإرسال، الرجاء فحص البريد الإلكتروني',
+              maskType: EasyLoadingMaskType.black,
+              duration: const Duration(milliseconds: 2000),
             );
-
           }
 
-          if (state is CraftResetPasswordErrorState ){
-
-            showToast(
-              state: ToastState.ERROR,
-              msg: 'لا يوجد حساب لهذا البريد الإلكتروني',
+          if (state is CraftResetPasswordErrorState) {
+            EasyLoading.showInfo(
+              'الرجاء التأكد من البريد الإلكتروني',
+              maskType: EasyLoadingMaskType.black,
+              duration: const Duration(milliseconds: 2000),
             );
-            print(state.error);
-
           }
-
-
         },
         builder: (context, state) {
           var cubit = CraftResetPasswordCubit.get(context);
@@ -144,9 +139,12 @@ class ForgotPassword extends StatelessWidget {
                                   } else if (!value.contains('@')) {
                                     return 'الرجاء إدخال الإيميل بالصيغة الرسمية';
                                   }
+                                  return null;
                                 },
                                 decoration: const InputDecoration(
                                   border: InputBorder.none,
+                                  contentPadding:
+                                      EdgeInsets.symmetric(horizontal: 8.0),
                                   //  label: Text('البريد الالكتروني'),
                                   //  prefixIcon: Icon(Icons.email_outlined),
                                 ),
@@ -167,7 +165,8 @@ class ForgotPassword extends StatelessWidget {
                               height: 50,
                               child: TextButton(
                                 onPressed: () {
-                                  cubit.resetPassword(email: emailController.text);
+                                  cubit.resetPassword(
+                                      email: emailController.text);
                                 },
                                 child: const Text(
                                   'التالي',
