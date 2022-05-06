@@ -46,7 +46,7 @@ class _NewPostScreenState extends State<NewPostScreen> {
           EasyLoading.showToast(
             'تم النشر',
             toastPosition: EasyLoadingToastPosition.bottom,
-            duration: const Duration(milliseconds: 1000),
+            duration: const Duration(milliseconds: 1500),
           );
 
           CraftHomeCubit.get(context).getPosts();
@@ -321,13 +321,11 @@ class _NewPostScreenState extends State<NewPostScreen> {
                                           }
                                       };
                               },
-                              height: 50,
+                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
+                              height: 60,
                               color: cubit.isEmpty ? Colors.grey : mainColor,
                               child: Container(
-                                width: size.width / 1.4,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(15),
-                                ),
+                                width: size.width / 1.2,
                                 child: const Text(
                                   'نشر',
                                   style: TextStyle(

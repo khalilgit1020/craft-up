@@ -155,9 +155,10 @@ class _ChatDetailsScreenState extends State<ChatDetailsScreen> {
                               ),
                             ),
                     ),
+                    const SizedBox(height: 10,),
                     Container(
                       decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(15),
+                        borderRadius: BorderRadius.circular(25),
                       ),
                       clipBehavior: Clip.antiAliasWithSaveLayer,
                       child: Row(

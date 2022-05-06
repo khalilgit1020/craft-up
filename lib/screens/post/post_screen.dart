@@ -134,11 +134,25 @@ class _PostScreenState extends State<PostScreen> {
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
                                 children: [
-                                  Text(
-                                    widget.model.location!,
-                                    style: const TextStyle(
-                                        fontSize: 18,
-                                        fontWeight: FontWeight.bold),
+                                  Row(
+                                    children: [
+                                      const Padding(
+                                        padding: EdgeInsets.only(bottom: 5.0),
+                                        child: Icon(
+                                          Icons.location_on_outlined,
+                                          size: 22,
+                                        ),
+                                      ),
+                                      const SizedBox(
+                                        width: 2,
+                                      ),
+                                      Text(
+                                        widget.model.location!,
+                                        style: const TextStyle(
+                                            fontSize: 18,
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                    ],
                                   ),
                                   Text(
                                     '${widget.model.salary!} \$',
@@ -156,17 +170,24 @@ class _PostScreenState extends State<PostScreen> {
                             // post text
                             Center(
                               child: Container(
-                                height: size.height / 3,
+                                height: size.height / 4.5,
                                 width: size.width / 1.1,
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(8),
-                                  border: Border.all(
-                                    color: Colors.grey,
-                                  ),
+                                  color:
+                                      Theme.of(context).scaffoldBackgroundColor,
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.grey.withOpacity(0.5),
+                                      spreadRadius: 3,
+                                      blurRadius: 15,
+                                      offset: const Offset(-3, 7),
+                                    ),
+                                  ],
                                 ),
                                 margin: const EdgeInsets.all(10.0),
                                 padding: const EdgeInsets.symmetric(
-                                    horizontal: 10.0, vertical: 5),
+                                    horizontal: 10.0, vertical: 10),
                                 child: SingleChildScrollView(
                                   child: Text(
                                     widget.model.text!,
@@ -186,20 +207,21 @@ class _PostScreenState extends State<PostScreen> {
                             Center(
                               child: Container(
                                 padding: const EdgeInsets.symmetric(
-                                  horizontal: 8,
-                                  vertical: 4,
+                                    horizontal: 8, vertical: 8),
+                                constraints: const BoxConstraints(
+                                  maxHeight: 100,
                                 ),
                                 width: size.width / 1.2,
                                 decoration: BoxDecoration(
                                   color: Colors.grey.shade200,
                                   borderRadius: BorderRadius.circular(8),
-                                  boxShadow: const [
+                                  boxShadow: [
                                     BoxShadow(
-                                      color: Colors.grey,
-                                      spreadRadius: 0.1,
-                                      blurRadius: 4,
-                                      offset: Offset(
-                                          0, 2), // changes position of shadow
+                                      color: Colors.grey.withOpacity(0.5),
+                                      spreadRadius: 1,
+                                      blurRadius: 7,
+                                      offset: const Offset(
+                                          0, 3), // changes position of shadow
                                     ),
                                   ],
                                 ),
@@ -207,6 +229,8 @@ class _PostScreenState extends State<PostScreen> {
                                   children: [
                                     Expanded(
                                       child: TextFormField(
+                                        minLines: 1,
+                                        maxLines: 10,
                                         controller: commentController,
                                         keyboardType: TextInputType.text,
                                         validator: (value) {
@@ -226,8 +250,10 @@ class _PostScreenState extends State<PostScreen> {
                                           }
                                         },
                                         decoration: const InputDecoration(
+                                          contentPadding:
+                                              EdgeInsets.symmetric(vertical: 0),
                                           border: InputBorder.none,
-                                          label: Text('اكتب تعليقك هنا'),
+                                          label: Text('أضف تعليقك هنا'),
 /*suffixIcon: Icon(
                                           IconBroken.Send,
                                           color: Colors.blue,
@@ -286,24 +312,47 @@ class _PostScreenState extends State<PostScreen> {
                             const SizedBox(
                               height: 20,
                             ),
+                            if (cubit.comments!.isNotEmpty)
+                              ListView.separated(
+                                reverse: true,
+                                shrinkWrap: true,
+                                physics: const NeverScrollableScrollPhysics(),
+                                itemCount: cubit.comments!.length,
+                                separatorBuilder: (context, index) =>
+                                    MyDivider(startIndent: 15, endIndent: 15),
+                                itemBuilder: (context, index) {
+                                  // cubit.getComments(postId: model.postId);
 
-                            ListView.separated(
-                              reverse: true,
-                              shrinkWrap: true,
-                              physics: const NeverScrollableScrollPhysics(),
-                              itemCount: cubit.comments!.length,
-                              separatorBuilder: (context, index) => MyDivider(),
-                              itemBuilder: (context, index) {
-                                // cubit.getComments(postId: model.postId);
-
-                                return buildComment(
-                                    context: context,
-                                    index: index,
-                                    model: cubit.comments![index],
-                                    cubit: cubit);
-                              },
-                            ),
-
+                                  return buildComment(
+                                      context: context,
+                                      index: index,
+                                      model: cubit.comments![index],
+                                      cubit: cubit);
+                                },
+                              ),
+                            if (cubit.comments!.isEmpty)
+                              SizedBox(
+                                width: double.infinity,
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      'لا توجد تعليقات حتى الآن',
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .caption!
+                                          .copyWith(fontSize: 17, height: 1),
+                                    ),
+                                    Text(
+                                      'كن أول من يعلق',
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .caption!
+                                          .copyWith(fontSize: 14, height: 1.3),
+                                    ),
+                                  ],
+                                ),
+                              ),
                             const SizedBox(
                               height: 20,
                             ),
@@ -373,9 +422,7 @@ class _PostScreenState extends State<PostScreen> {
                 Text(
                   cubit.specialUser![model.userId]!.name!,
                   style: const TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold
-                  ),
+                      fontSize: 16, fontWeight: FontWeight.bold),
                 ),
                 Text(
                   model.comment.toString(),

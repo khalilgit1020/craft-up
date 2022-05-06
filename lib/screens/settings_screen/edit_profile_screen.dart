@@ -342,10 +342,10 @@ class EditProfileScreen extends StatelessWidget {
                             // for edit button
                             Center(
                               child: Container(
-                                width: size.width / 1.3,
+                                width: size.width / 1.2,
                                 decoration: BoxDecoration(
                                   color: mainColor,
-                                  borderRadius: BorderRadius.circular(8),
+                                  borderRadius: BorderRadius.circular(4),
                                 ),
                                 height: 60,
                                 child: state is CraftUserUpdateLoadingState

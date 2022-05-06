@@ -21,13 +21,13 @@ class SettingsProfileScreen extends StatelessWidget {
 
     return BlocConsumer<CraftHomeCubit, CraftStates>(
       listener: (context, state) {
-        if(state is CraftLogoutSuccessState){
-          CacheHelper.removeData(key: 'uId').then((value){
-            if(value){
-              Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=> CraftLoginScreen()));
+        if (state is CraftLogoutSuccessState) {
+          CacheHelper.removeData(key: 'uId').then((value) {
+            if (value) {
+              Navigator.pushReplacement(context,
+                  MaterialPageRoute(builder: (context) => CraftLoginScreen()));
             }
           });
-
         }
       },
       builder: (context, state) {
@@ -43,22 +43,22 @@ class SettingsProfileScreen extends StatelessWidget {
               body: SingleChildScrollView(
                 child: Column(
                   children: [
-                     Container(
-                       padding: const EdgeInsets.symmetric(horizontal: 30),
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 30),
                       height: size.height / 6,
-                       child:const Align(
-                         alignment: Alignment.center,
-                         child: Text(
-                           'الاعدادات ',
-                           style: TextStyle(
-                             fontSize: 22,
-                             fontWeight: FontWeight.bold,
-                             color: Colors.white,
-                           ),
-                           textAlign: TextAlign.start,
-                         ),
-                       ),
-                     ),
+                      child: const Align(
+                        alignment: Alignment.center,
+                        child: Text(
+                          'الاعدادات ',
+                          style: TextStyle(
+                            fontSize: 22,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
+                          textAlign: TextAlign.start,
+                        ),
+                      ),
+                    ),
                     Container(
                       padding: const EdgeInsets.symmetric(
                           horizontal: 12, vertical: 20),
@@ -75,17 +75,63 @@ class SettingsProfileScreen extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           //buildListTileForSettings(IconBroken.Profile,'البيانات الشخصية',true,(){}),
-                          buildListTileForSettings(IconBroken.Info_Circle,'معلومات التطبيق',(){
-                            Navigator.of(context).push(MaterialPageRoute(builder:(_)=>const AppInformation()));
+                          buildListTileForSettings(
+                              IconBroken.Info_Circle, 'معلومات التطبيق', () {
+                            Navigator.of(context).push(MaterialPageRoute(
+                                builder: (_) => const AppInformation()));
                           }),
-                          buildListTileForSettings(Icons.add_to_photos,'كتابة اقتراح',(){
-                            Navigator.of(context).push(MaterialPageRoute(builder:(_)=> WriteSuggetion()));
+                          buildListTileForSettings(
+                              Icons.add_to_photos, 'كتابة اقتراح', () {
+                            Navigator.of(context).push(MaterialPageRoute(
+                                builder: (_) => WriteSuggetion()));
                           }),
-                          buildListTileForSettings(Icons.share,'مشاركة التطبيق ',(){
-                          //  cubit.getNotifications();
+                          buildListTileForSettings(
+                              Icons.share, 'مشاركة التطبيق ', () {
+                            //  cubit.getNotifications();
                           }),
-                          buildListTileForSettings(IconBroken.Logout,'تسجيل الخروج',(){
-                            cubit.logOut();
+                          buildListTileForSettings(
+                              IconBroken.Logout, 'تسجيل الخروج', () {
+                            showDialog(
+                              barrierDismissible: false,
+                              context: context,
+                              builder: (_) {
+                                return Directionality(
+                                  textDirection: TextDirection.rtl,
+                                  child: AlertDialog(
+                                    title: const Text(
+                                      'تسجيل الخروج',
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                    content: const Text(
+                                      'هل أنت متأكد أنك تريد تسجيل الخروج؟',
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.w600),
+                                    ),
+                                    actions: [
+                                      Directionality(
+                                        textDirection: TextDirection.rtl,
+                                        child: TextButton(
+                                          onPressed: () {
+                                            Navigator.pop(context);
+                                          },
+                                          child: const Text('إلغاء', style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),),
+                                        ),
+                                      ),
+                                      Directionality(
+                                        textDirection: TextDirection.rtl,
+                                        child: TextButton(
+                                          onPressed: () {
+                                            cubit.logOut();
+                                          },
+                                          child: const Text('خروج', style: TextStyle(color: Colors.red, fontWeight: FontWeight.bold),),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                );
+                              },
+                            );
                           }),
                         ],
                       ),
@@ -100,18 +146,18 @@ class SettingsProfileScreen extends StatelessWidget {
     );
   }
 
-  Column buildListTileForSettings(IconData icon,title,Function() onTap) {
+  Column buildListTileForSettings(IconData icon, title, Function() onTap) {
     return Column(
       children: [
         ListTile(
-          onTap:onTap ,
+          onTap: onTap,
           leading: Icon(
             icon,
             color: Colors.black,
           ),
           title: Text(
             title,
-            style:const TextStyle(
+            style: const TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.bold,
             ),

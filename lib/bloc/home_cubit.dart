@@ -183,7 +183,6 @@ class CraftHomeCubit extends Cubit<CraftStates> {
       value.update({
         'commentId': value.id,
       });
-      getComments(postId: postId);
       emit(CraftWriteCommentSuccessState());
     }).catchError((error) {
       emit(CraftWriteCommentErrorState(error.toString()));
@@ -209,27 +208,24 @@ class CraftHomeCubit extends Cubit<CraftStates> {
     });
   }
 
-  Future<void> getComments({required String? postId}) async {
-    comments = [];
-    usersComment = [];
+  void getComments({required String? postId}) {
+    comments!.clear();
+    usersComment!.clear();
     emit(CraftGetPostCommentsUserLoadingState());
-
     FirebaseFirestore.instance
         .collection('posts')
         .doc(postId)
         .collection('comments')
         .orderBy('date')
-        .get()
-        .then((value) {
-      print('************** Get Comments ***************');
+        .snapshots()
+        .listen((value) {
+          comments = [];
+          usersComment = [];
       for (var element in value.docs) {
         comments!.add(CommentModel.fromJson(element.data()));
         usersComment!.add(specialUser![element.data()['userId']]!);
       }
       emit(CraftGetPostCommentsSuccessState());
-    }).catchError((error) {
-      print(error.toString());
-      emit(CraftGetPostCommentsErrorState(error.toString()));
     });
   }
 
@@ -723,6 +719,7 @@ class CraftHomeCubit extends Cubit<CraftStates> {
   void getMessage({
     required String receiverId,
   }) {
+    messages.clear();
     emit(CraftGetMessageLoadingState());
     FirebaseFirestore.instance
         .collection('users')
@@ -734,7 +731,6 @@ class CraftHomeCubit extends Cubit<CraftStates> {
         .snapshots()
         .listen((event) {
       messages = [];
-
       for (var element in event.docs) {
         messages.insert(0, MessageModel.fromJson(element.data()));
         //    print (element.data());

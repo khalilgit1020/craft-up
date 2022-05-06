@@ -553,7 +553,7 @@ class _CraftRegisterScreenState extends State<CraftRegisterScreen> {
                                 width: double.infinity,
                                 decoration: BoxDecoration(
                                   color: mainColor,
-                                  borderRadius: BorderRadius.circular(8),
+                                  borderRadius: BorderRadius.circular(4),
                                 ),
                                 height: 60,
                                 child: state is CraftRegisterLoadingState

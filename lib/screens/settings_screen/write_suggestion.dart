@@ -107,8 +107,9 @@ class WriteSuggetion extends StatelessWidget {
                     height: size.height / 15,
                   ),
                   MaterialButton(
-                    minWidth: size.width /1.4,
-                    height: 55,
+                    minWidth: size.width /1.2,
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
+                    height: 60,
                     color: mainColor,
                     onPressed:(){
                       var date = DateTime.now();

@@ -15,11 +15,11 @@ class CommentModel{
 
 
   CommentModel.fromJson(Map <String,dynamic> json){
-    comment = json['comment']!;
-    userId = json['userId']!;
-    date = json['date']!;
-    commentId = json['commentId']!;
-    postId = json['postId']!;
+    comment = json['comment'];
+    userId = json['userId'];
+    date = json['date'];
+    commentId = json['commentId'];
+    postId = json['postId'];
   }
 
 
