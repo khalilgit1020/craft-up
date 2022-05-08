@@ -30,15 +30,15 @@ class CraftLoginCubit extends Cubit<CraftStates> {
     });
   }
 
-  IconData suffixIcon = Icons.visibility_outlined;
+  IconData suffixIcon = Icons.visibility_off_outlined;
   bool isPasswordShown = true;
 
   void changePasswordVisibility() {
     isPasswordShown = !isPasswordShown;
 
     suffixIcon = isPasswordShown
-        ? Icons.visibility_outlined
-        : Icons.visibility_off_outlined;
+        ? Icons.visibility_off_outlined
+        : Icons.visibility_outlined;
     emit(CraftChangePasswordVisibilityState());
   }
 }

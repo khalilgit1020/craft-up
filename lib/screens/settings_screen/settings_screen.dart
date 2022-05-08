@@ -1,4 +1,3 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:graduation/helpers/cache_helper.dart';
@@ -25,7 +24,7 @@ class SettingsProfileScreen extends StatelessWidget {
           CacheHelper.removeData(key: 'uId').then((value) {
             if (value) {
               Navigator.pushReplacement(context,
-                  MaterialPageRoute(builder: (context) => CraftLoginScreen()));
+                  MaterialPageRoute(builder: (context) => const CraftLoginScreen()));
             }
           });
         }
@@ -94,7 +93,7 @@ class SettingsProfileScreen extends StatelessWidget {
                             showDialog(
                               barrierDismissible: false,
                               context: context,
-                              builder: (_) {
+                              builder: (context) {
                                 return Directionality(
                                   textDirection: TextDirection.rtl,
                                   child: AlertDialog(
@@ -123,6 +122,7 @@ class SettingsProfileScreen extends StatelessWidget {
                                         child: TextButton(
                                           onPressed: () {
                                             cubit.logOut();
+                                            Navigator.pop(context);
                                           },
                                           child: const Text('خروج', style: TextStyle(color: Colors.red, fontWeight: FontWeight.bold),),
                                         ),

@@ -2,13 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:graduation/constants.dart';
 import 'package:graduation/screens/settings_screen/my_works_gallery.dart';
 
-import '../bloc/home_cubit.dart';
 import '../screens/settings_screen/edit_profile_screen.dart';
 
 settingModalBottomSheet(context) {
-
-  var cubit = CraftHomeCubit.get(context);
-
   showModalBottomSheet(
       context: context,
       builder: (BuildContext bc) {
@@ -62,7 +58,7 @@ settingModalBottomSheet(context) {
                     ),
                     onTap: () => {
                       Navigator.of(context).pop(),
-                      Navigator.of(context).push(MaterialPageRoute(builder: (_)=>EditProfileScreen())),
+                      Navigator.of(context).push(MaterialPageRoute(builder: (_)=>const EditProfileScreen())),
 
                     },
                 ),

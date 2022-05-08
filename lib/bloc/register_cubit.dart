@@ -80,13 +80,13 @@ class CraftRegisterCubit extends Cubit<CraftStates> {
     });
   }
 
-  IconData suffix = Icons.visibility_outlined;
+  IconData suffix = Icons.visibility_off_outlined;
   bool isPassword = true;
 
   void changePasswordVisibility() {
     isPassword = !isPassword;
     suffix =
-        isPassword ? Icons.visibility_outlined : Icons.visibility_off_outlined;
+        isPassword ? Icons.visibility_off_outlined : Icons.visibility_outlined;
 
     emit(ShopRegisterChangePasswordVisibilityState());
   }

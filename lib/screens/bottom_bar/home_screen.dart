@@ -15,24 +15,7 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<CraftHomeCubit, CraftStates>(
-      listener: (context, state) {
-
-
-        if (state is CraftGetLocationErrorState){
-          print(state.error);
-        }
-
-        // CraftSavePostSuccessState  CraftGetLocationErrorState
-        /*
-        if (state is CraftSavePostSuccessState) {
-          print('تم الحفظ بنجاح');
-          showToast(
-            state: ToastState.SUCCESS,
-            msg: 'تم حفظ المنشور بنجاح',
-          );
-          CraftHomeCubit().getMySavedPostsId();
-        }*/
-      },
+      listener: (context, state) {},
       builder: (context, state) {
         var cubit = CraftHomeCubit.get(context);
 
@@ -70,7 +53,7 @@ class HomeScreen extends StatelessWidget {
                 icons: [
                   IconBroken.Home,
                   !cubit.isCrafter ?
-                  IconBroken.Notification:Icons.bookmark_outline_sharp,
+                  IconBroken.Notification : IconBroken.Bookmark,
                   IconBroken.Search,
                   IconBroken.Profile,
                 ],

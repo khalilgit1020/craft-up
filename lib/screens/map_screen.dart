@@ -1,15 +1,13 @@
 import 'dart:async';
 import 'dart:collection';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:graduation/constants.dart';
 import 'package:graduation/models/craft_user_model.dart';
-import 'package:graduation/screens/other_user_profile.dart';
+import 'package:graduation/screens/mah_other_design.dart';
 
 import '../bloc/craft_states.dart';
 import '../bloc/home_cubit.dart';
@@ -156,7 +154,7 @@ class _MapScreenState extends State<MapScreen> {
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => OtherUserProfile(
+                                    builder: (context) => MahOtherDesign(
                                         userModel: widget.cubit)));
                           },),
                     ),);

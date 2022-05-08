@@ -1,3 +1,4 @@
+import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:graduation/constants.dart';
@@ -87,79 +88,82 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
       child: Directionality(
         textDirection: TextDirection.rtl,
         child: Scaffold(
-          body: Container(
-            width: double.infinity,
-            color: Colors.white,
-            padding: const EdgeInsets.all(12.0),
-            child: Column(
-              children: [
-                Expanded(
-                  flex: 4,
-                  child: Container(
-                    margin: const EdgeInsets.only(top: 100),
-                    child: PageView.builder(
+          body: FadeIn(
+            duration: const Duration(milliseconds: 700),
+            child: Container(
+              width: double.infinity,
+              color: Colors.white,
+              padding: const EdgeInsets.all(12.0),
+              child: Column(
+                children: [
+                  Expanded(
+                    flex: 4,
+                    child: Container(
+                      margin: const EdgeInsets.only(top: 100),
+                      child: PageView.builder(
+                        controller: boardController,
+                        physics: const BouncingScrollPhysics(),
+                        onPageChanged: (int index) {
+                          if (index == boarding.length - 1) {
+                            setState(() {
+                              isLast = true;
+                            });
+                          } else {
+                            setState(() {
+                              isLast = false;
+                            });
+                          }
+                        },
+                        itemCount: boarding.length,
+                        itemBuilder: (context, index) {
+                          return buildBoardingItem(boarding[index]);
+                        },
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                    flex: 1,
+                    child: SmoothPageIndicator(
                       controller: boardController,
-                      physics: const BouncingScrollPhysics(),
-                      onPageChanged: (int index) {
-                        if (index == boarding.length - 1) {
-                          setState(() {
-                            isLast = true;
-                          });
-                        } else {
-                          setState(() {
-                            isLast = false;
-                          });
-                        }
-                      },
-                      itemCount: boarding.length,
-                      itemBuilder: (context, index) {
-                        return buildBoardingItem(boarding[index]);
-                      },
+                      effect: ExpandingDotsEffect(
+                        dotColor: Colors.grey,
+                        activeDotColor: mainColor,
+                        dotHeight: 10.0,
+                        expansionFactor: 3.0,
+                        dotWidth: 10.0,
+                        spacing: 5,
+                      ),
+                      count: boarding.length,
                     ),
                   ),
-                ),
-                Expanded(
-                  flex: 1,
-                  child: SmoothPageIndicator(
-                    controller: boardController,
-                    effect: ExpandingDotsEffect(
-                      dotColor: Colors.grey,
-                      activeDotColor: mainColor,
-                      dotHeight: 10.0,
-                      expansionFactor: 3.0,
-                      dotWidth: 10.0,
-                      spacing: 5,
-                    ),
-                    count: boarding.length,
-                  ),
-                ),
-                TextButton(
-                  onPressed: () {
-                    Navigator.of(context).pushReplacement(
-                      MaterialPageRoute(builder: (_)=>CraftLoginScreen()),
-                    );
-                  },
-                  child: Container(
+                  Container(
                     margin: const EdgeInsets.symmetric(horizontal: 8,vertical: 60),
                     width: double.infinity,
                     decoration: BoxDecoration(
                       color: mainColor,
-                      borderRadius: BorderRadius.circular(8),
+                      borderRadius: BorderRadius.circular(4.0),
                     ),
-                    height: 60,
-                    child:const Center(
-                      child: Text(
-                        'تسجيل الدخول',
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
+                    height: 50,
+                    child: TextButton(
+                      onPressed: () {
+                        Navigator.of(context).pushReplacement(
+                          MaterialPageRoute(builder: (_)=> const CraftLoginScreen()),
+                        );
+                      },
+                      child:const Center(
+                        child: Text(
+                          'يدء الاستخدام',
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
+                        //  textAlign: TextAlign.center,
                         ),
-                      //  textAlign: TextAlign.center,
                       ),
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ),

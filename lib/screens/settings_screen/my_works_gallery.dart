@@ -36,47 +36,55 @@ class MyWorksGallery extends StatelessWidget {
           child: Directionality(
             textDirection: TextDirection.rtl,
             child: Scaffold(
-              body: Column(
-                children: [
-                  Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 20),
-                    color: mainColor,
-                    width: size.width,
-                    height: size.width / 4,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        const Text(
-                          'معرض أعمالي',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 22,
+              appBar: PreferredSize(
+                preferredSize: Size.fromHeight(size.height / 8),
+                child: AppBar(
+                  automaticallyImplyLeading: false,
+                  flexibleSpace: Center(
+                    child: Padding(
+                      padding: const EdgeInsets.only(left: 5.0, right: 20.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Expanded(
+                            child: const Text(
+                              'معرض الأعمال',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 22,
+                              ),
+                            ),
                           ),
-                        ),
-                        Row(
-                          children: [
-                            IconButton(
-                              onPressed: () {
-                                cubit.getWorkImage();
-                              },
-                              icon: const Icon(Icons.add_a_photo_outlined),
+                          IconButton(
+                            onPressed: () {
+                              cubit.getWorkImage();
+                            },
+                            icon: const Icon(
+                              Icons.add_a_photo_outlined,
                               color: Colors.white,
                             ),
-                            IconButton(
-                              onPressed: () {
-                                Navigator.of(context).pop();
-                              },
-                              icon: const Icon(Icons.arrow_forward_ios),
+                          ),
+                          IconButton(
+                            onPressed: () {
+                              Navigator.pop(context);
+                            },
+                            icon: const Icon(
+                              Icons.arrow_forward,
                               color: Colors.white,
                             ),
-                          ],
-                        ),
-                      ],
+                          ),
+                        ],
+                      ),
                     ),
                   ),
+                  backgroundColor: mainColor,
+                ),
+              ),
+              body: Column(
+                children: [
                   const SizedBox(
-                    height: 1,
+                    height: 4,
                   ),
                   if (state is CraftUploadWorkImageLoadingState)
                     const LinearProgressIndicator(),

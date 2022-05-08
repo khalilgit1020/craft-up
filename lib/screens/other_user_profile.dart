@@ -136,15 +136,25 @@ class OtherUserProfile extends StatelessWidget {
                   child: Column(
                     children: [
                       SizedBox(
-                        height: size.height / 20,
+                        height: size.height / 14,
                       ),
                       textUser(userModel.name, 20),
                       if (userModel.craftType != '')
+                        const SizedBox(
+                          height: 10,
+                        ),
+                      if (userModel.craftType != '')
                         textUser(userModel.craftType, 14),
+                      SizedBox(
+                        height: userModel.craftType != '' ? 5 : 10,
+                      ),
                       textUser('${userModel.address} | ${userModel.phone}', 14),
+                      const SizedBox(
+                        height: 5,
+                      ),
                       textUser(userModel.email, 14),
                       const SizedBox(
-                        height: 10,
+                        height: 15,
                       ),
                       InkWell(
                         onTap: () {
@@ -184,10 +194,6 @@ class OtherUserProfile extends StatelessWidget {
         ),
         userModel.userType!
             ? Expanded(
-                child: RefreshIndicator(
-                onRefresh: () {
-                  return cubit.getOtherWorkImages(id: userModel.uId);
-                },
                 child: cubit.otherWorkGallery.isNotEmpty
                     ? GridView.builder(
                         padding: const EdgeInsets.symmetric(
@@ -235,8 +241,7 @@ class OtherUserProfile extends StatelessWidget {
                           ),
                           textAlign: TextAlign.center,
                         ),
-                      ),
-              ))
+                      ))
             : Expanded(
                 child: Center(
                   child: Stack(

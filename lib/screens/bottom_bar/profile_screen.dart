@@ -1,10 +1,8 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:graduation/bloc/home_cubit.dart';
 import 'package:graduation/constants.dart';
 import 'package:graduation/models/craft_user_model.dart';
-import 'package:graduation/screens/settings_screen/image_zoom_screen.dart';
 import 'package:graduation/screens/settings_screen/settings_screen.dart';
 import 'package:graduation/widgets/show_bottom_sheet.dart';
 import 'package:graduation/widgets/styles/icon_broken.dart';
@@ -70,7 +68,7 @@ class ProfileScreen extends StatelessWidget {
         userModel.userType!
             ? settingModalBottomSheet(context)
             : Navigator.of(context)
-                .push(MaterialPageRoute(builder: (_) => EditProfileScreen()));
+                .push(MaterialPageRoute(builder: (_) => const EditProfileScreen()));
       },
       icon: const Icon(IconBroken.Edit),
       color: Colors.white,

@@ -9,6 +9,7 @@ import 'package:graduation/models/comment_model.dart';
 import 'package:graduation/screens/bottom_bar/profile_screen.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_staorage;
 import 'package:graduation/screens/bottom_bar/search_screen.dart';
+import 'package:graduation/screens/mah_desgin.dart';
 import 'package:graduation/screens/post/saved_posts_screen.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -66,16 +67,16 @@ class CraftHomeCubit extends Cubit<CraftStates> {
     const FeedScreen(),
     // const NotificationsScreen(),
     const SavedPostsScreen(),
-    SearchsScreen(),
-    ProfileScreen(),
+    const SearchScreen(),
+    MahDesign(),
   ];
 
   List userScreens = [
     const FeedScreen(),
     const NotificationsScreen(),
     //const SavedPostsScreen(),
-    SearchsScreen(),
-    ProfileScreen(),
+    const SearchScreen(),
+    MahDesign(),
   ];
 
   List<String> titles = const [
@@ -875,9 +876,9 @@ class CraftHomeCubit extends Cubit<CraftStates> {
   List<PostModel>? search = [];
 
   void getSearch({required String? text}) async {
-    search = [];
     emit(NewsSearchLoadingStates());
     FirebaseFirestore.instance.collection('posts').get().then((value) {
+      search = [];
       for (var element in value.docs) {
         if (element['jobName'].toString().contains(text!) ||
             element['text'].toString().contains(text)) {

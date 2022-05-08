@@ -1,9 +1,11 @@
+import 'package:animate_do/animate_do.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:graduation/constants.dart';
 import 'package:graduation/models/comment_model.dart';
+import 'package:graduation/screens/mah_other_design.dart';
 import 'package:graduation/widgets/my_divider.dart';
 import 'package:graduation/widgets/styles/icon_broken.dart';
 
@@ -117,10 +119,14 @@ class _PostScreenState extends State<PostScreen> {
 
                             // post title
                             Center(
-                              child: Text(
-                                widget.model.jobName!,
-                                style: const TextStyle(
-                                    fontSize: 22, fontWeight: FontWeight.bold),
+                              child: FadeIn(
+                                duration: const Duration(milliseconds: 500),
+                                child: Text(
+                                  widget.model.jobName!,
+                                  style: const TextStyle(
+                                      fontSize: 22,
+                                      fontWeight: FontWeight.bold),
+                                ),
                               ),
                             ),
                             SizedBox(
@@ -128,39 +134,42 @@ class _PostScreenState extends State<PostScreen> {
                             ),
 
                             // post details
-                            Padding(
-                              padding: const EdgeInsets.all(20.0),
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Row(
-                                    children: [
-                                      const Padding(
-                                        padding: EdgeInsets.only(bottom: 5.0),
-                                        child: Icon(
-                                          Icons.location_on_outlined,
-                                          size: 22,
+                            FadeIn(
+                              duration: const Duration(milliseconds: 500),
+                              child: Padding(
+                                padding: const EdgeInsets.all(20.0),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Row(
+                                      children: [
+                                        const Padding(
+                                          padding: EdgeInsets.only(bottom: 5.0),
+                                          child: Icon(
+                                            Icons.location_on_outlined,
+                                            size: 22,
+                                          ),
                                         ),
-                                      ),
-                                      const SizedBox(
-                                        width: 2,
-                                      ),
-                                      Text(
-                                        widget.model.location!,
-                                        style: const TextStyle(
-                                            fontSize: 18,
-                                            fontWeight: FontWeight.bold),
-                                      ),
-                                    ],
-                                  ),
-                                  Text(
-                                    '${widget.model.salary!} \$',
-                                    style: const TextStyle(
-                                        fontSize: 18,
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                ],
+                                        const SizedBox(
+                                          width: 2,
+                                        ),
+                                        Text(
+                                          widget.model.location!,
+                                          style: const TextStyle(
+                                              fontSize: 18,
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                      ],
+                                    ),
+                                    Text(
+                                      '${widget.model.salary!} \$',
+                                      style: const TextStyle(
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                  ],
+                                ),
                               ),
                             ),
                             SizedBox(
@@ -168,33 +177,36 @@ class _PostScreenState extends State<PostScreen> {
                             ),
 
                             // post text
-                            Center(
-                              child: Container(
-                                height: size.height / 4.5,
-                                width: size.width / 1.1,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(8),
-                                  color:
-                                      Theme.of(context).scaffoldBackgroundColor,
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: Colors.grey.withOpacity(0.5),
-                                      spreadRadius: 3,
-                                      blurRadius: 15,
-                                      offset: const Offset(-3, 7),
+                            FadeIn(
+                              duration: const Duration(milliseconds: 500),
+                              child: Center(
+                                child: Container(
+                                  height: size.height / 4.5,
+                                  width: size.width / 1.1,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(8),
+                                    color: Theme.of(context)
+                                        .scaffoldBackgroundColor,
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Colors.grey.withOpacity(0.5),
+                                        spreadRadius: 3,
+                                        blurRadius: 15,
+                                        offset: const Offset(-3, 7),
+                                      ),
+                                    ],
+                                  ),
+                                  margin: const EdgeInsets.all(10.0),
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 10.0, vertical: 10),
+                                  child: SingleChildScrollView(
+                                    child: Text(
+                                      widget.model.text!,
+                                      style: const TextStyle(
+                                        fontSize: 17,
+                                      ),
+                                      textAlign: TextAlign.justify,
                                     ),
-                                  ],
-                                ),
-                                margin: const EdgeInsets.all(10.0),
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 10.0, vertical: 10),
-                                child: SingleChildScrollView(
-                                  child: Text(
-                                    widget.model.text!,
-                                    style: const TextStyle(
-                                      fontSize: 18,
-                                    ),
-                                    textAlign: TextAlign.justify,
                                   ),
                                 ),
                               ),
@@ -204,92 +216,97 @@ class _PostScreenState extends State<PostScreen> {
                             ),
 
                             // for enter comment
-                            Center(
-                              child: Container(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 8, vertical: 8),
-                                constraints: const BoxConstraints(
-                                  maxHeight: 100,
-                                ),
-                                width: size.width / 1.2,
-                                decoration: BoxDecoration(
-                                  color: Colors.grey.shade200,
-                                  borderRadius: BorderRadius.circular(8),
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: Colors.grey.withOpacity(0.5),
-                                      spreadRadius: 1,
-                                      blurRadius: 7,
-                                      offset: const Offset(
-                                          0, 3), // changes position of shadow
-                                    ),
-                                  ],
-                                ),
-                                child: Row(
-                                  children: [
-                                    Expanded(
-                                      child: TextFormField(
-                                        minLines: 1,
-                                        maxLines: 10,
-                                        controller: commentController,
-                                        keyboardType: TextInputType.text,
-                                        validator: (value) {
-                                          if (value!.isEmpty) {
-                                            return 'تعليقك فارغ,يرجى ادخال تعليق مناسب للمنشور';
-                                          }
-                                          return null;
-                                        },
-                                        onChanged: (String value) {
-                                          if (!RegExp(r'^[ ]*$')
-                                              .hasMatch(value)) {
-                                            cubit.enableCommentButton(
-                                                comment: value);
-                                          } else {
-                                            cubit.unableCommentButton(
-                                                comment: value);
-                                          }
-                                        },
-                                        decoration: const InputDecoration(
-                                          contentPadding:
-                                              EdgeInsets.symmetric(vertical: 0),
-                                          border: InputBorder.none,
-                                          label: Text('أضف تعليقك هنا'),
+                            FadeIn(
+                              duration: const Duration(milliseconds: 500),
+                              child: Center(
+                                child: Container(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 8, vertical: 8),
+                                  constraints: const BoxConstraints(
+                                    maxHeight: 100,
+                                  ),
+                                  width: size.width / 1.2,
+                                  decoration: BoxDecoration(
+                                    color: Colors.grey.shade200,
+                                    borderRadius: BorderRadius.circular(8),
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Colors.grey.withOpacity(0.5),
+                                        spreadRadius: 1,
+                                        blurRadius: 7,
+                                        offset: const Offset(
+                                            0, 3), // changes position of shadow
+                                      ),
+                                    ],
+                                  ),
+                                  child: Row(
+                                    children: [
+                                      Expanded(
+                                        child: TextFormField(
+                                          minLines: 1,
+                                          maxLines: 10,
+                                          controller: commentController,
+                                          keyboardType: TextInputType.text,
+                                          validator: (value) {
+                                            if (value!.isEmpty) {
+                                              return 'تعليقك فارغ,يرجى ادخال تعليق مناسب للمنشور';
+                                            }
+                                            return null;
+                                          },
+                                          onChanged: (String value) {
+                                            if (!RegExp(r'^[ ]*$')
+                                                .hasMatch(value)) {
+                                              cubit.enableCommentButton(
+                                                  comment: value);
+                                            } else {
+                                              cubit.unableCommentButton(
+                                                  comment: value);
+                                            }
+                                          },
+                                          decoration: const InputDecoration(
+                                            contentPadding:
+                                                EdgeInsets.symmetric(
+                                                    vertical: 0),
+                                            border: InputBorder.none,
+                                            label: Text('أضف تعليقك هنا'),
 /*suffixIcon: Icon(
-                                          IconBroken.Send,
-                                          color: Colors.blue,
-                                        ),*/
+                                            IconBroken.Send,
+                                            color: Colors.blue,
+                                          ),*/
+                                          ),
                                         ),
                                       ),
-                                    ),
-                                    IconButton(
-                                      onPressed: cubit.currentComment == ''
-                                          ? null
-                                          : () {
+                                      IconButton(
+                                        onPressed: cubit.currentComment == ''
+                                            ? null
+                                            : () {
+                                                cubit.sendComment(
+                                                  text: commentController.text
+                                                      .toString(),
+                                                  postId: widget.model.postId,
+                                                );
+                                                commentController.clear();
+                                                FocusManager
+                                                    .instance.primaryFocus
+                                                    ?.unfocus();
+                                              }
+                                        /*(){
+                                            if(commentController.text.isNotEmpty){
                                               cubit.sendComment(
-                                                text: commentController.text
-                                                    .toString(),
-                                                postId: widget.model.postId,
+                                                text: commentController.text.toString(),
+                                                postId: model.postId,
                                               );
-                                              commentController.clear();
-                                              FocusManager.instance.primaryFocus
-                                                  ?.unfocus();
                                             }
-                                      /*(){
-                                          if(commentController.text.isNotEmpty){
-                                            cubit.sendComment(
-                                              text: commentController.text.toString(),
-                                              postId: model.postId,
-                                            );
-                                          }
 
-                                        }*/
-                                      ,
-                                      color: cubit.currentComment == ''
-                                          ? Colors.grey
-                                          : Colors.blue,
-                                      icon: const Icon(IconBroken.Send),
-                                    ),
-                                  ],
+                                          }*/
+                                        ,
+                                        color: cubit.currentComment == ''
+                                            ? Colors.grey
+                                            : Colors.blue,
+                                        icon: const Icon(IconBroken.Send),
+                                      ),
+                                    ],
+                                  ),
                                 ),
                               ),
                             ),
@@ -297,38 +314,54 @@ class _PostScreenState extends State<PostScreen> {
                               height: 20,
                             ),
 
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Text(
-                                'رؤية التعليقات ',
-                                style: TextStyle(
-                                  fontSize: 25,
-                                  color: mainColor,
+                            FadeIn(
+                              duration: const Duration(milliseconds: 500),
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+                                child: Text(
+                                  'رؤية التعليقات ',
+                                  style: TextStyle(
+                                    fontSize: 25,
+                                    color: mainColor,
+                                    fontWeight: FontWeight.bold,
+                                  ),
                                 ),
                               ),
                             ),
-                            MyDivider(),
+                            FadeIn(
+                              duration: const Duration(milliseconds: 500),
+                              child: MyDivider(),
+                            ),
 
                             const SizedBox(
                               height: 20,
                             ),
                             if (cubit.comments!.isNotEmpty)
-                              ListView.separated(
-                                reverse: true,
-                                shrinkWrap: true,
-                                physics: const NeverScrollableScrollPhysics(),
-                                itemCount: cubit.comments!.length,
-                                separatorBuilder: (context, index) =>
-                                    MyDivider(startIndent: 15, endIndent: 15),
-                                itemBuilder: (context, index) {
-                                  // cubit.getComments(postId: model.postId);
+                              FadeIn(
+                                duration: const Duration(milliseconds: 500),
+                                child: Padding(
+                                  padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                                  child: ListView.separated(
+                                    reverse: true,
+                                    shrinkWrap: true,
+                                    physics: const NeverScrollableScrollPhysics(),
+                                    itemCount: cubit.comments!.length,
+                                    separatorBuilder: (context, index) => FadeIn(
+                                      duration: const Duration(milliseconds: 500),
+                                      child: MyDivider(
+                                          startIndent: 15, endIndent: 15),
+                                    ),
+                                    itemBuilder: (context, index) {
+                                      // cubit.getComments(postId: model.postId);
 
-                                  return buildComment(
-                                      context: context,
-                                      index: index,
-                                      model: cubit.comments![index],
-                                      cubit: cubit);
-                                },
+                                      return buildComment(
+                                          context: context,
+                                          index: index,
+                                          model: cubit.comments![index],
+                                          cubit: cubit);
+                                    },
+                                  ),
+                                ),
                               ),
                             if (cubit.comments!.isEmpty)
                               SizedBox(
@@ -376,33 +409,37 @@ class _PostScreenState extends State<PostScreen> {
     required CommentModel model,
     required CraftHomeCubit cubit,
   }) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 12.0),
+    return FadeIn(
+      duration: const Duration(milliseconds: 500),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Expanded(
             flex: 2,
             child: InkWell(
+              splashColor: Colors.transparent,
+              hoverColor: Colors.transparent,
+              highlightColor: Colors.transparent,
               onTap: () {
                 cubit.getOtherWorkImages(id: model.userId).then((value) {
                   if (model.userId != cubit.UserModel!.uId) {
                     Navigator.of(context).push(MaterialPageRoute(
-                        builder: (_) => OtherUserProfile(
+                        builder: (_) => MahOtherDesign(
                             userModel: cubit.specialUser![model.userId]!)));
                   }
                 });
               },
               child: CircleAvatar(
-                radius: 35,
+                radius: 30,
                 child: ClipRRect(
+                  clipBehavior: Clip.antiAliasWithSaveLayer,
                   borderRadius: BorderRadius.circular(50.0),
                   child: CachedNetworkImage(
                     height: double.infinity,
-                    width: double.infinity,
+                    width: 60,
                     imageUrl: cubit.specialUser![model.userId]!.image!,
                     placeholder: (context, url) => CircleAvatar(
-                      radius: 25.0,
+                      radius: 30.0,
                       backgroundColor: Colors.grey[300],
                     ),
                     fit: BoxFit.cover,
@@ -419,10 +456,24 @@ class _PostScreenState extends State<PostScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  cubit.specialUser![model.userId]!.name!,
-                  style: const TextStyle(
-                      fontSize: 16, fontWeight: FontWeight.bold),
+                InkWell(
+                  splashColor: Colors.transparent,
+                  hoverColor: Colors.transparent,
+                  highlightColor: Colors.transparent,
+                  onTap: (){
+                    cubit.getOtherWorkImages(id: model.userId).then((value) {
+                      if (model.userId != cubit.UserModel!.uId) {
+                        Navigator.of(context).push(MaterialPageRoute(
+                            builder: (_) => MahOtherDesign(
+                                userModel: cubit.specialUser![model.userId]!)));
+                      }
+                    });
+                  },
+                  child: Text(
+                    cubit.specialUser![model.userId]!.name!,
+                    style: const TextStyle(
+                        fontSize: 16, fontWeight: FontWeight.bold),
+                  ),
                 ),
                 Text(
                   model.comment.toString(),

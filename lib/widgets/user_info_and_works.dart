@@ -1,3 +1,4 @@
+import 'package:animate_do/animate_do.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
@@ -32,20 +33,35 @@ Column UserInfoAndWorks(
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(20),
                 ),
-                child: Column(
-                  children: [
-                    SizedBox(
-                      height: size.height / 20,
-                    ),
-                    textUser(userModel.name, 20),
-                    if (userModel.craftType != '')
-                      textUser(userModel.craftType, 14),
-                    textUser('${userModel.address} | ${userModel.phone}', 14),
-                    textUser(userModel.email, 14),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                  ],
+                child: FadeIn(
+                  duration: const Duration(milliseconds: 700),
+                  child: Column(
+                    children: [
+                      SizedBox(
+                        height: size.height / 14,
+                      ),
+                      Center(
+                        child: Text(
+                          userModel.name!,
+                          style: const TextStyle(
+                            fontSize: 21,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                      if (userModel.craftType != '')
+                        const SizedBox(height: 5,),
+                      if (userModel.craftType != '')
+                        textUser(userModel.craftType, 14),
+                      SizedBox(height: userModel.craftType != '' ? 5 : 10,),
+                      textUser('${userModel.address} | ${userModel.phone}', 14),
+                      const SizedBox(height: 5,),
+                      textUser(userModel.email, 14),
+                      const SizedBox(
+                        height: 20,
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),
@@ -55,41 +71,45 @@ Column UserInfoAndWorks(
       userModel.userType!
           ? Expanded(
               child: cubit.myWorkGallery.isNotEmpty
-                  ? GridView.builder(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 20, vertical: 2),
-                      gridDelegate:
-                          const SliverGridDelegateWithMaxCrossAxisExtent(
-                        maxCrossAxisExtent: 200,
-                        childAspectRatio: 3 / 3,
-                        crossAxisSpacing: 18,
-                        mainAxisSpacing: 14,
-                      ),
-                      itemCount: cubit.myWorkGallery.length,
-                      itemBuilder: (context, index) {
-                        var url = cubit.myWorkGallery[index]['image'];
+                  ? FadeIn(
+                      duration: const Duration(milliseconds: 700),
+                      child: GridView.builder(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 20, vertical: 2),
+                        gridDelegate:
+                            const SliverGridDelegateWithMaxCrossAxisExtent(
+                          maxCrossAxisExtent: 200,
+                          childAspectRatio: 3 / 3,
+                          crossAxisSpacing: 18,
+                          mainAxisSpacing: 14,
+                        ),
+                        itemCount: cubit.myWorkGallery.length,
+                        itemBuilder: (context, index) {
+                          var url = cubit.myWorkGallery[index]['image'];
 
-                        return InkWell(
-                          onTap: () {
-                            Navigator.of(context).push(MaterialPageRoute(
-                                builder: (_) => ImageZoomScreen(
-                                      tag: index.toString(),
-                                      url: url!,
-                                    )));
-                          },
-                          child: Hero(
-                            tag: index.toString(),
-                            child: CachedNetworkImage(
-                              imageUrl: url!,
-                              placeholder: (context, url) => Container(
-                                color: Colors.grey[300],
+                          return InkWell(
+                            onTap: () {
+                              Navigator.of(context).push(MaterialPageRoute(
+                                  builder: (_) => ImageZoomScreen(
+                                        tag: index.toString(),
+                                        url: url!,
+                                      )));
+                            },
+                            child: Hero(
+                              tag: index.toString(),
+                              child: CachedNetworkImage(
+                                imageUrl: url!,
+                                placeholder: (context, url) => Container(
+                                  color: Colors.grey[300],
+                                ),
+                                errorWidget: (context, url, error) =>
+                                    Icon(Icons.error),
+                                fit: BoxFit.cover,
                               ),
-                              errorWidget: (context, url, error) => Icon(Icons.error),
-                              fit: BoxFit.cover,
                             ),
-                          ),
-                        );
-                      },
+                          );
+                        },
+                      ),
                     )
                   : Center(
                       child: Text(

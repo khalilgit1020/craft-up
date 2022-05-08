@@ -1,3 +1,4 @@
+import 'package:animate_do/animate_do.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -130,55 +131,76 @@ class ChatScreen extends StatelessWidget {
           child: Directionality(
             textDirection: TextDirection.rtl,
             child: Scaffold(
-              body: Column(
-                children: [
-                  Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 20),
-                    color: mainColor,
-                    width: size.width,
-                    height: size.width / 5,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        const Text(
-                          'الرسائل',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 18,
-                          ),
+              appBar: PreferredSize(
+                preferredSize: Size.fromHeight(size.height / 8),
+                child: AppBar(
+                  automaticallyImplyLeading: false,
+                  flexibleSpace: FadeIn(
+                    child: Center(
+                      child: Padding(
+                        padding: const EdgeInsets.only(left: 5.0, right: 20.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            const Text(
+                              'المحادثات',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 22,
+                              ),
+                            ),
+                            IconButton(
+                              onPressed: () {
+                                Navigator.pop(context);
+                              },
+                              icon: const Icon(
+                                Icons.arrow_forward,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ],
                         ),
-                        IconButton(
-                          onPressed: () {
-                            Navigator.of(context).pop();
-                          },
-                          icon: const Icon(Icons.arrow_forward_ios),
-                          color: Colors.white,
-                        ),
-                      ],
+                      ),
                     ),
                   ),
-                  cubit.usersMessenger!.isNotEmpty
-                      ? Expanded(
-                          child: ListView.separated(
-                            physics: const BouncingScrollPhysics(),
-                            itemBuilder: (context, index) =>
-                                buildChatItem(cubit.usersMessenger![index], context, cubit),
-                            separatorBuilder: (context, index) =>
-                                const Divider(),
-                            itemCount: cubit.usersMessenger!.length,
-                          ),
-                        )
-                      : const Expanded(
-                          child: Center(
-                            child: Text(
-                              'لا يوجد لديك مراسلات حتى الأن...',
-                              style:
-                                  TextStyle(color: Colors.grey, fontSize: 18),
+                  backgroundColor: mainColor,
+                ),
+              ),
+              body: Padding(
+                padding: const EdgeInsets.all(20.0),
+                child: Column(
+                  children: [
+                    cubit.usersMessenger!.isNotEmpty
+                        ? Expanded(
+                            child: FadeIn(
+                              duration: const Duration(milliseconds: 500),
+                              child: ListView.separated(
+                                physics: const BouncingScrollPhysics(),
+                                itemBuilder: (context, index) => buildChatItem(
+                                    cubit.usersMessenger![index], context, cubit),
+                                separatorBuilder: (context, index) =>
+                                    const Divider(
+                                  height: 30,
+                                ),
+                                itemCount: cubit.usersMessenger!.length,
+                              ),
+                            ),
+                          )
+                        : Expanded(
+                            child: FadeIn(
+                              duration: const Duration(milliseconds: 700),
+                              child: const Center(
+                                child: Text(
+                                  'لا يوجد لديك مراسلات حتى الأن...',
+                                  style:
+                                      TextStyle(color: Colors.grey, fontSize: 18),
+                                ),
+                              ),
                             ),
                           ),
-                        ),
-                ],
+                  ],
+                ),
               ),
             ),
           ),
@@ -195,32 +217,36 @@ class ChatScreen extends StatelessWidget {
         Navigator.of(context).push(MaterialPageRoute(
             builder: (context) => ChatDetailsScreen(userModel: model)));
       },
-      child: Padding(
-        padding: const EdgeInsets.all(20.0),
-        child: Row(
-          children: [
-            CircleAvatar(
-              radius: 40,
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(50.0),
-                child: CachedNetworkImage(
-                  height: double.infinity,
-                  width: double.infinity,
-                  imageUrl: model.image!,
-                  placeholder: (context, url) => CircleAvatar(
-                    radius: 25.0,
-                    backgroundColor: Colors.grey[300],
-                  ),
-                  fit: BoxFit.cover,
+      child: Row(
+        children: [
+          CircleAvatar(
+            radius: 35,
+            child: ClipRRect(
+              clipBehavior: Clip.antiAliasWithSaveLayer,
+              borderRadius: BorderRadius.circular(50.0),
+              child: CachedNetworkImage(
+                height: double.infinity,
+                width: 70,
+                imageUrl: model.image!,
+                placeholder: (context, url) => CircleAvatar(
+                  radius: 35.0,
+                  backgroundColor: Colors.grey[300],
                 ),
+                fit: BoxFit.cover,
               ),
             ),
-            const SizedBox(
-              width: 20,
+          ),
+          const SizedBox(
+            width: 10,
+          ),
+          Text(
+            '${model.name}',
+            style: const TextStyle(
+              fontSize: 17,
+              fontWeight: FontWeight.bold,
             ),
-            Text('${model.name}'),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
