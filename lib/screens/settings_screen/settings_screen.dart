@@ -108,24 +108,18 @@ class SettingsProfileScreen extends StatelessWidget {
                                           fontWeight: FontWeight.w600),
                                     ),
                                     actions: [
-                                      Directionality(
-                                        textDirection: TextDirection.rtl,
-                                        child: TextButton(
-                                          onPressed: () {
-                                            Navigator.pop(context);
-                                          },
-                                          child: const Text('إلغاء', style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),),
-                                        ),
+                                      TextButton(
+                                        onPressed: () {
+                                          Navigator.pop(context);
+                                        },
+                                        child: const Text('إلغاء', style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),),
                                       ),
-                                      Directionality(
-                                        textDirection: TextDirection.rtl,
-                                        child: TextButton(
-                                          onPressed: () {
-                                            cubit.logOut();
-                                            Navigator.pop(context);
-                                          },
-                                          child: const Text('خروج', style: TextStyle(color: Colors.red, fontWeight: FontWeight.bold),),
-                                        ),
+                                      TextButton(
+                                        onPressed: () {
+                                          cubit.logOut();
+                                          Navigator.pop(context);
+                                        },
+                                        child: const Text('خروج', style: TextStyle(color: Colors.red, fontWeight: FontWeight.bold),),
                                       ),
                                     ],
                                   ),

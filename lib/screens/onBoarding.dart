@@ -152,8 +152,9 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
                       },
                       child:const Center(
                         child: Text(
-                          'يدء الاستخدام',
+                          'بدء الاستخدام',
                           style: TextStyle(
+                            fontSize: 21,
                             fontWeight: FontWeight.bold,
                             color: Colors.white,
                           ),
