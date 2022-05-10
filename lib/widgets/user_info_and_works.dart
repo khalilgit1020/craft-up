@@ -1,6 +1,7 @@
 import 'package:animate_do/animate_do.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:graduation/widgets/styles/icon_broken.dart';
 
 import '../bloc/home_cubit.dart';
 import '../constants.dart';
@@ -13,132 +14,227 @@ Column UserInfoAndWorks(
   CraftHomeCubit cubit,
 ) {
   return Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
     children: [
       SizedBox(
         height: size.height / 8.5,
       ),
-      Container(
-        padding: const EdgeInsets.all(12),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(20),
-        ),
-        child: ClipRRect(
-          borderRadius: BorderRadius.circular(10),
-          child: Card(
-            elevation: 5,
-            child: Center(
-              child: Container(
-                padding: const EdgeInsets.all(4),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(20),
+      Center(
+        child: Container(
+          margin: const EdgeInsets.all(15),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(20.0),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.grey[300]!,
+                blurRadius: 6,
+                spreadRadius: 0,
+                offset: const Offset(0,3),
+              )
+            ]
+          ),
+          child: FadeIn(
+            duration: const Duration(milliseconds: 500),
+            child: Column(
+              children: [
+                SizedBox(
+                  height: size.height / 16,
                 ),
-                child: FadeIn(
-                  duration: const Duration(milliseconds: 700),
-                  child: Column(
-                    children: [
-                      SizedBox(
-                        height: size.height / 14,
-                      ),
-                      Center(
-                        child: Text(
-                          userModel.name!,
-                          style: const TextStyle(
-                            fontSize: 21,
-                            fontWeight: FontWeight.bold,
-                          ),
+                Center(
+                  child: Text(
+                    userModel.name!,
+                    style: const TextStyle(
+                      fontSize: 21,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                if (userModel.craftType != '')
+                  Padding(
+                    padding: EdgeInsets.only(right: size.width/ 3.5),
+                    child: Row(
+                      children: [
+                        const Icon(IconBroken.Work),
+                        const SizedBox(
+                          width: 10,
                         ),
-                      ),
-                      if (userModel.craftType != '')
-                        const SizedBox(height: 5,),
-                      if (userModel.craftType != '')
-                        textUser(userModel.craftType, 14),
-                      SizedBox(height: userModel.craftType != '' ? 5 : 10,),
-                      textUser('${userModel.address} | ${userModel.phone}', 14),
-                      const SizedBox(height: 5,),
-                      textUser(userModel.email, 14),
+                        Text(
+                          userModel.craftType!,
+                          style: const TextStyle(fontSize: 17),
+                        ),
+                      ],
+                    ),
+                  ),
+                //textUser(userModel.craftType, 14),
+                if (userModel.craftType != '')
+                  const SizedBox(
+                    height: 5,
+                  ),
+                Padding(
+                  padding: EdgeInsets.only(right: size.width/ 3.5),
+                  child: Row(
+                    children: [
+                      const Icon(IconBroken.Location),
                       const SizedBox(
-                        height: 20,
+                        width: 10,
+                      ),
+                      Text(
+                        userModel.address!,
+                        style: const TextStyle(fontSize: 17),
                       ),
                     ],
                   ),
                 ),
-              ),
+                //textUser('${userModel.address} | ${userModel.phone}', 14),
+                const SizedBox(
+                  height: 5,
+                ),
+                Padding(
+                  padding: EdgeInsets.only(right: size.width/ 3.5),
+                  child: Row(
+                    children: [
+                      const Icon(IconBroken.Call),
+                      const SizedBox(
+                        width: 10,
+                      ),
+                      Text(
+                        userModel.phone!,
+                        style: const TextStyle(fontSize: 17),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(
+                  height: 5,
+                ),
+                Padding(
+                  padding: EdgeInsets.only(right: size.width/ 3.5),
+                  child: Row(
+                    children: [
+                      const Icon(IconBroken.Message),
+                      const SizedBox(width: 10,),
+                      Expanded(
+                        child: Text(
+                          userModel.email!,
+                          style: const TextStyle(fontSize: 17),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                //textUser(userModel.email, 14),
+                const SizedBox(
+                  height: 30,
+                ),
+              ],
             ),
           ),
         ),
       ),
+      const SizedBox(
+        height: 10,
+      ),
+      if (userModel.userType!)
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20),
+          child: FadeIn(
+            duration: const Duration(milliseconds: 500),
+            child: const Text(
+              'معرض الأعمال',
+              style: TextStyle(fontSize: 19, fontWeight: FontWeight.bold),
+            ),
+          ),
+        ),
+      if (userModel.userType!)
+        SizedBox(
+          height: cubit.myWorkGallery.isNotEmpty ? 15 : 70,
+        ),
+      if (!userModel.userType!)
+        const SizedBox(
+          height: 20,
+        ),
       userModel.userType!
-          ? Expanded(
-              child: cubit.myWorkGallery.isNotEmpty
-                  ? FadeIn(
-                      duration: const Duration(milliseconds: 700),
-                      child: GridView.builder(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 20, vertical: 2),
-                        gridDelegate:
-                            const SliverGridDelegateWithMaxCrossAxisExtent(
-                          maxCrossAxisExtent: 200,
-                          childAspectRatio: 3 / 3,
-                          crossAxisSpacing: 18,
-                          mainAxisSpacing: 14,
-                        ),
-                        itemCount: cubit.myWorkGallery.length,
-                        itemBuilder: (context, index) {
-                          var url = cubit.myWorkGallery[index]['image'];
+          ? cubit.myWorkGallery.isNotEmpty
+              ? FadeIn(
+                  duration: const Duration(milliseconds: 500),
+                  child: GridView.builder(
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 20, vertical: 2),
+                    gridDelegate:
+                        const SliverGridDelegateWithMaxCrossAxisExtent(
+                      maxCrossAxisExtent: 200,
+                      childAspectRatio: 3 / 3,
+                      crossAxisSpacing: 10,
+                      mainAxisSpacing: 10,
+                    ),
+                    itemCount: cubit.myWorkGallery.length,
+                    itemBuilder: (context, index) {
+                      var url = cubit.myWorkGallery[index]['image'];
 
-                          return InkWell(
-                            onTap: () {
-                              Navigator.of(context).push(MaterialPageRoute(
-                                  builder: (_) => ImageZoomScreen(
-                                        tag: index.toString(),
-                                        url: url!,
-                                      )));
-                            },
-                            child: Hero(
-                              tag: index.toString(),
-                              child: CachedNetworkImage(
-                                imageUrl: url!,
-                                placeholder: (context, url) => Container(
-                                  color: Colors.grey[300],
-                                ),
-                                errorWidget: (context, url, error) =>
-                                    Icon(Icons.error),
-                                fit: BoxFit.cover,
-                              ),
-                            ),
-                          );
+                      return InkWell(
+                        onTap: () {
+                          Navigator.of(context).push(MaterialPageRoute(
+                              builder: (_) => ImageZoomScreen(
+                                    tag: index.toString(),
+                                    url: url!,
+                                  )));
                         },
-                      ),
-                    )
-                  : Center(
-                      child: Text(
-                        'لا يوجد لديك صور في معرضك الخاص, أضف بعض الصور...',
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                          color: mainColor,
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(4.0),
+                          child: Hero(
+                            tag: index.toString(),
+                            child: CachedNetworkImage(
+                              imageUrl: url!,
+                              placeholder: (context, url) => Container(
+                                color: Colors.grey[300],
+                              ),
+                              errorWidget: (context, url, error) =>
+                                  const Icon(Icons.error),
+                              fit: BoxFit.cover,
+                            ),
+                          ),
                         ),
-                        textAlign: TextAlign.center,
+                      );
+                    },
+                  ),
+                )
+              : FadeIn(
+                  duration: const Duration(milliseconds: 500),
+                  child: Center(
+                    child: Text(
+                      'لا يوجد لديك صور في معرضك الخاص, أضف بعض الصور...',
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: mainColor,
                       ),
+                      textAlign: TextAlign.center,
                     ),
-            )
-          : Expanded(
-              child: Center(
-                child: Stack(
-                  children: [
-                    Align(
-                      alignment: const Alignment(-2, -0.7),
-                      child: Image.asset('assets/images/profile2.png'),
-                    ),
-                    Align(
-                      alignment: const Alignment(0, -1),
-                      child: Image.asset('assets/images/profile.png'),
-                    ),
-                  ],
-                ),
+                  ),
+                )
+          : FadeIn(
+            duration: const Duration(milliseconds: 500),
+            child: Center(
+              child: Stack(
+                children: [
+                  Align(
+                    alignment: const Alignment(-2, -0.7),
+                    child: Image.asset('assets/images/profile2.png'),
+                  ),
+                  Align(
+                    alignment: const Alignment(0, -1),
+                    child: Image.asset('assets/images/profile.png'),
+                  ),
+                ],
               ),
             ),
+          ),
     ],
   );
 }

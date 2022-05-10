@@ -60,7 +60,7 @@ class HomeScreen extends StatelessWidget {
                 activeIndex: cubit.currentIndex,
                 gapLocation: !cubit.isCrafter ? GapLocation.center : GapLocation.none,
                 activeColor: mainColor,
-                notchSmoothness: NotchSmoothness.defaultEdge,
+                notchSmoothness: NotchSmoothness.softEdge,
                 leftCornerRadius: 0,
                 rightCornerRadius: 0,
                 onTap: (index) {

@@ -2,7 +2,6 @@ import 'package:animate_do/animate_do.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:graduation/screens/mah_other_design.dart';
 
 import '../../bloc/craft_states.dart';
 import '../../bloc/home_cubit.dart';
@@ -10,6 +9,7 @@ import '../../constants.dart';
 import '../../models/post_model.dart';
 import '../../widgets/my_divider.dart';
 import '../../widgets/styles/icon_broken.dart';
+import '../other_user_profile.dart';
 import '../post/post_screen.dart';
 
 class SearchScreen extends StatefulWidget {
@@ -51,6 +51,7 @@ class _SearchScreenState extends State<SearchScreen> {
                     padding: const EdgeInsets.symmetric(horizontal: 20.0),
                     child: Center(
                       child: FadeIn(
+                        duration: const Duration(milliseconds: 100),
                         child: Container(
                           decoration: BoxDecoration(
                             color: Colors.white,
@@ -123,22 +124,19 @@ class _SearchScreenState extends State<SearchScreen> {
                               const SizedBox(
                                 height: 20,
                               ),
-                              FadeIn(
-                                duration: const Duration(milliseconds: 500),
-                                child: ListView.separated(
-                                  shrinkWrap: true,
-                                  physics: const NeverScrollableScrollPhysics(),
-                                  itemCount: cubit.search!.length,
-                                  separatorBuilder: (context, index) =>
-                                      MyDivider(),
-                                  itemBuilder: (context, index) {
-                                    return buildPost(
-                                      context: context,
-                                      model: cubit.search![index],
-                                      cubit: cubit,
-                                    );
-                                  },
-                                ),
+                              ListView.separated(
+                                shrinkWrap: true,
+                                physics: const NeverScrollableScrollPhysics(),
+                                itemCount: cubit.search!.length,
+                                separatorBuilder: (context, index) =>
+                                    MyDivider(),
+                                itemBuilder: (context, index) {
+                                  return buildPost(
+                                    context: context,
+                                    model: cubit.search![index],
+                                    cubit: cubit,
+                                  );
+                                },
                               ),
                             ],
                           ),
@@ -149,7 +147,7 @@ class _SearchScreenState extends State<SearchScreen> {
                     Expanded(
                       child: Center(
                         child: FadeIn(
-                          duration: const Duration(milliseconds: 500),
+                          duration: const Duration(milliseconds: 100),
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             crossAxisAlignment: CrossAxisAlignment.center,
@@ -177,7 +175,7 @@ class _SearchScreenState extends State<SearchScreen> {
                     Expanded(
                       child: Center(
                         child: FadeIn(
-                          duration: const Duration(milliseconds: 500),
+                          duration: const Duration(milliseconds: 100),
                           child: Text(
                             'لم يتم العثور على نتائج',
                             style: Theme.of(context)
@@ -230,7 +228,7 @@ class _SearchScreenState extends State<SearchScreen> {
                       cubit.changeBottomNv(3);
                     } else {
                       Navigator.of(context).push(MaterialPageRoute(
-                          builder: (_) => MahOtherDesign(
+                          builder: (_) => OtherUserProfile(
                               userModel: cubit.specialUser![model.uId]!)));
                     }
                   });
@@ -266,7 +264,7 @@ class _SearchScreenState extends State<SearchScreen> {
                       cubit.changeBottomNv(3);
                     } else {
                       Navigator.of(context).push(MaterialPageRoute(
-                          builder: (_) => MahOtherDesign(
+                          builder: (_) => OtherUserProfile(
                               userModel: cubit.specialUser![model.uId]!)));
                     }
                   });

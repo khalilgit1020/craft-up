@@ -25,7 +25,6 @@ getPositionn()async{
 
   cPosition = await Geolocator.getCurrentPosition(
       desiredAccuracy: LocationAccuracy.high);
-  print('3kkkkkkkkkkkk');
 }
 
 
@@ -89,7 +88,7 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
         textDirection: TextDirection.rtl,
         child: Scaffold(
           body: FadeIn(
-            duration: const Duration(milliseconds: 700),
+            duration: const Duration(milliseconds: 500),
             child: Container(
               width: double.infinity,
               color: Colors.white,
@@ -138,12 +137,12 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
                   ),
                   Container(
                     margin: const EdgeInsets.symmetric(horizontal: 8,vertical: 60),
-                    width: double.infinity,
+                    width: MediaQuery.of(context).size.width / 1.5,
                     decoration: BoxDecoration(
                       color: mainColor,
-                      borderRadius: BorderRadius.circular(4.0),
+                      borderRadius: BorderRadius.circular(50),
                     ),
-                    height: 50,
+                    height: 60,
                     child: TextButton(
                       onPressed: () {
                         Navigator.of(context).pushReplacement(

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:graduation/helpers/cache_helper.dart';
 import 'package:graduation/screens/auth/login_screen.dart';
 import 'package:graduation/screens/settings_screen/write_suggestion.dart';
@@ -23,8 +24,10 @@ class SettingsProfileScreen extends StatelessWidget {
         if (state is CraftLogoutSuccessState) {
           CacheHelper.removeData(key: 'uId').then((value) {
             if (value) {
-              Navigator.pushReplacement(context,
-                  MaterialPageRoute(builder: (context) => const CraftLoginScreen()));
+              Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => const CraftLoginScreen()));
             }
           });
         }
@@ -85,48 +88,74 @@ class SettingsProfileScreen extends StatelessWidget {
                                 builder: (_) => WriteSuggetion()));
                           }),
                           buildListTileForSettings(
-                              Icons.share, 'مشاركة التطبيق ', () {
-                            //  cubit.getNotifications();
-                          }),
+                            Icons.share,
+                            'مشاركة التطبيق ',
+                            () async {
+                              cubit.shareApp(context).then((value) {
+                                if (state is CraftSuccessShareAppState) {
+                                  EasyLoading.showToast(
+                                    'شكراً لك على مشاركة التطلبق',
+                                    toastPosition:
+                                        EasyLoadingToastPosition.bottom,
+                                    duration:
+                                        const Duration(milliseconds: 2000),
+                                  );
+                                }
+                              });
+                            },
+                          ),
                           buildListTileForSettings(
-                              IconBroken.Logout, 'تسجيل الخروج', () {
-                            showDialog(
-                              barrierDismissible: false,
-                              context: context,
-                              builder: (context) {
-                                return Directionality(
-                                  textDirection: TextDirection.rtl,
-                                  child: AlertDialog(
-                                    title: const Text(
-                                      'تسجيل الخروج',
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                    content: const Text(
-                                      'هل أنت متأكد أنك تريد تسجيل الخروج؟',
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.w600),
-                                    ),
-                                    actions: [
-                                      TextButton(
-                                        onPressed: () {
-                                          Navigator.pop(context);
-                                        },
-                                        child: const Text('إلغاء', style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),),
+                            IconBroken.Logout,
+                            'تسجيل الخروج',
+                            () {
+                              showDialog(
+                                barrierDismissible: false,
+                                context: context,
+                                builder: (context) {
+                                  return Directionality(
+                                    textDirection: TextDirection.rtl,
+                                    child: AlertDialog(
+                                      title: const Text(
+                                        'تسجيل الخروج',
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.bold),
                                       ),
-                                      TextButton(
-                                        onPressed: () {
-                                          cubit.logOut();
-                                          Navigator.pop(context);
-                                        },
-                                        child: const Text('خروج', style: TextStyle(color: Colors.red, fontWeight: FontWeight.bold),),
+                                      content: const Text(
+                                        'هل أنت متأكد أنك تريد تسجيل الخروج؟',
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.w600),
                                       ),
-                                    ],
-                                  ),
-                                );
-                              },
-                            );
-                          }),
+                                      actions: [
+                                        TextButton(
+                                          onPressed: () {
+                                            Navigator.pop(context);
+                                          },
+                                          child: const Text(
+                                            'إلغاء',
+                                            style: TextStyle(
+                                                color: Colors.black,
+                                                fontWeight: FontWeight.bold),
+                                          ),
+                                        ),
+                                        TextButton(
+                                          onPressed: () {
+                                            cubit.logOut();
+                                            Navigator.pop(context);
+                                          },
+                                          child: const Text(
+                                            'خروج',
+                                            style: TextStyle(
+                                                color: Colors.red,
+                                                fontWeight: FontWeight.bold),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  );
+                                },
+                              );
+                            },
+                          ),
                         ],
                       ),
                     ),

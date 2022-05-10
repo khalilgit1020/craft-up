@@ -40,68 +40,108 @@ class MahDesign extends StatelessWidget {
           drawer: const Drawer(
             child: SettingsProfileScreen(),
           ),
-          body: SingleChildScrollView(
-            physics: const BouncingScrollPhysics(),
-            child: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: FadeIn(
-                duration: const Duration(milliseconds: 500),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Container(
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        border:
-                            Border.all(width: 4, color: mainColor.withOpacity(.2)),
-                      ),
-                      child: InkWell(
-                        splashColor: Colors.transparent,
-                        highlightColor: Colors.transparent,
-                        hoverColor: Colors.transparent,
-                        onTap: () {
-                          Navigator.of(context).push(MaterialPageRoute(
-                              builder: (_) => ImageZoomScreen(
-                                    tag: 'profile'.toString(),
-                                    url: cubit.UserModel!.image!,
-                                  )));
-                        },
-                        child: CircleAvatar(
-                          radius: 50,
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(50.0),
-                            child: CachedNetworkImage(
-                              height: double.infinity,
-                              width: double.infinity,
-                              imageUrl: cubit.UserModel!.image!,
-                              placeholder: (context, url) => CircleAvatar(
-                                radius: 50.0,
-                                backgroundColor: Colors.grey[300],
+          body: SafeArea(
+            child: SingleChildScrollView(
+              physics: const BouncingScrollPhysics(),
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: FadeIn(
+                  duration: const Duration(milliseconds: 500),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Container(
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          border:
+                              Border.all(width: 4, color: mainColor.withOpacity(.2)),
+                        ),
+                        child: InkWell(
+                          splashColor: Colors.transparent,
+                          highlightColor: Colors.transparent,
+                          hoverColor: Colors.transparent,
+                          onTap: () {
+                            Navigator.of(context).push(MaterialPageRoute(
+                                builder: (_) => ImageZoomScreen(
+                                      tag: 'profile'.toString(),
+                                      url: cubit.UserModel!.image!,
+                                    )));
+                          },
+                          child: CircleAvatar(
+                            radius: 50,
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(50.0),
+                              child: CachedNetworkImage(
+                                height: double.infinity,
+                                width: double.infinity,
+                                imageUrl: cubit.UserModel!.image!,
+                                placeholder: (context, url) => CircleAvatar(
+                                  radius: 50.0,
+                                  backgroundColor: Colors.grey[300],
+                                ),
+                                fit: BoxFit.cover,
                               ),
-                              fit: BoxFit.cover,
                             ),
                           ),
                         ),
                       ),
-                    ),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    Text(
-                      cubit.UserModel!.name!,
-                      style:
-                          const TextStyle(fontSize: 21, fontWeight: FontWeight.bold),
-                    ),
-                    const SizedBox(
-                      height: 30,
-                    ),
-                    if (cubit.UserModel!.craftType != '')
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      Text(
+                        cubit.UserModel!.name!,
+                        style:
+                            const TextStyle(fontSize: 21, fontWeight: FontWeight.bold),
+                      ),
+                      const SizedBox(
+                        height: 20,
+                      ),
+                      if (cubit.UserModel!.craftType != '')
+                        Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                          height: 50,
+                          width: double.infinity,
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(50),
+                              color: mainColor.withOpacity(.2),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.grey.withOpacity(0.2),
+                                  spreadRadius: 3,
+                                  blurRadius: 12,
+                                  offset: const Offset(-1, 6),
+                                )
+                              ]),
+                          child: Row(
+                            children: [
+                              const SizedBox(
+                                width: 5,
+                                child: Icon(IconBroken.Work),
+                              ),
+                              Expanded(
+                                  child: SizedBox(
+                                      child: Center(
+                                          child: Text(
+                                cubit.UserModel!.craftType!,
+                                style: const TextStyle(
+                                    fontSize: 17, fontWeight: FontWeight.bold),
+                              )))),
+                              const SizedBox(
+                                width: 5,
+                              ),
+                            ],
+                          ),
+                        ),
+                      if (cubit.UserModel!.craftType != '')
+                        const SizedBox(
+                          height: 5,
+                        ),
                       Container(
                         padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                        height: 60,
+                        height: 50,
                         width: double.infinity,
                         decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(12),
+                            borderRadius: BorderRadius.circular(50),
                             color: mainColor.withOpacity(.2),
                             boxShadow: [
                               BoxShadow(
@@ -115,251 +155,213 @@ class MahDesign extends StatelessWidget {
                           children: [
                             const SizedBox(
                               width: 5,
-                              child: Icon(IconBroken.Work),
+                              child: Icon(IconBroken.Location),
                             ),
                             Expanded(
-                                child: SizedBox(
-                                    child: Center(
-                                        child: Text(
-                              cubit.UserModel!.craftType!,
-                              style: const TextStyle(
-                                  fontSize: 17, fontWeight: FontWeight.bold),
-                            )))),
+                              child: SizedBox(
+                                child: Center(
+                                  child: Text(
+                                    cubit.UserModel!.address!,
+                                    style: const TextStyle(
+                                        fontSize: 17,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                ),
+                              ),
+                            ),
                             const SizedBox(
                               width: 5,
                             ),
                           ],
                         ),
                       ),
-                    if (cubit.UserModel!.craftType != '')
                       const SizedBox(
-                        height: 12,
+                        height: 5,
                       ),
-                    Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                      height: 60,
-                      width: double.infinity,
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(12),
-                          color: mainColor.withOpacity(.2),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.grey.withOpacity(0.2),
-                              spreadRadius: 3,
-                              blurRadius: 12,
-                              offset: const Offset(-1, 6),
-                            )
-                          ]),
-                      child: Row(
-                        children: [
-                          const SizedBox(
-                            width: 5,
-                            child: Icon(IconBroken.Location),
-                          ),
-                          Expanded(
-                            child: SizedBox(
-                              child: Center(
-                                child: Text(
-                                  cubit.UserModel!.address!,
-                                  style: const TextStyle(
-                                      fontSize: 17,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                              ),
-                            ),
-                          ),
-                          const SizedBox(
-                            width: 5,
-                          ),
-                        ],
-                      ),
-                    ),
-                    const SizedBox(
-                      height: 12,
-                    ),
-                    Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                      height: 60,
-                      width: double.infinity,
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(12),
-                          color: mainColor.withOpacity(.2),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.grey.withOpacity(0.2),
-                              spreadRadius: 3,
-                              blurRadius: 12,
-                              offset: const Offset(-1, 6),
-                            )
-                          ]),
-                      child: Row(
-                        children: [
-                          const SizedBox(
-                            width: 5,
-                            child: Icon(IconBroken.Call),
-                          ),
-                          Expanded(
-                            child: SizedBox(
-                              child: Center(
-                                child: Text(
-                                  cubit.UserModel!.phone!,
-                                  style: const TextStyle(
-                                      fontSize: 17,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                              ),
-                            ),
-                          ),
-                          const SizedBox(
-                            width: 5,
-                          )
-                        ],
-                      ),
-                    ),
-                    const SizedBox(
-                      height: 12,
-                    ),
-                    Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                      height: 60,
-                      width: double.infinity,
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(12),
-                          color: mainColor.withOpacity(.2),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.grey.withOpacity(0.2),
-                              spreadRadius: 3,
-                              blurRadius: 12,
-                              offset: const Offset(-1, 6),
-                            )
-                          ]),
-                      child: Row(
-                        children: [
-                          const SizedBox(
-                            width: 5,
-                            child: Icon(IconBroken.Message),
-                          ),
-                          Expanded(
-                            child: SizedBox(
-                              child: Center(
-                                child: Text(
-                                  cubit.UserModel!.email!,
-                                  style: const TextStyle(
-                                      fontSize: 17,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                              ),
-                            ),
-                          ),
-                          const SizedBox(
-                            width: 5,
-                          )
-                        ],
-                      ),
-                    ),
-                    const SizedBox(
-                      height: 25,
-                    ),
-                    const Divider(),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    if (cubit.UserModel!.userType!)
-                      Row(
-                        children: const [
-                          Icon(
-                            IconBroken.Image_2,
-                            size: 27,
-                          ),
-                          SizedBox(
-                            width: 5,
-                          ),
-                          Text(
-                            'معرض الأعمال',
-                            style: TextStyle(
-                                fontSize: 19, fontWeight: FontWeight.bold),
-                          )
-                        ],
-                      ),
-                    if (cubit.UserModel!.userType!)
-                    SizedBox(
-                      height: cubit.myWorkGallery.isNotEmpty ? 15 : 50,
-                    ),
-                    if (!cubit.UserModel!.userType!)
-                      const SizedBox(height: 20,),
-                    cubit.UserModel!.userType!
-                        ? cubit.myWorkGallery.isNotEmpty
-                            ? GridView.builder(
-                      shrinkWrap: true,
-                                physics: const NeverScrollableScrollPhysics(),
-                                gridDelegate:
-                                    const SliverGridDelegateWithMaxCrossAxisExtent(
-                                  maxCrossAxisExtent: 200,
-                                  childAspectRatio: 3 / 3,
-                                  crossAxisSpacing: 10,
-                                  mainAxisSpacing: 10,
-                                ),
-                                itemCount: cubit.myWorkGallery.length,
-                                itemBuilder: (context, index) {
-                                  var url =
-                                      cubit.myWorkGallery[index]['image'];
-
-                                  return InkWell(
-                                    onTap: () {
-                                      Navigator.of(context).push(
-                                          MaterialPageRoute(
-                                              builder: (_) =>
-                                                  ImageZoomScreen(
-                                                    tag: index.toString(),
-                                                    url: url!,
-                                                  )));
-                                    },
-                                    child: Hero(
-                                      tag: index.toString(),
-                                      child: CachedNetworkImage(
-                                        imageUrl: url!,
-                                        placeholder: (context, url) =>
-                                            Container(
-                                          color: Colors.grey[300],
-                                        ),
-                                        errorWidget:
-                                            (context, url, error) =>
-                                                const Icon(Icons.error),
-                                        fit: BoxFit.cover,
-                                      ),
-                                    ),
-                                  );
-                                },
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                        height: 50,
+                        width: double.infinity,
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(50),
+                            color: mainColor.withOpacity(.2),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.grey.withOpacity(0.2),
+                                spreadRadius: 3,
+                                blurRadius: 12,
+                                offset: const Offset(-1, 6),
                               )
-                            : Center(
-                                child: Text(
-                                  'لا يوجد لديك صور في معرضك الخاص, أضف بعض الصور...',
-                                  style: TextStyle(
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.bold,
-                                    color: mainColor,
+                            ]),
+                        child: Row(
+                          children: [
+                            const SizedBox(
+                              width: 5,
+                              child: Icon(IconBroken.Call),
+                            ),
+                            Expanded(
+                              child: SizedBox(
+                                child: Center(
+                                  child: Text(
+                                    cubit.UserModel!.phone!,
+                                    style: const TextStyle(
+                                        fontSize: 17,
+                                        fontWeight: FontWeight.bold),
                                   ),
-                                  textAlign: TextAlign.center,
                                 ),
-                              )
-                        : Center(
-                            child: Stack(
-                              children: [
-                                Align(
-                                  alignment: const Alignment(-2, -0.7),
-                                  child:
-                                      Image.asset('assets/images/profile2.png'),
-                                ),
-                                Align(
-                                  alignment: const Alignment(0, -1),
-                                  child:
-                                      Image.asset('assets/images/profile.png'),
-                                ),
-                              ],
+                              ),
                             ),
-                          ),
-                  ],
+                            const SizedBox(
+                              width: 5,
+                            )
+                          ],
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 5,
+                      ),
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                        height: 50,
+                        width: double.infinity,
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(50),
+                            color: mainColor.withOpacity(.2),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.grey.withOpacity(0.2),
+                                spreadRadius: 3,
+                                blurRadius: 12,
+                                offset: const Offset(-1, 6),
+                              )
+                            ]),
+                        child: Row(
+                          children: [
+                            const SizedBox(
+                              width: 5,
+                              child: Icon(IconBroken.Message),
+                            ),
+                            Expanded(
+                              child: SizedBox(
+                                child: Center(
+                                  child: Text(
+                                    cubit.UserModel!.email!,
+                                    style: const TextStyle(
+                                        fontSize: 17,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            const SizedBox(
+                              width: 5,
+                            )
+                          ],
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 25,
+                      ),
+                      const Divider(),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      if (cubit.UserModel!.userType!)
+                        Row(
+                          children: const [
+                            Icon(
+                              IconBroken.Image_2,
+                              size: 27,
+                            ),
+                            SizedBox(
+                              width: 5,
+                            ),
+                            Text(
+                              'معرض الأعمال',
+                              style: TextStyle(
+                                  fontSize: 19, fontWeight: FontWeight.bold),
+                            )
+                          ],
+                        ),
+                      if (cubit.UserModel!.userType!)
+                      SizedBox(
+                        height: cubit.myWorkGallery.isNotEmpty ? 15 : 50,
+                      ),
+                      if (!cubit.UserModel!.userType!)
+                        const SizedBox(height: 20,),
+                      cubit.UserModel!.userType!
+                          ? cubit.myWorkGallery.isNotEmpty
+                              ? GridView.builder(
+                        shrinkWrap: true,
+                                  physics: const NeverScrollableScrollPhysics(),
+                                  gridDelegate:
+                                      const SliverGridDelegateWithMaxCrossAxisExtent(
+                                    maxCrossAxisExtent: 200,
+                                    childAspectRatio: 3 / 3,
+                                    crossAxisSpacing: 10,
+                                    mainAxisSpacing: 10,
+                                  ),
+                                  itemCount: cubit.myWorkGallery.length,
+                                  itemBuilder: (context, index) {
+                                    var url =
+                                        cubit.myWorkGallery[index]['image'];
+
+                                    return InkWell(
+                                      onTap: () {
+                                        Navigator.of(context).push(
+                                            MaterialPageRoute(
+                                                builder: (_) =>
+                                                    ImageZoomScreen(
+                                                      tag: index.toString(),
+                                                      url: url!,
+                                                    )));
+                                      },
+                                      child: Hero(
+                                        tag: index.toString(),
+                                        child: CachedNetworkImage(
+                                          imageUrl: url!,
+                                          placeholder: (context, url) =>
+                                              Container(
+                                            color: Colors.grey[300],
+                                          ),
+                                          errorWidget:
+                                              (context, url, error) =>
+                                                  const Icon(Icons.error),
+                                          fit: BoxFit.cover,
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                )
+                              : Center(
+                                  child: Text(
+                                    'لا يوجد لديك صور في معرضك الخاص, أضف بعض الصور...',
+                                    style: TextStyle(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.bold,
+                                      color: mainColor,
+                                    ),
+                                    textAlign: TextAlign.center,
+                                  ),
+                                )
+                          : Center(
+                              child: Stack(
+                                children: [
+                                  Align(
+                                    alignment: const Alignment(-2, -0.7),
+                                    child:
+                                        Image.asset('assets/images/profile2.png'),
+                                  ),
+                                  Align(
+                                    alignment: const Alignment(0, -1),
+                                    child:
+                                        Image.asset('assets/images/profile.png'),
+                                  ),
+                                ],
+                              ),
+                            ),
+                    ],
+                  ),
                 ),
               ),
             ),

@@ -5,11 +5,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:graduation/constants.dart';
 import 'package:graduation/models/craft_user_model.dart';
 import 'package:graduation/models/post_model.dart';
-import 'package:graduation/screens/mah_other_design.dart';
 
 import '../../bloc/craft_states.dart';
 import '../../bloc/home_cubit.dart';
 import '../../widgets/my_divider.dart';
+import '../other_user_profile.dart';
 import '../post/post_screen.dart';
 
 class NotificationsScreen extends StatelessWidget {
@@ -32,6 +32,7 @@ class NotificationsScreen extends StatelessWidget {
                 preferredSize: Size.fromHeight(size.height / 8),
                 child: AppBar(
                   flexibleSpace: FadeIn(
+                    duration: const Duration(milliseconds: 100),
                     child: const Center(
                       child: Text(
                         'الإشعارات',
@@ -60,7 +61,7 @@ class NotificationsScreen extends StatelessWidget {
                               padding: const EdgeInsets.symmetric(
                                   horizontal: 18.0, vertical: 12),
                               child: FadeIn(
-                                duration: const Duration(milliseconds: 500),
+                                duration: const Duration(milliseconds: 100),
                                 child: ListView.separated(
                                   shrinkWrap: true,
                                   physics: const NeverScrollableScrollPhysics(),
@@ -114,7 +115,7 @@ class NotificationsScreen extends StatelessWidget {
             onTap: () {
               cubit.getOtherWorkImages(id: user.uId);
               Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context) => MahOtherDesign(
+                  builder: (context) => OtherUserProfile(
                         userModel: user,
                       )));
             },

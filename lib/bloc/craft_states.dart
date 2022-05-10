@@ -467,3 +467,9 @@ class CraftGetNotificationsSuccessState extends CraftStates{}
 class CraftGetNotificationsErrorState extends CraftStates{}
 
 
+
+class CraftSuccessShareAppState extends CraftStates{}
+
+class CraftDismissedShareAppState extends CraftStates{}
+
+

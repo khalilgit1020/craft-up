@@ -1,4 +1,3 @@
-import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
@@ -34,32 +33,30 @@ class WriteSuggetion extends StatelessWidget {
                 preferredSize: Size.fromHeight(size.height / 8),
                 child: AppBar(
                   automaticallyImplyLeading: false,
-                  flexibleSpace: FadeIn(
-                    child: Center(
-                      child: Padding(
-                        padding: const EdgeInsets.only(left: 5.0, right: 20.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            const Text(
-                              'سجل اقتراحك',
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 22,
-                              ),
+                  flexibleSpace: Center(
+                    child: Padding(
+                      padding: const EdgeInsets.only(left: 5.0, right: 20.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          const Text(
+                            'سجل اقتراحك',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 22,
                             ),
-                            IconButton(
-                              onPressed: () {
-                                Navigator.pop(context);
-                              },
-                              icon: const Icon(
-                                Icons.arrow_forward,
-                                color: Colors.white,
-                              ),
+                          ),
+                          IconButton(
+                            onPressed: () {
+                              Navigator.pop(context);
+                            },
+                            icon: const Icon(
+                              Icons.arrow_forward,
+                              color: Colors.white,
                             ),
-                          ],
-                        ),
+                          ),
+                        ],
                       ),
                     ),
                   ),
@@ -70,70 +67,64 @@ class WriteSuggetion extends StatelessWidget {
                 padding: const EdgeInsets.all(20),
                 child: Column(
                   children: [
-                    FadeIn(
-                      duration: const Duration(milliseconds: 700),
-                      child: Container(
-                        width: size.width / 1.1,
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(8),
-                          boxShadow: const [
-                            BoxShadow(
-                              color: Colors.grey,
-                              spreadRadius: 0.1,
-                              blurRadius: 4,
-                              offset:
-                                  Offset(0, 2), // changes position of shadow
-                            ),
-                          ],
-                        ),
-                        child: TextFormField(
-                          maxLines: null,
-                          minLines: 12,
-                          controller: suggestionController,
-                          keyboardType: TextInputType.text,
-                          validator: (value) {
-                            if (value!.isEmpty) {
-                              return 'تأكد من إدخال اقتراح جيد';
-                            }
-                            return null;
-                          },
-                          decoration: const InputDecoration(
-                            hintText: 'أدخل محتوى الاقتراح',
-                            border: InputBorder.none,
-                            contentPadding: EdgeInsets.symmetric(
-                                horizontal: 8.0, vertical: 12),
+                    Container(
+                      width: size.width / 1.1,
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(8),
+                        boxShadow: const [
+                          BoxShadow(
+                            color: Colors.grey,
+                            spreadRadius: 0.1,
+                            blurRadius: 4,
+                            offset:
+                                Offset(0, 2), // changes position of shadow
                           ),
+                        ],
+                      ),
+                      child: TextFormField(
+                        maxLines: null,
+                        minLines: 12,
+                        controller: suggestionController,
+                        keyboardType: TextInputType.text,
+                        validator: (value) {
+                          if (value!.isEmpty) {
+                            return 'تأكد من إدخال اقتراح جيد';
+                          }
+                          return null;
+                        },
+                        decoration: const InputDecoration(
+                          hintText: 'أدخل محتوى الاقتراح',
+                          border: InputBorder.none,
+                          contentPadding: EdgeInsets.symmetric(
+                              horizontal: 8.0, vertical: 12),
                         ),
                       ),
                     ),
                     SizedBox(
                       height: size.height / 15,
                     ),
-                    FadeIn(
-                      duration: const Duration(milliseconds: 700),
-                      child: MaterialButton(
-                        minWidth: size.width / 1.1,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(4),
-                        ),
-                        height: 50,
-                        color: mainColor,
-                        onPressed: () {
-                          var date = DateTime.now();
-                          cubit.writeSuggestion(
-                            date: date.toString(),
-                            content: suggestionController.text,
-                            uId: cubit.UserModel!.uId,
-                          );
-                        },
-                        child: const Text(
-                          'إرسال',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 21,
-                            fontWeight: FontWeight.bold,
-                          ),
+                    MaterialButton(
+                      minWidth: size.width / 1.1,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(4),
+                      ),
+                      height: 50,
+                      color: mainColor,
+                      onPressed: () {
+                        var date = DateTime.now();
+                        cubit.writeSuggestion(
+                          date: date.toString(),
+                          content: suggestionController.text,
+                          uId: cubit.UserModel!.uId,
+                        );
+                      },
+                      child: const Text(
+                        'إرسال',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 21,
+                          fontWeight: FontWeight.bold,
                         ),
                       ),
                     ),

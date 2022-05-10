@@ -27,18 +27,7 @@ class MahOtherDesign extends StatelessWidget {
           textDirection: TextDirection.rtl,
           child: Scaffold(
             appBar: AppBar(
-              leading: const SizedBox()
-              /*IconButton(
-                tooltip: 'محادثة',
-                onPressed: () {
-                  cubit.getMessage(receiverId: userModel.uId!);
-                  cubit.getOtherLocation(userId: userModel.uId!);
-                  Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) =>
-                          ChatDetailsScreen(userModel: userModel)));
-                },
-                icon: const Icon(IconBroken.Send),
-              )*/,
+              automaticallyImplyLeading: false,
               actions: [
                 IconButton(
                   onPressed: () {
@@ -104,16 +93,16 @@ class MahOtherDesign extends StatelessWidget {
                               fontSize: 21, fontWeight: FontWeight.bold),
                         ),
                         const SizedBox(
-                          height: 30,
+                          height: 20,
                         ),
                         if (userModel.craftType != '')
                           Container(
                             padding:
                                 const EdgeInsets.symmetric(horizontal: 16.0),
-                            height: 60,
+                            height: 50,
                             width: double.infinity,
                             decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(12),
+                                borderRadius: BorderRadius.circular(50),
                                 color: mainColor.withOpacity(.2),
                                 boxShadow: [
                                   BoxShadow(
@@ -146,14 +135,14 @@ class MahOtherDesign extends StatelessWidget {
                           ),
                         if (userModel.craftType != '')
                           const SizedBox(
-                            height: 12,
+                            height: 5,
                           ),
                         Container(
                           padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                          height: 60,
+                          height: 50,
                           width: double.infinity,
                           decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(12),
+                              borderRadius: BorderRadius.circular(50),
                               color: mainColor.withOpacity(.2),
                               boxShadow: [
                                 BoxShadow(
@@ -188,14 +177,14 @@ class MahOtherDesign extends StatelessWidget {
                           ),
                         ),
                         const SizedBox(
-                          height: 12,
+                          height: 5,
                         ),
                         Container(
                           padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                          height: 60,
+                          height: 50,
                           width: double.infinity,
                           decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(12),
+                              borderRadius: BorderRadius.circular(50),
                               color: mainColor.withOpacity(.2),
                               boxShadow: [
                                 BoxShadow(
@@ -230,18 +219,19 @@ class MahOtherDesign extends StatelessWidget {
                           ),
                         ),
                         const SizedBox(
-                          height: 12,
+                          height: 20,
                         ),
                         SizedBox(
-                          height: 60,
+                          height: 50,
                           width: double.infinity,
                           child: OutlinedButton(
                             style: ButtonStyle(
+                              backgroundColor: MaterialStateProperty.all(mainColor),
                               foregroundColor:
-                                  MaterialStateProperty.all(mainColor),
+                                  MaterialStateProperty.all(Colors.white),
                               shape: MaterialStateProperty.all(
                                 RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(12.0),
+                                  borderRadius: BorderRadius.circular(50),
                                 ),
                               ),
                             ),

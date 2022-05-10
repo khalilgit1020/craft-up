@@ -113,7 +113,6 @@ class _CraftRegisterScreenState extends State<CraftRegisterScreen> {
                   child: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 20.0),
                     child: FadeIn(
-                      duration: const Duration(milliseconds: 700),
                       child: Column(
                         children: [
                           const SizedBox(height: 25,),

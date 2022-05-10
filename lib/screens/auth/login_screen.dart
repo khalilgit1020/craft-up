@@ -98,7 +98,6 @@ class _CraftLoginScreenState extends State<CraftLoginScreen> {
                       child: Form(
                         key: formKey,
                         child: FadeIn(
-                          duration: const Duration(milliseconds: 700),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [

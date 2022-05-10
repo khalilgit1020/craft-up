@@ -1,4 +1,3 @@
-import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 
 import '../../constants.dart';
@@ -18,32 +17,30 @@ class AppInformation extends StatelessWidget {
             preferredSize: Size.fromHeight(size.height / 8),
             child: AppBar(
               automaticallyImplyLeading: false,
-              flexibleSpace: FadeIn(
-                child: Center(
-                  child: Padding(
-                    padding: const EdgeInsets.only(left: 5.0, right: 20.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        const Text(
-                          'معلومات التطبيق',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 22,
-                          ),
+              flexibleSpace: Center(
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 5.0, right: 20.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const Text(
+                        'معلومات التطبيق',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 22,
                         ),
-                        IconButton(
-                          onPressed: () {
-                            Navigator.pop(context);
-                          },
-                          icon: const Icon(
-                            Icons.arrow_forward,
-                            color: Colors.white,
-                          ),
+                      ),
+                      IconButton(
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                        icon: const Icon(
+                          Icons.arrow_forward,
+                          color: Colors.white,
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
                 ),
               ),
@@ -51,36 +48,33 @@ class AppInformation extends StatelessWidget {
             ),
           ),
           body: Column(
-            children: [
-              const SizedBox(
+            children: const [
+              SizedBox(
                 height: 20,
               ),
-              FadeIn(
-                duration: const Duration(milliseconds: 700),
-                child: const ExpansionTile(
-                  title: Text(
-                    'سياسة الاستخدام ',
-                    style: TextStyle(fontWeight: FontWeight.bold),
-                  ),
-                  children: [
-                    Padding(
-                      padding: EdgeInsets.all(8.0),
-                      child: Text(
-                        'يمنع استخدام  خدمات التطبيق باي طريقة تخل بقوانين فلسطين , جميع محتويات التطبيق هيحقوق ملكية فكرية محفوظة ويمنع استخدامها باي شكل من أي اطراف اخرى',
-                        style: TextStyle(fontWeight: FontWeight.bold),
-                      ),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.all(8.0),
-                      child: Text(
-                        'شروط العضوية:\n اختيار اسم لائق ومناسب خلال عملية التسجيل\n يلتزم العضو بعدم مشاركة معلومات عضويته ',
-                        style: TextStyle(fontWeight: FontWeight.bold),
-                      ),
-                    ),
-                  ],
+              ExpansionTile(
+                title: Text(
+                  'سياسة الاستخدام ',
+                  style: TextStyle(fontWeight: FontWeight.bold),
                 ),
+                children: [
+                  Padding(
+                    padding: EdgeInsets.all(8.0),
+                    child: Text(
+                      'يمنع استخدام  خدمات التطبيق باي طريقة تخل بقوانين فلسطين , جميع محتويات التطبيق هيحقوق ملكية فكرية محفوظة ويمنع استخدامها باي شكل من أي اطراف اخرى',
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.all(8.0),
+                    child: Text(
+                      'شروط العضوية:\n اختيار اسم لائق ومناسب خلال عملية التسجيل\n يلتزم العضو بعدم مشاركة معلومات عضويته ',
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                ],
               ),
-              const ExpansionTile(
+              ExpansionTile(
                 title: Text(
                   'عن التطبيق',
                   style: TextStyle(fontWeight: FontWeight.bold),

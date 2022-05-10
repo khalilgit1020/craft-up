@@ -58,7 +58,6 @@ class ForgotPassword extends StatelessWidget {
                 body: Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: FadeIn(
-                    duration: const Duration(milliseconds: 700),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [

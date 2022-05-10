@@ -59,7 +59,7 @@ class MyApp extends StatelessWidget {
     return BlocProvider(
       create: (context) => CraftHomeCubit()
         ..getUserData()
-        ..checkIfLocationPermissionAllowedd(),
+        ..checkIfLocationPermissionAllowed(),
       child: BlocConsumer<CraftHomeCubit, CraftStates>(
         listener: (context, state) {},
         builder: (context, state) {

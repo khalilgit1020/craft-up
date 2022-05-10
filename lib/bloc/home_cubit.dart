@@ -3,15 +3,16 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:graduation/models/comment_model.dart';
 import 'package:graduation/screens/bottom_bar/profile_screen.dart';
-import 'package:firebase_storage/firebase_storage.dart' as firebase_staorage;
+import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:graduation/screens/bottom_bar/search_screen.dart';
-import 'package:graduation/screens/mah_desgin.dart';
 import 'package:graduation/screens/post/saved_posts_screen.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:share_plus/share_plus.dart';
 
 import '../constants.dart';
 import '../helpers/cache_helper.dart';
@@ -68,7 +69,7 @@ class CraftHomeCubit extends Cubit<CraftStates> {
     // const NotificationsScreen(),
     const SavedPostsScreen(),
     const SearchScreen(),
-    MahDesign(),
+    const ProfileScreen(),
   ];
 
   List userScreens = [
@@ -76,7 +77,7 @@ class CraftHomeCubit extends Cubit<CraftStates> {
     const NotificationsScreen(),
     //const SavedPostsScreen(),
     const SearchScreen(),
-    MahDesign(),
+    const ProfileScreen(),
   ];
 
   List<String> titles = const [
@@ -92,7 +93,7 @@ class CraftHomeCubit extends Cubit<CraftStates> {
       getMySavedPostsId();
     } else if (!isCrafter && index == 1) {
       getNotifications();
-    } else if(isCrafter && index == 3){
+    } else if (isCrafter && index == 3) {
       getMyWorkImages();
     }
     currentIndex = index;
@@ -220,8 +221,8 @@ class CraftHomeCubit extends Cubit<CraftStates> {
         .orderBy('date')
         .snapshots()
         .listen((value) {
-          comments = [];
-          usersComment = [];
+      comments = [];
+      usersComment = [];
       for (var element in value.docs) {
         comments!.add(CommentModel.fromJson(element.data()));
         usersComment!.add(specialUser![element.data()['userId']]!);
@@ -262,7 +263,7 @@ class CraftHomeCubit extends Cubit<CraftStates> {
     });
   }
 
-  PostModel? notificationPostModel;
+  /*PostModel? notificationPostModel;
 
   getPostScreenFromNotification({required String? id}) async {
     await FirebaseFirestore.instance
@@ -271,8 +272,8 @@ class CraftHomeCubit extends Cubit<CraftStates> {
         .get()
         .then((value) {
       notificationPostModel = PostModel.fromJson(value.data()!);
-    }).catchError((erro) {});
-  }
+    }).catchError((error) {});
+  }*/
 
   List<CraftUserModel>? notificationUsers = [];
   List<PostModel>? notificationPosts = [];
@@ -306,16 +307,10 @@ class CraftHomeCubit extends Cubit<CraftStates> {
               emit(CraftGetNotificationsSuccessState());
             }
           }).catchError((error) {});
-
-          //print('${element.data()} 3333333333' );
         }
 
-        /* if (kDebugMode) {
-            print('${element.data()} 3333333333' );
-          }*/
       } //emit(CraftGetNotificationsSuccessState());
     }).catchError((error) {
-      print(error.toString());
       emit(CraftGetNotificationsErrorState());
     });
   }
@@ -390,7 +385,7 @@ class CraftHomeCubit extends Cubit<CraftStates> {
   }) {
     emit(CraftUserUpdateLoadingState());
 
-    firebase_staorage.FirebaseStorage.instance
+    firebase_storage.FirebaseStorage.instance
         .ref()
         .child('users/${Uri.file(profileImage!.path).pathSegments.last}')
         .putFile(profileImage!)
@@ -565,7 +560,6 @@ class CraftHomeCubit extends Cubit<CraftStates> {
       getMySavedPostsId();
       emit(CraftDeleteSavePostSuccessState());
     }).catchError((error) {
-
       emit(CraftDeleteSavePostErrorState());
     });
   }
@@ -589,7 +583,7 @@ class CraftHomeCubit extends Cubit<CraftStates> {
   Future<void> uploadWorkImage() async {
     emit(CraftUploadWorkImageLoadingState());
 
-    firebase_staorage.FirebaseStorage.instance
+    firebase_storage.FirebaseStorage.instance
         .ref()
         .child('workGallery/${Uri.file(workImage!.path).pathSegments.last}')
         .putFile(workImage!)
@@ -684,7 +678,6 @@ class CraftHomeCubit extends Cubit<CraftStates> {
   void selectUserMessenger(String userId) {}
 
   Future<void> getUsersChatList() async {
-    print('***************');
     emit(CraftGetAllUsersMessengerLoadingState());
 
     FirebaseFirestore.instance
@@ -695,9 +688,7 @@ class CraftHomeCubit extends Cubit<CraftStates> {
         .snapshots()
         .listen((value) {
       usersMessenger = [];
-      print('****************** ${value.docs.length} *******************');
       for (var item in value.docs) {
-        print('helloooooooooooooooooooooo');
         usersMessenger!.insert(0, specialUser![item.id]!);
       }
       emit(CraftGetAllUsersMessengerSuccessState());
@@ -825,7 +816,7 @@ class CraftHomeCubit extends Cubit<CraftStates> {
   }) async {
     emit(CraftUploadMessageImageLoadingState());
 
-    firebase_staorage.FirebaseStorage.instance
+    firebase_storage.FirebaseStorage.instance
         .ref()
         .child('messages/${Uri.file(messageImage!.path).pathSegments.last}')
         .putFile(messageImage!)
@@ -928,19 +919,18 @@ class CraftHomeCubit extends Cubit<CraftStates> {
   late Position cPosition;
   LocationPermission? locationPermission;
 
-  checkIfLocationPermissionAllowedd() async {
+  checkIfLocationPermissionAllowed() async {
     locationPermission = await Geolocator.requestPermission().then((value) {
-      getPositionn();
+      getPosition();
       updateLocation();
       emit(CraftGetLocationSuccessState());
     }).catchError((error) {
-      print(error.toString());
       emit(CraftGetLocationErrorState(error.toString()));
     });
 
     if (locationPermission == LocationPermission.denied) {
       locationPermission = await Geolocator.requestPermission().then((value) {
-        getPositionn();
+        getPosition();
         updateLocation();
         emit(CraftGetLocationSuccessState());
       }).catchError((error) {
@@ -949,7 +939,7 @@ class CraftHomeCubit extends Cubit<CraftStates> {
     }
   }
 
-  getPositionn() async {
+  getPosition() async {
     cPosition = await Geolocator.getCurrentPosition(
         desiredAccuracy: LocationAccuracy.high);
     emit(CraftGetLocationSuccessState());
@@ -975,5 +965,20 @@ class CraftHomeCubit extends Cubit<CraftStates> {
       otherLat = value.data()!['latitude'];
       otherLong = value.data()!['longitude'];
     }).catchError((error) {});
+  }
+
+  Future<void> shareApp(BuildContext context) async {
+    final box = context.findRenderObject() as RenderBox?;
+    ShareResult result;
+    result = await Share.shareWithResult(
+      'https://drive.google.com/file/d/14atgDPGciUKp6BoNSRhwwtyj7wv8DAjZ/view?usp=sharing \n\n قم بتحميل التطبيق الآن من خلال الرابط',
+      subject: 'Craft-Up App',
+      sharePositionOrigin: box!.localToGlobal(Offset.zero) & box.size,
+    );
+    if (result.status == ShareResultStatus.success) {
+      emit(CraftSuccessShareAppState());
+    } else if (result.status == ShareResultStatus.dismissed) {
+      emit(CraftDismissedShareAppState());
+    }
   }
 }

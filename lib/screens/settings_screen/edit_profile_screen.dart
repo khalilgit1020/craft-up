@@ -85,310 +85,307 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
               body: Column(
                 children: [
                   Expanded(
-                    child: FadeIn(
-                      duration: const Duration(milliseconds: 700),
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 8, vertical: 6),
-                        child: SingleChildScrollView(
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                // for user picture
-                                Column(
-                                  children: [
-                                    userPicture(size, userModel,profileImage),
-                                    TextButton(
-                                      onPressed: () {
-                                        cubit.getProfileImage();
-                                      },
-                                      child: const Text(
-                                        'تغيير الصورة الشخصيَّة',
-                                        style: TextStyle(
-                                          fontSize: 18,
-                                          fontWeight: FontWeight.bold,
-                                          color: Colors.blue,
-                                        ),
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 8, vertical: 6),
+                      child: SingleChildScrollView(
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              // for user picture
+                              Column(
+                                children: [
+                                  userPicture(size, userModel,profileImage),
+                                  TextButton(
+                                    onPressed: () {
+                                      cubit.getProfileImage();
+                                    },
+                                    child: const Text(
+                                      'تغيير الصورة الشخصيَّة',
+                                      style: TextStyle(
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.blue,
                                       ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              SizedBox(height: 20,),
+
+                              // for enter name
+                              Text(
+                                'الاسم',
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .bodyText1!
+                                    .copyWith(
+                                      color: Colors.grey,
+                                    ),
+                              ),
+                              Container(
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(8),
+                                  boxShadow: const [
+                                    BoxShadow(
+                                      color: Colors.grey,
+                                      spreadRadius: 0.1,
+                                      blurRadius: 4,
+                                      offset: Offset(
+                                          0, 2), // changes position of shadow
                                     ),
                                   ],
                                 ),
-                                SizedBox(height: 20,),
-
-                                // for enter name
-                                Text(
-                                  'الاسم',
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .bodyText1!
-                                      .copyWith(
-                                        color: Colors.grey,
-                                      ),
-                                ),
-                                Container(
-                                  decoration: BoxDecoration(
-                                    color: Colors.white,
-                                    borderRadius: BorderRadius.circular(8),
-                                    boxShadow: const [
-                                      BoxShadow(
-                                        color: Colors.grey,
-                                        spreadRadius: 0.1,
-                                        blurRadius: 4,
-                                        offset: Offset(
-                                            0, 2), // changes position of shadow
-                                      ),
-                                    ],
+                                child: TextFormField(
+                                  controller: nameController,
+                                  keyboardType: TextInputType.text,
+                                  validator: (value) {
+                                    if (value!.isEmpty) {
+                                      return 'الرجاء إدخال اسمك';
+                                    }
+                                    return null;
+                                  },
+                                  decoration: const InputDecoration(
+                                    border: InputBorder.none,
+                                    contentPadding: EdgeInsets.symmetric(horizontal: 8.0),
+                                    //  label: Text('البريد الالكتروني'),
+                                    //  prefixIcon: Icon(Icons.email_outlined),
                                   ),
-                                  child: TextFormField(
-                                    controller: nameController,
-                                    keyboardType: TextInputType.text,
-                                    validator: (value) {
-                                      if (value!.isEmpty) {
-                                        return 'الرجاء إدخال اسمك';
-                                      }
-                                      return null;
-                                    },
-                                    decoration: const InputDecoration(
-                                      border: InputBorder.none,
-                                      contentPadding: EdgeInsets.symmetric(horizontal: 8.0),
-                                      //  label: Text('البريد الالكتروني'),
-                                      //  prefixIcon: Icon(Icons.email_outlined),
+                                ),
+                              ),
+                              const SizedBox(
+                                height: 20,
+                              ),
+
+                              if(userModel.userType == true)
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+
+                                  // for enter job name
+                                  Text(
+                                    'نوع الحرفة',
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .bodyText1!
+                                        .copyWith(
+                                      color: Colors.grey,
                                     ),
                                   ),
-                                ),
-                                const SizedBox(
-                                  height: 20,
-                                ),
-
-                                if(userModel.userType == true)
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-
-                                    // for enter job name
-                                    Text(
-                                      'نوع الحرفة',
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .bodyText1!
-                                          .copyWith(
-                                        color: Colors.grey,
-                                      ),
-                                    ),
-                                    Container(
-                                      decoration: BoxDecoration(
-                                        color: Colors.white,
-                                        borderRadius: BorderRadius.circular(8),
-                                        boxShadow: const [
-                                          BoxShadow(
-                                            color: Colors.grey,
-                                            spreadRadius: 0.1,
-                                            blurRadius: 4,
-                                            offset: Offset(
-                                                0, 2), // changes position of shadow
-                                          ),
-                                        ],
-                                      ),
-                                      child: TextFormField(
-                                        controller: craftTypeController,
-                                        keyboardType: TextInputType.text,
-                                        validator: (value) {
-                                          if (value!.isEmpty) {
-                                            return 'الرجاء إدخال حرفتك الخاصة';
-                                          }
-                                          return null;
-                                        },
-                                        decoration: const InputDecoration(
-                                          border: InputBorder.none,
-                                          contentPadding: EdgeInsets.symmetric(horizontal: 8.0),
-                                        ),
-                                      ),
-                                    ),
-                                    const SizedBox(
-                                      height: 20,
-                                    ),
-                                  ],
-                                ),
-
-                                // for enter address
-                                Text(
-                                  'العنوان',
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .bodyText1!
-                                      .copyWith(
-                                        color: Colors.grey,
-                                      ),
-                                ),
-                                Container(
-                                  decoration: BoxDecoration(
-                                    color: Colors.white,
-                                    borderRadius: BorderRadius.circular(8),
-                                    boxShadow: const [
-                                      BoxShadow(
-                                        color: Colors.grey,
-                                        spreadRadius: 0.1,
-                                        blurRadius: 4,
-                                        offset: Offset(
-                                            0, 2), // changes position of shadow
-                                      ),
-                                    ],
-                                  ),
-                                  child: TextFormField(
-                                    controller: addressController,
-                                    keyboardType: TextInputType.text,
-                                    validator: (value) {
-                                      if (value!.isEmpty) {
-                                        return 'الرجاء إدخال عنوانك';
-                                      }
-                                      return null;
-                                    },
-                                    decoration: const InputDecoration(
-                                      border: InputBorder.none,
-                                      contentPadding: EdgeInsets.symmetric(horizontal: 8.0),
-                                    ),
-                                  ),
-                                ),
-                                const SizedBox(
-                                  height: 20,
-                                ),
-
-                                // for enter phone number
-                                Text(
-                                  'رقم الجوال',
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .bodyText1!
-                                      .copyWith(
-                                        color: Colors.grey,
-                                      ),
-                                ),
-                                Container(
-                                  decoration: BoxDecoration(
-                                    color: Colors.white,
-                                    borderRadius: BorderRadius.circular(8),
-                                    boxShadow: const [
-                                      BoxShadow(
-                                        color: Colors.grey,
-                                        spreadRadius: 0.1,
-                                        blurRadius: 4,
-                                        offset: Offset(
-                                            0, 2), // changes position of shadow
-                                      ),
-                                    ],
-                                  ),
-                                  child: TextFormField(
-                                    controller: phoneController,
-                                    keyboardType: TextInputType.number,
-                                    validator: (value) {
-                                      if (value!.isEmpty) {
-                                        return 'الرجاء إدخال رقم هاتفك';
-                                      }
-                                      return null;
-                                    },
-                                    decoration: const InputDecoration(
-                                      border: InputBorder.none,
-                                      contentPadding: EdgeInsets.symmetric(horizontal: 8.0),
-                                    ),
-                                  ),
-                                ),
-                                const SizedBox(
-                                  height: 20,
-                                ),
-
-                                // for enter email
-                                Text(
-                                  'البريد الالكتروني',
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .bodyText1!
-                                      .copyWith(
-                                        color: Colors.grey,
-                                      ),
-                                ),
-                                Container(
-                                  decoration: BoxDecoration(
-                                    color: Colors.white,
-                                    borderRadius: BorderRadius.circular(8),
-                                    boxShadow: const [
-                                      BoxShadow(
-                                        color: Colors.grey,
-                                        spreadRadius: 0.1,
-                                        blurRadius: 4,
-                                        offset: Offset(
-                                            0, 2), // changes position of shadow
-                                      ),
-                                    ],
-                                  ),
-                                  child: TextFormField(
-                                    initialValue: userModel.email!,
-                                    style: const TextStyle(color: Colors.grey),
-                                    enabled: false,
-                                    //   controller: emailController,
-
-                                    decoration: const InputDecoration(
-                                      border: InputBorder.none,
-                                      contentPadding: EdgeInsets.symmetric(horizontal: 8.0),
-                                      //  label: Text('البريد الالكتروني'),
-                                      //  prefixIcon: Icon(Icons.email_outlined),
-                                    ),
-                                  ),
-                                ),
-                                const SizedBox(
-                                  height: 45,
-                                ),
-
-                                // for edit button
-                                Center(
-                                  child: Container(
-                                    width: size.width / 1.1,
+                                  Container(
                                     decoration: BoxDecoration(
-                                      color: mainColor,
-                                      borderRadius: BorderRadius.circular(4),
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.circular(8),
+                                      boxShadow: const [
+                                        BoxShadow(
+                                          color: Colors.grey,
+                                          spreadRadius: 0.1,
+                                          blurRadius: 4,
+                                          offset: Offset(
+                                              0, 2), // changes position of shadow
+                                        ),
+                                      ],
                                     ),
-                                    height: 50,
-                                    child: state is CraftUserUpdateLoadingState
-                                        ? const Center(
-                                            child: CircularProgressIndicator
-                                                .adaptive(),
-                                          )
-                                        : TextButton(
-                                            onPressed: () {
-                                              cubit.profileImage == null
-                                                  ? cubit.updateUser(
-                                                      name:nameController.text == ''? userModel.name :nameController.text,
-                                                      phone:phoneController.text == ''? userModel.phone : phoneController.text,
-                                                      address:
-                                                      addressController.text == ''? userModel.address : addressController.text,
-                                                      craftType:
-                                                      craftTypeController.text == ''? userModel.craftType : craftTypeController.text,
-                                                    )
-                                                  : cubit.uploadProfileImage(
-                                                name:nameController.text == ''? userModel.name :nameController.text,
-                                                phone:phoneController.text == ''? userModel.phone : phoneController.text,
-                                                address:
-                                                addressController.text == ''? userModel.address : addressController.text,
-                                                craftType:
-                                                craftTypeController.text == ''? userModel.craftType : craftTypeController.text,
-                                              );
-                                            },
-                                            child: const Text(
-                                              'حفظ التغييرات',
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.bold,
-                                                  color: Colors.white,
-                                                  fontSize: 16),
-                                            ),
-                                          ),
+                                    child: TextFormField(
+                                      controller: craftTypeController,
+                                      keyboardType: TextInputType.text,
+                                      validator: (value) {
+                                        if (value!.isEmpty) {
+                                          return 'الرجاء إدخال حرفتك الخاصة';
+                                        }
+                                        return null;
+                                      },
+                                      decoration: const InputDecoration(
+                                        border: InputBorder.none,
+                                        contentPadding: EdgeInsets.symmetric(horizontal: 8.0),
+                                      ),
+                                    ),
+                                  ),
+                                  const SizedBox(
+                                    height: 20,
+                                  ),
+                                ],
+                              ),
+
+                              // for enter address
+                              Text(
+                                'العنوان',
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .bodyText1!
+                                    .copyWith(
+                                      color: Colors.grey,
+                                    ),
+                              ),
+                              Container(
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(8),
+                                  boxShadow: const [
+                                    BoxShadow(
+                                      color: Colors.grey,
+                                      spreadRadius: 0.1,
+                                      blurRadius: 4,
+                                      offset: Offset(
+                                          0, 2), // changes position of shadow
+                                    ),
+                                  ],
+                                ),
+                                child: TextFormField(
+                                  controller: addressController,
+                                  keyboardType: TextInputType.text,
+                                  validator: (value) {
+                                    if (value!.isEmpty) {
+                                      return 'الرجاء إدخال عنوانك';
+                                    }
+                                    return null;
+                                  },
+                                  decoration: const InputDecoration(
+                                    border: InputBorder.none,
+                                    contentPadding: EdgeInsets.symmetric(horizontal: 8.0),
                                   ),
                                 ),
-                                const SizedBox(
-                                  height: 3,
+                              ),
+                              const SizedBox(
+                                height: 20,
+                              ),
+
+                              // for enter phone number
+                              Text(
+                                'رقم الجوال',
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .bodyText1!
+                                    .copyWith(
+                                      color: Colors.grey,
+                                    ),
+                              ),
+                              Container(
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(8),
+                                  boxShadow: const [
+                                    BoxShadow(
+                                      color: Colors.grey,
+                                      spreadRadius: 0.1,
+                                      blurRadius: 4,
+                                      offset: Offset(
+                                          0, 2), // changes position of shadow
+                                    ),
+                                  ],
                                 ),
-                              ],
-                            ),
+                                child: TextFormField(
+                                  controller: phoneController,
+                                  keyboardType: TextInputType.number,
+                                  validator: (value) {
+                                    if (value!.isEmpty) {
+                                      return 'الرجاء إدخال رقم هاتفك';
+                                    }
+                                    return null;
+                                  },
+                                  decoration: const InputDecoration(
+                                    border: InputBorder.none,
+                                    contentPadding: EdgeInsets.symmetric(horizontal: 8.0),
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(
+                                height: 20,
+                              ),
+
+                              // for enter email
+                              Text(
+                                'البريد الالكتروني',
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .bodyText1!
+                                    .copyWith(
+                                      color: Colors.grey,
+                                    ),
+                              ),
+                              Container(
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(8),
+                                  boxShadow: const [
+                                    BoxShadow(
+                                      color: Colors.grey,
+                                      spreadRadius: 0.1,
+                                      blurRadius: 4,
+                                      offset: Offset(
+                                          0, 2), // changes position of shadow
+                                    ),
+                                  ],
+                                ),
+                                child: TextFormField(
+                                  initialValue: userModel.email!,
+                                  style: const TextStyle(color: Colors.grey),
+                                  enabled: false,
+                                  //   controller: emailController,
+
+                                  decoration: const InputDecoration(
+                                    border: InputBorder.none,
+                                    contentPadding: EdgeInsets.symmetric(horizontal: 8.0),
+                                    //  label: Text('البريد الالكتروني'),
+                                    //  prefixIcon: Icon(Icons.email_outlined),
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(
+                                height: 45,
+                              ),
+
+                              // for edit button
+                              Center(
+                                child: Container(
+                                  width: size.width / 1.1,
+                                  decoration: BoxDecoration(
+                                    color: mainColor,
+                                    borderRadius: BorderRadius.circular(4),
+                                  ),
+                                  height: 50,
+                                  child: state is CraftUserUpdateLoadingState
+                                      ? const Center(
+                                          child: CircularProgressIndicator
+                                              .adaptive(),
+                                        )
+                                      : TextButton(
+                                          onPressed: () {
+                                            cubit.profileImage == null
+                                                ? cubit.updateUser(
+                                                    name:nameController.text == ''? userModel.name :nameController.text,
+                                                    phone:phoneController.text == ''? userModel.phone : phoneController.text,
+                                                    address:
+                                                    addressController.text == ''? userModel.address : addressController.text,
+                                                    craftType:
+                                                    craftTypeController.text == ''? userModel.craftType : craftTypeController.text,
+                                                  )
+                                                : cubit.uploadProfileImage(
+                                              name:nameController.text == ''? userModel.name :nameController.text,
+                                              phone:phoneController.text == ''? userModel.phone : phoneController.text,
+                                              address:
+                                              addressController.text == ''? userModel.address : addressController.text,
+                                              craftType:
+                                              craftTypeController.text == ''? userModel.craftType : craftTypeController.text,
+                                            );
+                                          },
+                                          child: const Text(
+                                            'حفظ التغييرات',
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                color: Colors.white,
+                                                fontSize: 16),
+                                          ),
+                                        ),
+                                ),
+                              ),
+                              const SizedBox(
+                                height: 3,
+                              ),
+                            ],
                           ),
                         ),
                       ),

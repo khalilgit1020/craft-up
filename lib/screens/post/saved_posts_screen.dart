@@ -9,7 +9,7 @@ import '../../bloc/home_cubit.dart';
 import '../../constants.dart';
 import '../../models/post_model.dart';
 import '../../widgets/my_divider.dart';
-import '../mah_other_design.dart';
+import '../other_user_profile.dart';
 
 class SavedPostsScreen extends StatelessWidget {
   const SavedPostsScreen({Key? key}) : super(key: key);
@@ -31,6 +31,7 @@ class SavedPostsScreen extends StatelessWidget {
                 preferredSize: Size.fromHeight(size.height / 8),
                 child: AppBar(
                   flexibleSpace: FadeIn(
+                    duration: const Duration(milliseconds: 100),
                     child: const Center(
                       child: Text(
                         'المنشورات المحفوظة',
@@ -51,7 +52,7 @@ class SavedPostsScreen extends StatelessWidget {
                   Expanded(
                     child: cubit.mySavedPostsDetails!.isNotEmpty
                         ? FadeIn(
-                            duration: const Duration(milliseconds: 500),
+                            duration: const Duration(milliseconds: 100),
                             child: SingleChildScrollView(
                               child: Padding(
                                 padding: const EdgeInsets.symmetric(
@@ -75,7 +76,7 @@ class SavedPostsScreen extends StatelessWidget {
                             ),
                           )
                         : FadeIn(
-                            duration: const Duration(milliseconds: 500),
+                            duration: const Duration(milliseconds: 100),
                             child: const Center(
                               child: Text(
                                 'لا يوجد لديك منشورات محفوظة',
@@ -120,7 +121,7 @@ class SavedPostsScreen extends StatelessWidget {
                 onTap: () {
                   cubit.getOtherWorkImages(id: model.uId);
                   Navigator.of(context).push(MaterialPageRoute(
-                      builder: (_) => MahOtherDesign(
+                      builder: (_) => OtherUserProfile(
                           userModel: cubit.specialUser![model.uId]!)));
                 },
                 child: CircleAvatar(
@@ -151,7 +152,7 @@ class SavedPostsScreen extends StatelessWidget {
                 onTap: () {
                   cubit.getOtherWorkImages(id: model.uId);
                   Navigator.of(context).push(MaterialPageRoute(
-                      builder: (_) => MahOtherDesign(
+                      builder: (_) => OtherUserProfile(
                           userModel: cubit.specialUser![model.uId]!)));
                 },
                 child: Text(

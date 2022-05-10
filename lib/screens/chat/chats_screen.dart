@@ -136,6 +136,7 @@ class ChatScreen extends StatelessWidget {
                 child: AppBar(
                   automaticallyImplyLeading: false,
                   flexibleSpace: FadeIn(
+                    duration: const Duration(milliseconds: 100),
                     child: Center(
                       child: Padding(
                         padding: const EdgeInsets.only(left: 5.0, right: 20.0),
@@ -174,7 +175,6 @@ class ChatScreen extends StatelessWidget {
                     cubit.usersMessenger!.isNotEmpty
                         ? Expanded(
                             child: FadeIn(
-                              duration: const Duration(milliseconds: 500),
                               child: ListView.separated(
                                 physics: const BouncingScrollPhysics(),
                                 itemBuilder: (context, index) => buildChatItem(
@@ -189,7 +189,6 @@ class ChatScreen extends StatelessWidget {
                           )
                         : Expanded(
                             child: FadeIn(
-                              duration: const Duration(milliseconds: 700),
                               child: const Center(
                                 child: Text(
                                   'لا يوجد لديك مراسلات حتى الأن...',

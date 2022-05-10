@@ -12,7 +12,7 @@ import '../../widgets/user_info_and_works.dart';
 import '../settings_screen/edit_profile_screen.dart';
 
 class ProfileScreen extends StatelessWidget {
-  ProfileScreen({Key? key}) : super(key: key);
+  const ProfileScreen({Key? key}) : super(key: key);
 
 //  GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
 
@@ -42,20 +42,22 @@ class ProfileScreen extends StatelessWidget {
             elevation: 0,
             backgroundColor: mainColor,
           ),
-          body: Stack(
-            children: [
-              // for background color
-              Container(
-                color: mainColor,
-                height: size.height / 5.5,
-              ),
+          body: SingleChildScrollView(
+            child: Stack(
+              children: [
+                // for background color
+                Container(
+                  color: mainColor,
+                  height: size.height / 5.5,
+                ),
 
-              // for information card and gallery works
-              UserInfoAndWorks(size, userModel, cubit),
+                // for information card and gallery works
+                UserInfoAndWorks(size, userModel, cubit),
 
-              // for user picture
-              UserPicture(context,size, userModel),
-            ],
+                // for user picture
+                UserPicture(context,size, userModel),
+              ],
+            ),
           ),
         );
       },

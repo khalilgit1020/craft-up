@@ -7,10 +7,10 @@ import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:graduation/constants.dart';
 import 'package:graduation/models/craft_user_model.dart';
-import 'package:graduation/screens/mah_other_design.dart';
 
 import '../bloc/craft_states.dart';
 import '../bloc/home_cubit.dart';
+import 'other_user_profile.dart';
 
 class MapScreen extends StatefulWidget {
   final CraftUserModel cubit;
@@ -81,11 +81,7 @@ class _MapScreenState extends State<MapScreen> {
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<CraftHomeCubit, CraftStates>(
-      listener: (context, state) {
-        if (state is CraftGetLocationErrorState) {
-          print(state.error);
-        }
-      },
+      listener: (context, state) {},
       builder: (context, state) {
         var myCubit = CraftHomeCubit.get(context);
 
@@ -154,7 +150,7 @@ class _MapScreenState extends State<MapScreen> {
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => MahOtherDesign(
+                                    builder: (context) => OtherUserProfile(
                                         userModel: widget.cubit)));
                           },),
                     ),);

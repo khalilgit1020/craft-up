@@ -5,7 +5,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:graduation/constants.dart';
 import 'package:graduation/models/comment_model.dart';
-import 'package:graduation/screens/mah_other_design.dart';
 import 'package:graduation/widgets/my_divider.dart';
 import 'package:graduation/widgets/styles/icon_broken.dart';
 
@@ -120,7 +119,7 @@ class _PostScreenState extends State<PostScreen> {
                             // post title
                             Center(
                               child: FadeIn(
-                                duration: const Duration(milliseconds: 500),
+                                duration: const Duration(milliseconds: 100),
                                 child: Text(
                                   widget.model.jobName!,
                                   style: const TextStyle(
@@ -135,7 +134,7 @@ class _PostScreenState extends State<PostScreen> {
 
                             // post details
                             FadeIn(
-                              duration: const Duration(milliseconds: 500),
+                              duration: const Duration(milliseconds: 100),
                               child: Padding(
                                 padding: const EdgeInsets.all(20.0),
                                 child: Row(
@@ -178,21 +177,22 @@ class _PostScreenState extends State<PostScreen> {
 
                             // post text
                             FadeIn(
-                              duration: const Duration(milliseconds: 500),
+                              duration: const Duration(milliseconds: 100),
                               child: Center(
                                 child: Container(
                                   height: size.height / 4.5,
                                   width: size.width / 1.1,
                                   decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(8),
-                                    color: Theme.of(context)
-                                        .scaffoldBackgroundColor,
+                                    border: Border.all(color: Colors.grey[300]!),
+                                    color: Colors.white,
                                     boxShadow: [
                                       BoxShadow(
                                         color: Colors.grey.withOpacity(0.5),
-                                        spreadRadius: 3,
-                                        blurRadius: 15,
-                                        offset: const Offset(-3, 7),
+                                        spreadRadius: 2,
+                                        blurRadius: 10,
+                                        offset: const Offset(-1,
+                                            5), // changes position of shadow
                                       ),
                                     ],
                                   ),
@@ -217,7 +217,7 @@ class _PostScreenState extends State<PostScreen> {
 
                             // for enter comment
                             FadeIn(
-                              duration: const Duration(milliseconds: 500),
+                              duration: const Duration(milliseconds: 100),
                               child: Center(
                                 child: Container(
                                   padding: const EdgeInsets.symmetric(
@@ -234,8 +234,8 @@ class _PostScreenState extends State<PostScreen> {
                                         color: Colors.grey.withOpacity(0.5),
                                         spreadRadius: 1,
                                         blurRadius: 7,
-                                        offset: const Offset(
-                                            0, 3), // changes position of shadow
+                                        offset: const Offset(0,
+                                            3), // changes position of shadow
                                       ),
                                     ],
                                   ),
@@ -269,10 +269,6 @@ class _PostScreenState extends State<PostScreen> {
                                                     vertical: 0),
                                             border: InputBorder.none,
                                             label: Text('أضف تعليقك هنا'),
-/*suffixIcon: Icon(
-                                            IconBroken.Send,
-                                            color: Colors.blue,
-                                          ),*/
                                           ),
                                         ),
                                       ),
@@ -315,7 +311,7 @@ class _PostScreenState extends State<PostScreen> {
                             ),
 
                             FadeIn(
-                              duration: const Duration(milliseconds: 500),
+                              duration: const Duration(milliseconds: 100),
                               child: Padding(
                                 padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
                                 child: Text(
@@ -329,7 +325,7 @@ class _PostScreenState extends State<PostScreen> {
                               ),
                             ),
                             FadeIn(
-                              duration: const Duration(milliseconds: 500),
+                              duration: const Duration(milliseconds: 100),
                               child: MyDivider(),
                             ),
 
@@ -338,7 +334,7 @@ class _PostScreenState extends State<PostScreen> {
                             ),
                             if (cubit.comments!.isNotEmpty)
                               FadeIn(
-                                duration: const Duration(milliseconds: 500),
+                                duration: const Duration(milliseconds: 100),
                                 child: Padding(
                                   padding: const EdgeInsets.symmetric(horizontal: 8.0),
                                   child: ListView.separated(
@@ -347,7 +343,7 @@ class _PostScreenState extends State<PostScreen> {
                                     physics: const NeverScrollableScrollPhysics(),
                                     itemCount: cubit.comments!.length,
                                     separatorBuilder: (context, index) => FadeIn(
-                                      duration: const Duration(milliseconds: 500),
+                                      duration: const Duration(milliseconds: 100),
                                       child: MyDivider(
                                           startIndent: 15, endIndent: 15),
                                     ),
@@ -410,7 +406,7 @@ class _PostScreenState extends State<PostScreen> {
     required CraftHomeCubit cubit,
   }) {
     return FadeIn(
-      duration: const Duration(milliseconds: 500),
+      duration: const Duration(milliseconds: 100),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -424,7 +420,7 @@ class _PostScreenState extends State<PostScreen> {
                 cubit.getOtherWorkImages(id: model.userId).then((value) {
                   if (model.userId != cubit.UserModel!.uId) {
                     Navigator.of(context).push(MaterialPageRoute(
-                        builder: (_) => MahOtherDesign(
+                        builder: (_) => OtherUserProfile(
                             userModel: cubit.specialUser![model.userId]!)));
                   }
                 });
@@ -464,7 +460,7 @@ class _PostScreenState extends State<PostScreen> {
                     cubit.getOtherWorkImages(id: model.userId).then((value) {
                       if (model.userId != cubit.UserModel!.uId) {
                         Navigator.of(context).push(MaterialPageRoute(
-                            builder: (_) => MahOtherDesign(
+                            builder: (_) => OtherUserProfile(
                                 userModel: cubit.specialUser![model.userId]!)));
                       }
                     });

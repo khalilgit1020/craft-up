@@ -1,4 +1,3 @@
-import 'package:animate_do/animate_do.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -104,29 +103,25 @@ class ChatDetailsScreen extends StatelessWidget {
                               child: Column(
                                 children: [
                                   Expanded(
-                                    child: FadeIn(
-                                      duration:
-                                          const Duration(milliseconds: 700),
-                                      child: ListView.separated(
-                                        reverse: true,
-                                        physics: const BouncingScrollPhysics(),
-                                        itemBuilder: (context, index) {
-                                          var message = cubit.messages[index];
+                                    child: ListView.separated(
+                                      reverse: true,
+                                      physics: const BouncingScrollPhysics(),
+                                      itemBuilder: (context, index) {
+                                        var message = cubit.messages[index];
 
-                                          if (cubit.UserModel!.uId ==
-                                              message.senderId) {
-                                            return buildMyMessage(
-                                                message, context, index);
-                                          }
-                                          return buildMessage(
+                                        if (cubit.UserModel!.uId ==
+                                            message.senderId) {
+                                          return buildMyMessage(
                                               message, context, index);
-                                        },
-                                        separatorBuilder: (context, index) =>
-                                            const SizedBox(
-                                          height: 10,
-                                        ),
-                                        itemCount: cubit.messages.length,
+                                        }
+                                        return buildMessage(
+                                            message, context, index);
+                                      },
+                                      separatorBuilder: (context, index) =>
+                                          const SizedBox(
+                                        height: 10,
                                       ),
+                                      itemCount: cubit.messages.length,
                                     ),
                                   ),
                                   const SizedBox(
@@ -135,105 +130,99 @@ class ChatDetailsScreen extends StatelessWidget {
                                 ],
                               ),
                             )
-                          : FadeIn(
-                              duration: const Duration(milliseconds: 700),
-                              child: const Padding(
-                                padding: EdgeInsets.all(20.0),
-                                child: Center(
-                                  child: Text(
-                                    'لا توجد رسائل بعد, قل مرحبا...',
-                                    style: TextStyle(
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.grey,
-                                    ),
-                                  ),
+                          : const Padding(
+                            padding: EdgeInsets.all(20.0),
+                            child: Center(
+                              child: Text(
+                                'لا توجد رسائل بعد, قل مرحبا...',
+                                style: TextStyle(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.grey,
                                 ),
                               ),
                             ),
+                          ),
                     ),
                     const SizedBox(
                       height: 10,
                     ),
-                    FadeIn(
-                      duration: const Duration(milliseconds: 700),
-                      child: Container(
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(25),
-                        ),
-                        clipBehavior: Clip.antiAliasWithSaveLayer,
-                        child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.end,
-                          children: [
-                            Expanded(
-                              child: Container(
-                                constraints: const BoxConstraints(
-                                  maxHeight: 150,
-                                ),
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(25),
-                                  color: Colors.grey.shade300,
-                                ),
-                                padding:
-                                    const EdgeInsets.symmetric(horizontal: 15.0),
-                                child: TextFormField(
-                                  minLines: 1,
-                                  maxLines: 15,
-                                  enabled: true,
-                                  controller: textController,
-                                  decoration: const InputDecoration(
-                                    hintText: 'أكتب رسالة...',
-                                    border: InputBorder.none,
-                                  ),
-                                  keyboardType: TextInputType.multiline,
-                                ),
+                    Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(25),
+                      ),
+                      clipBehavior: Clip.antiAliasWithSaveLayer,
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          Expanded(
+                            child: Container(
+                              constraints: const BoxConstraints(
+                                maxHeight: 150,
                               ),
-                            ),
-                            const SizedBox(
-                              width: 5,
-                            ),
-                            Container(
-                              height: 50,
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(25),
-                                color: mainColor,
+                                color: Colors.grey.shade300,
                               ),
-                              child: IconButton(
-                                onPressed: () {
-                                  cubit.getMessageImage();
-                                },
-                                icon: const Icon(
-                                  IconBroken.Image,
-                                  color: Colors.white,
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 15.0),
+                              child: TextFormField(
+                                minLines: 1,
+                                maxLines: 15,
+                                enabled: true,
+                                controller: textController,
+                                decoration: const InputDecoration(
+                                  hintText: 'أكتب رسالة...',
+                                  border: InputBorder.none,
                                 ),
+                                keyboardType: TextInputType.multiline,
                               ),
                             ),
-                            const SizedBox(
-                              width: 5,
+                          ),
+                          const SizedBox(
+                            width: 5,
+                          ),
+                          Container(
+                            height: 50,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(25),
+                              color: mainColor,
                             ),
-                            Container(
-                              height: 50,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(25),
-                                color: mainColor,
-                              ),
-                              child: MaterialButton(
-                                onPressed: () {
-                                  cubit.sendMessage(
-                                    receiverId: userModel.uId!,
-                                    dateTime: DateTime.now().toString(),
-                                    text: textController.text,
-                                  );
-                                },
-                                minWidth: 1,
-                                child: const Icon(
-                                  IconBroken.Send,
-                                  color: Colors.white,
-                                ),
+                            child: IconButton(
+                              onPressed: () {
+                                cubit.getMessageImage();
+                              },
+                              icon: const Icon(
+                                IconBroken.Image,
+                                color: Colors.white,
                               ),
                             ),
-                          ],
-                        ),
+                          ),
+                          const SizedBox(
+                            width: 5,
+                          ),
+                          Container(
+                            height: 50,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(25),
+                              color: mainColor,
+                            ),
+                            child: MaterialButton(
+                              onPressed: () {
+                                cubit.sendMessage(
+                                  receiverId: userModel.uId!,
+                                  dateTime: DateTime.now().toString(),
+                                  text: textController.text,
+                                );
+                              },
+                              minWidth: 1,
+                              child: const Icon(
+                                IconBroken.Send,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                   ],
