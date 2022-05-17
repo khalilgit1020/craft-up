@@ -19,7 +19,7 @@ class HomeScreen extends StatelessWidget {
       builder: (context, state) {
         var cubit = CraftHomeCubit.get(context);
 
-        return  cubit.posts != null && cubit.UserModel != null ? SafeArea(
+        return SafeArea(
           child: Directionality(
             textDirection: TextDirection.rtl,
             child: Scaffold(
@@ -105,7 +105,7 @@ class HomeScreen extends StatelessWidget {
               )*/,
             ),
           ),
-        ) : const Scaffold(body: Center(child: CircularProgressIndicator(),),);
+        );
       },
     );
   }

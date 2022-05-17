@@ -62,7 +62,7 @@ class _SearchScreenState extends State<SearchScreen> {
                                 spreadRadius: 0.1,
                                 blurRadius: 4,
                                 offset:
-                                Offset(0, 2), // changes position of shadow
+                                    Offset(0, 2), // changes position of shadow
                               ),
                             ],
                           ),
@@ -106,10 +106,15 @@ class _SearchScreenState extends State<SearchScreen> {
               ),
               body: Column(
                 children: [
-                  if ((state is CraftClearSearchListState && cubit.search!.isNotEmpty) || (cubit.search!.isNotEmpty && state is NewsSearchLoadingStates))
-                    const Expanded(
+                  if ((state is CraftClearSearchListState &&
+                          cubit.search!.isNotEmpty) ||
+                      (cubit.search!.isNotEmpty &&
+                          state is NewsSearchLoadingStates))
+                    Expanded(
                       child: Center(
-                        child: CircularProgressIndicator.adaptive(),
+                        child: CircularProgressIndicator(
+                          color: mainColor,
+                        ),
                       ),
                     ),
                   if (state is CraftSearchSuccessStates &&
@@ -143,7 +148,8 @@ class _SearchScreenState extends State<SearchScreen> {
                         ),
                       ),
                     ),
-                  if (cubit.search!.isEmpty && state is! NewsSearchLoadingStates)
+                  if (cubit.search!.isEmpty &&
+                      state is! NewsSearchLoadingStates)
                     Expanded(
                       child: Center(
                         child: FadeIn(
@@ -171,7 +177,7 @@ class _SearchScreenState extends State<SearchScreen> {
                         ),
                       ),
                     ),
-                  if(state is NewsSearchLoadingStates && cubit.search!.isEmpty)
+                  if (state is NewsSearchLoadingStates && cubit.search!.isEmpty)
                     Expanded(
                       child: Center(
                         child: FadeIn(
@@ -204,10 +210,10 @@ class _SearchScreenState extends State<SearchScreen> {
       splashColor: Colors.transparent,
       hoverColor: Colors.transparent,
       highlightColor: Colors.transparent,
-      onTap: (){
+      onTap: () {
         cubit.getComments(postId: model.postId);
-        Navigator.of(context).push(
-            MaterialPageRoute(builder: (_) => PostScreen(model: model)));
+        Navigator.of(context)
+            .push(MaterialPageRoute(builder: (_) => PostScreen(model: model)));
       },
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -258,7 +264,7 @@ class _SearchScreenState extends State<SearchScreen> {
                 splashColor: Colors.transparent,
                 hoverColor: Colors.transparent,
                 highlightColor: Colors.transparent,
-                onTap: (){
+                onTap: () {
                   cubit.getOtherWorkImages(id: model.uId).then((value) {
                     if (model.uId == cubit.UserModel!.uId) {
                       cubit.changeBottomNv(3);

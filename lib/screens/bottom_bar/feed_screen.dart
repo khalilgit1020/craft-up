@@ -113,7 +113,7 @@ class _FeedScreenState extends State<FeedScreen> {
                 },
                 body: Column(
                   children: [
-                    cubit.posts!.isNotEmpty
+                    cubit.posts!.isNotEmpty && cubit.UserModel != null
                         ? Expanded(
                             child: SingleChildScrollView(
                               child: Padding(
@@ -146,8 +146,8 @@ class _FeedScreenState extends State<FeedScreen> {
                               ),
                             ),
                           )
-                        : const Expanded(
-                            child: SizedBox(),
+                        : Expanded(
+                            child: Center(child: CircularProgressIndicator(color: mainColor,),),
                           ),
                   ],
                 ),
